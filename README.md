@@ -12,7 +12,7 @@
 npm ci
 ```
 
-从已经构建前端的 Peach 检出同步静态代码，保留第三方许可证：
+从已经构建前端的 Peach 检出同步静态代码，保留第三方许可证。`web/css/` 中的样式分区按应用的文件名规则和层叠顺序拼成 `app.css`：
 
 ```powershell
 npm run sync -- ../peach

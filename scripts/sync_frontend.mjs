@@ -1,9 +1,15 @@
 // 从 Peach 检出的构建产物同步前端，不访问账本或生产服务。
 import path from 'node:path';
 import {readFile,readdir,mkdir,writeFile,access} from 'node:fs/promises';
-import {fileURLToPath} from 'node:url';
+import {fileURLToPath,pathToFileURL} from 'node:url';
 const root=fileURLToPath(new URL('../',import.meta.url));
-let source=process.argv[2]||process.env.PEACH_APP;
+export async function readStylesheet(web){
+ const dir=path.join(web,'css');
+ const names=(await readdir(dir)).filter(name=>/^\d{2}-[a-z0-9-]+\.css$/.test(name)).sort();
+ if(!names.length)throw Error('Peach 样式分区未取得');
+ return Buffer.concat(await Promise.all(names.map(name=>readFile(path.join(dir,name)))));
+}
+export async function syncFrontend(source=process.env.PEACH_APP){
 if(!source){
  for(const candidate of [path.resolve(root,'../peach'),path.resolve(root,'../../../peach-app')]){
   try{await access(path.join(candidate,'web/app.js'));source=candidate;break}catch{}
@@ -15,7 +21,9 @@ const web=path.join(source,'web'),names=['index.html','app.css','board.css','app
 async function walk(dir){for(const entry of await readdir(path.join(web,dir),{withFileTypes:true})){const name=`${dir}/${entry.name}`;if(entry.isDirectory())await walk(name);else if(!name.endsWith('.map'))names.push(name)}}
 for(const dir of ['js','dist','vendor'])await walk(dir);
 const staged=[];
-for(const name of names)staged.push({name,body:await readFile(path.join(web,name))});
+for(const name of names)staged.push({name,body:name==='app.css'?await readStylesheet(web):await readFile(path.join(web,name))});
 for(const name of ['javten','fc2ppvdb','avwikidb','github'])staged.push({name:`site-icon/${name}.png`,body:await readFile(path.join(source,'resources/site-marks',`${name}.png`))});
 for(const {name,body} of staged){const target=path.join(root,'site',name);await mkdir(path.dirname(target),{recursive:true});await writeFile(target,body)}
 console.log(`同步 ${staged.length} 个前端文件；演示脚本、录制响应与媒体保持不变。`);
+}
+if(process.argv[1]&&import.meta.url===pathToFileURL(path.resolve(process.argv[1])).href)await syncFrontend(process.argv[2]);
