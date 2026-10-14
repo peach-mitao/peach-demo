@@ -5,8 +5,10 @@ import {fixtureHash,fixtureKey} from '../src/key.mjs';
 import worker from '../src/worker.js';
 if(!globalThis.crypto)globalThis.crypto=webcrypto;
 const origin='https://example.test';
+const portraitHash=await fixtureHash('GET /entity-image?id=102&kind=performer');
 const files=new Map([
- ['/_fixtures/manifest.json',JSON.stringify({fixtures:{},paths:[],alias:{}})],
+ ['/_fixtures/manifest.json',JSON.stringify({fixtures:{[portraitHash]:'png'},paths:[],alias:{}})],
+ [`/_fixtures/${portraitHash}.png`,new Uint8Array([8,9,10])],
  ['/_fixtures/catalog.json',JSON.stringify({items:[
   {id:1,name:'示例一',code:'DEMO-001',is_jav:true,tags:[],performers:[],o_count:2,duration:120,size:100,location:'local'},
   {id:2,name:'示例二',code:'DEMO-002',is_jav:true,tags:[],performers:[],o_count:5,duration:240,size:200,location:'local'}
@@ -16,6 +18,12 @@ const files=new Map([
 ]);
 const env={ASSETS:{async fetch(input){const name=new URL(input instanceof Request?input.url:input).pathname;return files.has(name)?new Response(files.get(name)):new Response('not found',{status:404})}}};
 const call=(path,init)=>worker.fetch(new Request(origin+path,init),env);
+test('资料图片的版本参数复用已审核的演示图片',async()=>{
+ const response=await call('/entity-image?kind=performer&id=102&v=updated');
+ assert.equal(response.status,200);
+ assert.equal(response.headers.get('content-type'),'image/png');
+ assert.deepEqual([...new Uint8Array(await response.arrayBuffer())],[8,9,10]);
+});
 test('请求键按查询参数顺序规范化',async()=>{
  assert.equal(fixtureKey('GET',new URL(origin+'/api/items?b=2&a=1')),fixtureKey('GET',new URL(origin+'/api/items?a=1&b=2')));
  assert.equal((await fixtureHash('GET /x')).length,20);

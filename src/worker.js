@@ -78,6 +78,11 @@ async function stream(request, env, url) {
 
 async function lookup(env, url, method) {
   const keys = [fixtureKey(method, url)];
+  if (MEDIA_PATHS.has(url.pathname) && url.searchParams.has('v')) {
+    const image = new URL(url);
+    image.searchParams.delete('v');
+    keys.push(fixtureKey(method, image));
+  }
   if (url.search) keys.push(`${method} ${url.pathname}`);
   for (const key of keys) {
     // alias：同一份字节换了个地址（换头像候选图就是封面与九宫格格子），指向已有的那个文件。

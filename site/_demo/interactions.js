@@ -30,6 +30,15 @@
     }
   };
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',overlays,{once:true});else overlays();
+  if(new URLSearchParams(location.search).get('favorites')==='1'){
+    let attempts=0;
+    const open=()=>{
+      const button=document.querySelector('button[aria-label="我的收藏"]');
+      if(button){button.click();return}
+      if(++attempts<100)setTimeout(open,100);
+    };
+    if(document.body)open();else document.addEventListener('DOMContentLoaded',open,{once:true});
+  }
   const originalFetch = window.fetch.bind(window);
   const items = new Map();
   // 每个访客的草稿只存在当前页面内存中，刷新即恢复夹具。
@@ -88,6 +97,18 @@
     }
     const request = new Request(input instanceof Request ? input : url, init);
     const path = url.pathname;
+    if(request.method==='POST'&&path==='/api/library-shortcuts'){
+      const body=await request.clone().json(),data=await read(path);
+      if(body.action==='favorite'){
+        const match=row=>body.entity_id?row.entity_id===body.entity_id:row.kind===body.kind&&row.name===body.name;
+        if(body.on&&!data.favorites.some(match))data.favorites.push({entity_id:body.entity_id,kind:body.kind,name:body.name,
+          image_url:body.entity_id?`/entity-image?kind=${encodeURIComponent(body.kind)}&id=${body.entity_id}`:''});
+        if(!body.on)data.favorites=data.favorites.filter(row=>!match(row));
+      }
+      if(body.action==='save_filter')data.filters.push({id:crypto.randomUUID(),name:body.name,href:body.href});
+      if(body.action==='delete_filter')data.filters=data.filters.filter(row=>row.id!==body.id);
+      return result(data);
+    }
     if(request.method==='POST'&&['/api/reveal','/api/taste/import','/api/pick-folder'].includes(path))return new Response(JSON.stringify({message:'演示站不会访问本机文件或打开系统窗口。'}),{status:400,headers:{'content-type':'application/json; charset=utf-8'}});
     const requestKey = path + url.search;
     if (request.method === 'GET' && snapshots.has(requestKey)) return result(snapshots.get(requestKey));

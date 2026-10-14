@@ -1,9 +1,24 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdtemp,mkdir,writeFile,rm} from 'node:fs/promises';
+import {mkdtemp,mkdir,writeFile,readFile,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
-import {readStylesheet} from '../scripts/sync_frontend.mjs';
+import {readStylesheet,syncFrontend} from '../scripts/sync_frontend.mjs';
+
+test('React 入口与构建包可同步到独立演示目录',async()=>{
+ const root=path.resolve(await mkdtemp(path.join(tmpdir(),'peach-demo-react-')));
+ try{
+  const source=path.join(root,'app'),target=path.join(root,'site');
+  const files={'web/index.html':'<script type="module" src="/dist/peach-app.js"></script>','web/board.css':'board',
+   'web/css/01-base.css':'base','web/dist/peach-app.js':'app','web/dist/peach-app.css':'react','web/vendor/license.txt':'license'};
+  for(const name of ['javten','fc2ppvdb','avwikidb','github'])files[`resources/site-marks/${name}.png`]='icon';
+  for(const [name,body] of Object.entries(files)){const file=path.join(source,name);await mkdir(path.dirname(file),{recursive:true});await writeFile(file,body)}
+  await syncFrontend(source,target);
+  assert.equal(await readFile(path.join(target,'dist/peach-app.js'),'utf8'),'app');
+  assert.equal(await readFile(path.join(target,'app.css'),'utf8'),'base');
+  assert.equal(await readFile(path.join(target,'index.html'),'utf8'),files['web/index.html']);
+ }finally{await rm(root,{recursive:true,force:true})}
+});
 
 test('样式按应用分区规则筛选并按文件名拼接',async()=>{
  const web=await mkdtemp(path.join(tmpdir(),'peach-demo-css-'));
