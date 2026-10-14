@@ -1,22 +1,6 @@
 // 演示交互的状态留在当前页面内存中，刷新即恢复录制值。
 (() => {
   const overlays = () => {
-    const covers=()=>{
-      document.querySelectorAll('img.poster.cover.whole').forEach(img=>{
-        img.classList.replace('whole','front');
-        if(img.complete&&img.naturalWidth)img.dispatchEvent(new Event('load'));
-      });
-      const setting=document.querySelector('#javImageSetting');
-      if(setting){
-        setting.querySelectorAll('input').forEach(input=>{input.disabled=true;input.checked=input.value==='cover'});
-        const help=setting.closest('.settingrow')?.querySelector('small');
-        if(help&&help.textContent!=='演示站只展示正封。')help.textContent='演示站只展示正封。';
-      }
-      const help=document.querySelector('#javSizeSetting')?.closest('.settingrow')?.querySelector('small');
-      if(help&&help.textContent!=='首页和 JAV 等视频列表共用；演示站大小图都展示完整正封。')help.textContent='首页和 JAV 等视频列表共用；演示站大小图都展示完整正封。';
-    };
-    new MutationObserver(covers).observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['class']});
-    covers();
     const notice=document.querySelector('[data-demo-notice]'),toasts=document.querySelector('#toasts');
     if(notice)new ResizeObserver(()=>document.documentElement.style.setProperty('--demo-notice-height',notice.getBoundingClientRect().height+'px')).observe(notice);
     if(toasts){

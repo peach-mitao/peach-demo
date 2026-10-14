@@ -2,6 +2,8 @@
 // 馆藏列表和筛选读录制目录，按请求参数计算；其余接口依次查完整键、同路径录制响应和兜底。
 // 写操作不落地：页面内交互适配提供临时状态，Worker 提供录制响应，刷新恢复录制状态。
 import {fixtureHash, fixtureKey} from './key.mjs';
+import {directoryPage} from './directory.mjs';
+import {discoveryPage} from './discovery.mjs';
 
 const TYPES = {
   json: 'application/json; charset=utf-8', jpg: 'image/jpeg', png: 'image/png', webp: 'image/webp', avif: 'image/avif',
@@ -13,11 +15,12 @@ const MEDIA_PATHS = new Set(['/thumb', '/poster', '/cover', '/timeline', '/avata
   '/link-mark', '/site-mark', '/source-icon', '/work-icon', '/follow-avatar', '/follow-stream', '/follow-cover',
   '/follow-qualities', '/photo', '/photo-thumb', '/sample-thumb', '/sample-image', '/endcard-frame',
   '/avatar-choice', '/healthz']);
-const EMPTY_LIST = JSON.stringify({ok: true, items: [], total: 0, groups: [], results: [], has_more: false});
 let manifest = null;
+let directory = null;
+const discoveries = new Map();
 // 演示馆藏几乎全是番号片，首页默认开大图（竖版封面）；访客自己切过的不动。与 record.mjs 的 DEMO_SETTINGS 一致。
 const DEMO_SETTINGS = `<script>try{const k='peach.settings.v1',s=JSON.parse(localStorage.getItem(k)||'{}');
-if(!('homeLayout' in s))s.homeLayout='big';s.javImage='cover';localStorage.setItem(k,JSON.stringify(s))}catch(_e){}</script><style>.poster.cover.whole{visibility:hidden}</style>`;
+if(!('homeLayout' in s))s.homeLayout='big';localStorage.setItem(k,JSON.stringify(s))}catch(_e){}</script>`;
 // 演示数据里的关注更新全是图片帖，而关注页默认是视频模式（只认地址栏的 media 参数），直接进去是空的。
 // 从别处进关注页、或直接打开 /follow 时补上 media=images；已经在关注页里切回视频的不拦。
 const FOLLOW_IMAGES = `<script>(()=>{const fix=u=>{try{const url=new URL(u,location.href);
@@ -107,12 +110,18 @@ async function catalogItems(env,url) {
   return catalog.items.filter(it=>{
     if(p.get('loc')&&!p.get('loc').split(',').includes(it.location))return false;
     if(p.get('jav')==='1'&&!it.is_jav)return false;
-    if(p.get('creator')&&it.creator!==p.get('creator'))return false;
-    if(p.get('studio')&&it.studio!==p.get('studio'))return false;
-    if(p.get('performer')&&!(it.performers||[]).includes(p.get('performer')))return false;
+    for(const kind of ['creator','studio','performer','agency','series']){
+      const name=p.get(kind);if(!name)continue;
+      const members=catalog.entity_filters?.[kind]?.[name];
+      if(members?!members.includes(it.id):kind==='performer'?!(it.performers||[]).includes(name):it[kind]!==name)return false;
+    }
+    if(p.get('owner')==='none'&&(it.creator||(it.performers||[]).length))return false;
+    if(p.get('len')&&it.ctx_length!==p.get('len'))return false;
     if(p.get('orient')&&it.ctx_orient!==p.get('orient'))return false;
+    if(!p.get('orient')&&p.get('exclude_vertical')==='1'&&it.ctx_orient==='竖屏')return false;
     if(p.get('region')&&(it.effective_region||'none')!==p.get('region'))return false;
-    if(tags.length&&!(p.get('tag_match')==='any'?tags.some(t=>it.tags.includes(t)):tags.every(t=>it.tags.includes(t))))return false;
+    const filterTags=it.filter_tags||it.tags;
+    if(tags.length&&!(p.get('tag_match')==='any'?tags.some(t=>filterTags.includes(t)):tags.every(t=>filterTags.includes(t))))return false;
     const state=p.get('state');
     if(state==='unseen'&&it.play_count)return false;
     if(state==='later'&&!it.watch_later)return false;
@@ -128,7 +137,8 @@ async function fallbackCatalog(env,url,facets=false) {
   if(facets){
     const counts=pick=>{const counts=new Map();for(const it of items)for(const k of pick(it))if(k)counts.set(k,(counts.get(k)||0)+1);return [...counts].map(([k,n])=>({k,n})).sort((a,b)=>b.n-a.n)};
     return json(JSON.stringify({locations:counts(it=>[it.location]),orientations:counts(it=>[it.ctx_orient]),regions:counts(it=>[it.effective_region||'none']),
-      creators:counts(it=>[it.creator]),tags:counts(it=>it.tags).map(row=>({...row,cat:'general'})),tech:[],tagperformers:counts(it=>it.performers||[]),follow_tags:[],
+      creators:counts(it=>[it.creator]),tags:counts(it=>it.filter_tags||it.tags).filter(row=>catalog.tag_categories?.[row.k]!=='meta').map(row=>({...row,cat:catalog.tag_categories?.[row.k]||'general'})),
+      tech:counts(it=>it.filter_tags||it.tags).filter(row=>catalog.tag_categories?.[row.k]==='meta'),tagperformers:counts(it=>it.performers||[]),follow_tags:[],
       stats:{total:items.length,bytes:sum('size'),duration:sum('duration'),played:items.filter(it=>it.play_count).length,flagged:items.filter(it=>it.feedback||it.rating||it.o_count).length,attributed:items.filter(it=>it.creator||it.code).length}}));
   }
   const order=url.searchParams.get('dir')==='asc'?1:-1;
@@ -194,6 +204,22 @@ export default {
     if (url.pathname.startsWith('/_fixtures/') || url.pathname.startsWith('/_media/')) return json('{"error":"not found"}', 404);
     manifest ??= await env.ASSETS.fetch(new URL('/_fixtures/manifest.json', url)).then((r) => r.json());
     const method = request.method === 'HEAD' ? 'GET' : request.method;
+    if(method==='GET'&&url.pathname==='/api/jav/discoveries'){
+      const scope=url.searchParams.get('scope')==='library'?'library':'external';
+      if(!discoveries.has(scope)){
+        const canonical=new URL('/api/jav/discoveries',url);
+        canonical.search=new URLSearchParams({scope,limit:'100',sort:'taste',direction:'desc'}).toString();
+        const snapshot=await lookup(env,canonical,method);
+        if(snapshot)discoveries.set(scope,await snapshot.json());
+      }
+      if(discoveries.has(scope))return json(JSON.stringify(discoveryPage(discoveries.get(scope),url.searchParams)));
+    }
+    if(method==='GET'&&['/api/index','/api/follow/authors','/api/follow/tags'].includes(url.pathname)){
+      directory ??= await env.ASSETS.fetch(new URL('/_fixtures/indexes.json',url)).then(r=>r.ok?r.json():{});
+      const kind=url.pathname==='/api/index'?url.searchParams.get('kind'):url.pathname.endsWith('/authors')?'onlineAuthors':'onlineTags';
+      const page=directoryPage(directory,kind,url.searchParams);
+      if(page)return json(JSON.stringify(page));
+    }
     if(method==='GET'&&url.pathname==='/api/items'&&url.searchParams.get('state')!=='trash')return fallbackCatalog(env,url);
     if(method==='GET'&&url.pathname==='/api/facets'&&url.searchParams.get('state')!=='trash')return fallbackCatalog(env,url,true);
     const recorded = await lookup(env, url, method);
@@ -208,10 +234,21 @@ export default {
     if (url.pathname === '/api/items') return fallbackCatalog(env,url);
     if (url.pathname === '/api/suggest') return suggest(env, url);
     if (url.pathname === '/api/facets') return fallbackCatalog(env,url,true);
-    if (url.pathname.startsWith('/api/')) return json(EMPTY_LIST);
+    if (url.pathname.startsWith('/api/')) return new Response('{"error":"unavailable","message":"演示回放未取得"}',{status:404,headers:{'content-type':TYPES.json,'x-peach-demo-missing':'1'}});
     if (MEDIA_PATHS.has(url.pathname) || manifest.paths.includes(url.pathname)) return json('{"error":"unavailable"}', 404);
-    const response = await env.ASSETS.fetch(request);
+    const assetRequest = new Request(request);
+    if (request.headers.get('sec-fetch-dest') === 'document' || (request.headers.get('accept') ?? '').includes('text/html')) {
+      assetRequest.headers.delete('if-none-match');
+      assetRequest.headers.delete('if-modified-since');
+    }
+    const response = await env.ASSETS.fetch(assetRequest);
     if (!(response.headers.get('content-type') ?? '').startsWith('text/html')) return response;
+    // 页面包含演示脚本，不能复用静态 index.html 的校验器。
+    const pageHeaders = new Headers(response.headers);
+    pageHeaders.set('cache-control', 'no-store');
+    pageHeaders.delete('etag');
+    pageHeaders.delete('last-modified');
+    const page = new Response(response.body, {status: response.status, headers: pageHeaders});
     return new HTMLRewriter()
       .on('head', {element: (head) => head.prepend(DEMO_SETTINGS + FOLLOW_IMAGES + INTERACTIONS
         + (url.searchParams.has('tour') ? TOUR : ''), {html: true})})
@@ -219,6 +256,6 @@ export default {
         body.append(NOTICE, {html: true});
         if(url.searchParams.has('edit')){body.setAttribute('data-peach-copy-mode','local');body.append('<script src="/_demo/copy-editor.js" defer></script>',{html:true})}
       }})
-      .transform(response);
+      .transform(page);
   },
 };

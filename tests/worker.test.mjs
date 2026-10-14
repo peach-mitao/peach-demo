@@ -3,14 +3,22 @@ import assert from 'node:assert/strict';
 import {webcrypto} from 'node:crypto';
 import {fixtureHash,fixtureKey} from '../src/key.mjs';
 import worker from '../src/worker.js';
+import {discoveryPage} from '../src/discovery.mjs';
 if(!globalThis.crypto)globalThis.crypto=webcrypto;
 const origin='https://example.test';
 const portraitHash=await fixtureHash('GET /entity-image?id=102&kind=performer');
 const files=new Map([
  ['/_fixtures/manifest.json',JSON.stringify({fixtures:{[portraitHash]:'png'},paths:[],alias:{}})],
  [`/_fixtures/${portraitHash}.png`,new Uint8Array([8,9,10])],
- ['/_fixtures/catalog.json',JSON.stringify({items:[
-  {id:1,name:'示例一',code:'DEMO-001',is_jav:true,tags:[],performers:[],o_count:2,duration:120,size:100,location:'local'},
+ ['/_fixtures/indexes.json',JSON.stringify({creators:{kind:'creators',items:[],has_more:false,categories:{}},
+  onlineAuthors:{kind:'performers',scope:'online',items:[{k:'Billyhhyb',entity_id:152,key:'entity:152',n:20}],has_more:false},
+  onlineTags:{kind:'tags',scope:'online',items:[{k:'肖像',cat:'general',n:2},{k:'作品角色',cat:'character',n:1}],has_more:false,categories:{}},
+  onlineGeneralTags:{kind:'tags',scope:'online',items:[{k:'肖像',cat:'general',n:2}],has_more:false,categories:{}},
+  studios:{kind:'studios',items:[{entity_id:2,k:'片商'}],has_more:false},
+  studioSearch:{kind:'studios',items:[{entity_id:2,k:'片商'},{entity_id:3,k:'旗下厂牌'}],has_more:false},
+  performers:{kind:'performers',items:[{entity_id:102,k:'桥本有菜',identity_categories:['japanese_av']}],has_more:false,categories:{japanese_av:1}}})],
+ ['/_fixtures/catalog.json',JSON.stringify({tag_categories:{'4K':'meta','剧情':'story'},entity_filters:{studio:{'父片商':[1]},agency:{'事务所':[1]},series:{'演示系列':[2]}},items:[
+  {id:1,name:'示例一',code:'DEMO-001',is_jav:true,tags:['剧情'],filter_tags:['剧情','4K'],performers:[],o_count:2,duration:120,size:100,location:'local'},
   {id:2,name:'示例二',code:'DEMO-002',is_jav:true,tags:[],performers:[],o_count:5,duration:240,size:200,location:'local'}
  ]})],
  ['/_media/1.mp4',new Uint8Array([0,1,2,3,4,5,6,7])],
@@ -18,6 +26,39 @@ const files=new Map([
 ]);
 const env={ASSETS:{async fetch(input){const name=new URL(input instanceof Request?input.url:input).pathname;return files.has(name)?new Response(files.get(name)):new Response('not found',{status:404})}}};
 const call=(path,init)=>worker.fetch(new Request(origin+path,init),env);
+test('未录制的资料查询明确返回未取得',async()=>{
+ const response=await call('/api/entity?kind=creator&id=999999');
+ assert.equal(response.status,404);assert.equal(response.headers.get('x-peach-demo-missing'),'1');
+ assert.equal((await response.json()).error,'unavailable');
+});
+test('卖家与在线作者共享当前身份目录但各用自己的名册',async()=>{
+ const sellers=await (await call('/api/index?kind=creators&limit=120&offset=0')).json();
+ const online=await (await call('/api/follow/authors?limit=120&offset=0')).json();
+ assert.deepEqual(sellers.items,[]);assert.equal(online.items[0].entity_id,152);assert.equal(online.items[0].key,'entity:152');
+ const filtered=await (await call('/api/follow/authors?q=Billy&limit=1&offset=0')).json();
+ assert.equal(filtered.total,1);assert.equal(filtered.items[0].k,'Billyhhyb');assert.equal(filtered.has_more,false);
+ assert.equal((await (await call('/api/follow/authors?q=absent')).json()).total,0);
+});
+test('身份分类筛选与分页保留稳定 ID',async()=>{
+ const performer=await (await call('/api/index?kind=performers&category=japanese_av')).json();
+ assert.equal(performer.items[0].entity_id,102);
+ assert.deepEqual((await (await call('/api/index?kind=performers&category=seller')).json()).items,[]);
+ assert.deepEqual((await (await call('/api/index?kind=performers&offset=1')).json()).items,[]);
+});
+
+test('在线标签按来源类型筛选，通用词表只返回 general',async()=>{
+ const general=await (await call('/api/follow/tags')).json();
+ assert.deepEqual(general.items.map(row=>row.cat),['general']);
+ const character=await (await call('/api/follow/tags?types=all&type=character&q=角色')).json();
+ assert.deepEqual(character.items.map(row=>row.k),['作品角色']);
+ assert.deepEqual(character.categories,{general:1,character:1});
+});
+
+test('厂牌搜索包含旗下厂牌，默认名册按片商展示',async()=>{
+ assert.equal((await (await call('/api/index?kind=studios')).json()).items.length,1);
+ const label=await (await call('/api/index?kind=studios&q=旗下')).json();
+ assert.equal(label.items.length,1);assert.equal(label.items[0].entity_id,3);
+});
 test('资料图片的版本参数复用已审核的演示图片',async()=>{
  const response=await call('/entity-image?kind=performer&id=102&v=updated');
  assert.equal(response.status,200);
@@ -46,6 +87,50 @@ test('排序升降序均保留馆藏数据',async()=>{
  assert.deepEqual(desc.items.map(item=>item.id),[2,1]);
  assert.deepEqual(asc.items.map(item=>item.id),[1,2]);
  assert.equal(desc.total,2);assert.equal(asc.total,2);
+});
+
+test('技术标签参与筛选和技术分类，卡片保留内容标签',async()=>{
+ const items=await (await call('/api/items?tag=4K')).json();
+ assert.deepEqual(items.items.map(row=>row.id),[1]);assert.deepEqual(items.items[0].tags,['剧情']);
+ const all=await (await call('/api/items?tag=4K,剧情')).json();assert.equal(all.total,1);
+ const facets=await (await call('/api/facets')).json();
+ assert.deepEqual(facets.tech,[{k:'4K',n:1}]);assert.deepEqual(facets.tags,[{k:'剧情',n:1,cat:'story'}]);
+});
+
+test('发现排序保留图片和标签，缺失来源读数排在末尾',()=>{
+ const snapshot={scope:'external',items:[{id:1,code:'DEMO-001',tags:['剧情'],has_cover:true,release_date:'2026-01-01',source_score:4.8,taste_score:.8},
+  {id:2,code:'DEMO-002',tags:['制服'],has_cover:true,release_date:'2026-02-01',source_score:null,taste_score:.9}]};
+ const recent=discoveryPage(snapshot,new URLSearchParams('sort=release_date&direction=desc'));
+ assert.deepEqual(recent.items.map(row=>row.id),[2,1]);assert.deepEqual(recent.items[1].tags,['剧情']);assert.equal(recent.items[1].has_cover,true);
+ assert.deepEqual(discoveryPage(snapshot,new URLSearchParams('sort=source_score&direction=asc')).items.map(row=>row.id),[1,2]);
+ assert.deepEqual(discoveryPage(snapshot,new URLSearchParams('sort=taste&direction=asc&limit=1')).items.map(row=>row.id),[1]);
+ assert.deepEqual(snapshot.items.map(row=>row.id),[1,2]);
+});
+
+test('片商、事务所与系列查询复用录制的身份作品范围',async()=>{
+ for(const [query,ids] of [['studio=父片商',[1]],['agency=事务所',[1]],['series=演示系列',[2]]]){
+  const data=await (await call('/api/items?'+query)).json();assert.deepEqual(data.items.map(row=>row.id),ids);
+ }
+ assert.equal((await (await call('/api/items?agency=事务所&tag=4K')).json()).total,1);
+});
+
+test('文档请求读取当前页面，不沿用静态 HTML 校验器',async()=>{
+ const headersSeen=[];
+ const rewriter=globalThis.HTMLRewriter;
+ globalThis.HTMLRewriter=class { on(){return this} transform(response){return response} };
+ const htmlEnv={ASSETS:{async fetch(input){
+  const request=input instanceof Request?input:new Request(input);
+  if(new URL(request.url).pathname!=='/jav')return env.ASSETS.fetch(input);
+  headersSeen.push([...request.headers]);
+  const headers={'content-type':'text/html; charset=utf-8','etag':'static-index','last-modified':'Wed, 14 Oct 2026 01:00:00 GMT','cache-control':'public, max-age=3600'};
+  return request.headers.has('if-none-match')?new Response(null,{status:304,headers}):new Response('<!doctype html><html><body>当前页面</body></html>',{headers});
+ }}};
+ try{
+  const response=await worker.fetch(new Request(origin+'/jav?tab=discover',{headers:{accept:'text/html','if-none-match':'static-index','if-modified-since':'Wed, 14 Oct 2026 01:00:00 GMT'}}),htmlEnv);
+  assert.equal(response.status,200);assert.equal(response.headers.get('cache-control'),'no-store');
+  assert.equal(response.headers.get('etag'),null);assert.equal(response.headers.get('last-modified'),null);
+  assert.equal(headersSeen.length,1);assert.ok(!headersSeen[0].some(([key])=>['if-none-match','if-modified-since'].includes(key)));
+ }finally{if(rewriter===undefined)delete globalThis.HTMLRewriter;else globalThis.HTMLRewriter=rewriter}
 });
 test('演示写操作不改变录制馆藏',async()=>{
  assert.deepEqual(await (await call('/api/feedback',{method:'POST',body:'{}'})).json(),{ok:true});

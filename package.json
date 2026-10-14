@@ -8,7 +8,7 @@
   "scripts": {
     "sync": "node scripts/sync_frontend.mjs",
     "assets:import": "node scripts/import_assets.mjs",
-    "check": "node --check src/worker.js && node --check site/_demo/interactions.js && node --check site/_demo/copy-editor.js && node --check site/_demo/tour.js && node scripts/check_package.mjs",
+    "check": "node --check src/worker.js && node --check src/directory.mjs && node --check src/discovery.mjs && node --check site/_demo/interactions.js && node --check site/_demo/copy-editor.js && node --check site/_demo/tour.js && node scripts/check_package.mjs",
     "test": "node --test tests/*.test.mjs",
     "dev": "wrangler dev --ip 127.0.0.1 --port 8791",
     "predeploy": "node scripts/check_package.mjs --assets",

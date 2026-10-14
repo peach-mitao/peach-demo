@@ -4,7 +4,7 @@ import {fileURLToPath} from 'node:url';
 const root=fileURLToPath(new URL('../site/',import.meta.url));
 if(!process.argv[2])throw Error('请提供录制包目录：npm run assets:import -- <目录>');
 const source=path.resolve(process.argv[2]);
-for(const file of ['_fixtures/manifest.json','_fixtures/catalog.json'])await stat(path.join(source,file));
+for(const file of ['_fixtures/manifest.json','_fixtures/catalog.json','_fixtures/indexes.json'])await stat(path.join(source,file));
 let count=0;
 async function copy(from,to){
  await mkdir(to,{recursive:true});
