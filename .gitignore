@@ -13,6 +13,7 @@
 !/scripts/sync_frontend.mjs
 !/scripts/import_assets.mjs
 !/scripts/check_package.mjs
+!/scripts/build_static.mjs
 !/tests/
 !/site/
 /site/*

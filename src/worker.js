@@ -42,7 +42,7 @@ border:1px solid var(--color-separator-border,#0002);box-shadow:0 2px 8px #0001"
 Peach 演示站：数据是录制回放，操作不会保存 · <a href="https://peach.video/copyright/" target="_blank" rel="noopener" style="pointer-events:auto;color:inherit;text-decoration:underline">版权投诉 / DMCA</a></div>`;
 // 自动演示（site/_demo/tour.js）：只在地址带 tour 时同步插进 <head>，要赶在 app.js 读外观设置之前。
 const TOUR = '<script src="/_demo/tour.js"></script>';
-const INTERACTIONS = '<script src="/_demo/interactions.js"></script>';
+const INTERACTIONS = '<script src="/_demo/media-runtime.js"></script><script src="/_demo/interactions.js"></script>';
 
 const json = (body, status = 200) => new Response(body, {status, headers: {'content-type': TYPES.json}});
 
@@ -252,6 +252,7 @@ export default {
     return new HTMLRewriter()
       .on('head', {element: (head) => head.prepend(DEMO_SETTINGS + FOLLOW_IMAGES + INTERACTIONS
         + (url.searchParams.has('tour') ? TOUR : ''), {html: true})})
+      .on('script[src="/dist/peach-app.js"]', {element: script=>script.setAttribute('src','/dist/demo-peach-app.js')})
       .on('body', {element: (body) => {
         body.append(NOTICE, {html: true});
         if(url.searchParams.has('edit')){body.setAttribute('data-peach-copy-mode','local');body.append('<script src="/_demo/copy-editor.js" defer></script>',{html:true})}

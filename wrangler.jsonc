@@ -9,7 +9,7 @@
     "not_found_handling": "single-page-application",
     // 页面和回放端点经过 Worker；脚本、样式、字体及演示装饰资源直接由静态资源层返回。
     // _fixtures 与 _media 仍经过 Worker，拒绝从公开地址读取内部回放文件。
-    "run_worker_first": ["/*", "!/app.js", "!/app.css", "!/board.css", "!/dist/*", "!/js/*", "!/vendor/*", "!/site-icon/*", "!/_demo/*"]
+    "run_worker_first": ["/*", "!/favicon.ico", "!/favicon-32x32.png", "!/peach-logo.png", "!/app.js", "!/app.css", "!/board.css", "!/dist/*", "!/js/*", "!/vendor/*", "!/site-icon/*", "!/_demo/*"]
   },
   "routes": [{"pattern": "demo.peach.video", "custom_domain": true}],
   "observability": {"enabled": true}

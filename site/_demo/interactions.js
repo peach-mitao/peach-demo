@@ -23,15 +23,25 @@
     };
     if(document.body)open();else document.addEventListener('DOMContentLoaded',open,{once:true});
   }
-  const originalFetch = window.fetch.bind(window);
+  const networkFetch = window.fetch.bind(window);
+  const originalFetch = async (...args) => {
+    const response=await networkFetch(...args);
+    const input=args[0],url=new URL(input instanceof Request?input.url:input,location.href);
+    if(url.origin!==location.origin||!url.pathname.startsWith('/api/')||!response.ok||!(response.headers.get('content-type')||'').includes('application/json')||!globalThis.peachDemoMediaJSON)return response;
+    return responseJSON(response,globalThis.peachDemoMediaJSON(await response.json()));
+  };
   const items = new Map();
   // 每个访客的草稿只存在当前页面内存中，刷新即恢复夹具。
   const snapshots = new Map();
+  const pending = new Map();
   const read = async path => {
     if (!snapshots.has(path)) {
-      const response = await originalFetch(path);
-      if (!response.ok) throw new Error(`演示数据读取失败：${path}`);
-      snapshots.set(path, await response.json());
+      if(!pending.has(path))pending.set(path,(async()=>{
+        const response = await originalFetch(path);
+        if (!response.ok) throw new Error(`演示数据读取失败：${path}`);
+        snapshots.set(path, await response.json());
+      })().finally(()=>pending.delete(path)));
+      await pending.get(path);
     }
     return snapshots.get(path);
   };
@@ -81,12 +91,14 @@
     }
     const request = new Request(input instanceof Request ? input : url, init);
     const path = url.pathname;
+    if(request.method==='POST'&&['/api/activity','/api/play'].includes(path))return result({ok:true});
+    if(request.method==='GET'&&['/api/library-processing','/api/media-repair'].includes(path))return result(await read(path));
     if(request.method==='POST'&&path==='/api/library-shortcuts'){
       const body=await request.clone().json(),data=await read(path);
       if(body.action==='favorite'){
         const match=row=>body.entity_id?row.entity_id===body.entity_id:row.kind===body.kind&&row.name===body.name;
         if(body.on&&!data.favorites.some(match))data.favorites.push({entity_id:body.entity_id,kind:body.kind,name:body.name,
-          image_url:body.entity_id?`/entity-image?kind=${encodeURIComponent(body.kind)}&id=${body.entity_id}`:''});
+          image_url:body.entity_id?globalThis.peachDemoMedia(`/entity-image?kind=${encodeURIComponent(body.kind)}&id=${body.entity_id}`):''});
         if(!body.on)data.favorites=data.favorites.filter(row=>!match(row));
       }
       if(body.action==='save_filter')data.filters.push({id:crypto.randomUUID(),name:body.name,href:body.href});
