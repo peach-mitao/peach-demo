@@ -3,18 +3,28 @@
   "private": true,
   "type": "module",
   "license": "AGPL-3.0-only",
-  "engines": {"node": ">=24"},
-  "repository": {"type": "git", "url": "https://github.com/peach-mitao/peach-demo.git"},
+  "engines": {
+    "node": ">=24"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/peach-mitao/peach-demo.git"
+  },
   "scripts": {
     "sync": "node scripts/sync_frontend.mjs",
     "assets:import": "node scripts/import_assets.mjs",
-    "check": "node --check src/worker.js && node --check src/directory.mjs && node --check src/discovery.mjs && node --check site/_demo/interactions.js && node --check site/_demo/copy-editor.js && node --check site/_demo/tour.js && node scripts/check_package.mjs",
+    "build": "node scripts/build_static.mjs",
+    "check": "node --check src/worker.js && node --check src/media.mjs && node --check scripts/build_static.mjs && node --check src/directory.mjs && node --check src/discovery.mjs && node --check site/_demo/interactions.js && node --check site/_demo/copy-editor.js && node --check site/_demo/tour.js && node scripts/check_package.mjs",
     "test": "node --test tests/*.test.mjs",
     "dev": "wrangler dev --ip 127.0.0.1 --port 8791",
-    "predeploy": "node scripts/check_package.mjs --assets",
+    "predev": "npm run build",
+    "predeploy": "node scripts/check_package.mjs --assets && npm run build",
     "deploy": "wrangler deploy"
   },
   "devDependencies": {
+    "@noble/hashes": "2.4.0",
+    "acorn": "8.19.0",
+    "esbuild": "0.28.2",
     "playwright": "1.58.1",
     "wrangler": "4.141.0"
   }
