@@ -45,9 +45,26 @@
     }
     return snapshots.get(path);
   };
-  const result = data => new Response(JSON.stringify(data), {
+  const result = (data, status = 200) => new Response(JSON.stringify(data), {
+    status,
     headers: {'content-type':'application/json; charset=utf-8','cache-control':'no-store'},
   });
+  let processingRun = null;
+  const processingState = async () => {
+    const state = await read('/api/library-processing');
+    if (processingRun && state.status === 'running') {
+      const elapsed = processingRun.elapsed + Date.now() - processingRun.started;
+      const fraction = Math.min(1, elapsed / 30000);
+      state.checked = Math.floor(state.total * fraction);
+      state.eta_seconds_min = state.eta_seconds_max = Math.max(0,Math.ceil((30000 - elapsed) / 1000));
+      if (fraction === 1) {
+        Object.assign(state, {status:'complete',completed_at:Date.now()/1000,
+          message:'演示操作已完成；未处理真实文件或连接外部来源。'});
+        processingRun = null;
+      }
+    }
+    return state;
+  };
   const configuration = async (path, body) => {
     const config = await read('/api/configuration');
     const key = path.slice('/api/configuration/'.length);
@@ -92,7 +109,34 @@
     const request = new Request(input instanceof Request ? input : url, init);
     const path = url.pathname;
     if(request.method==='POST'&&['/api/activity','/api/play'].includes(path))return result({ok:true});
-    if(request.method==='GET'&&['/api/library-processing','/api/media-repair'].includes(path))return result(await read(path));
+    if(request.method==='GET'&&path==='/api/library-processing')return result(await processingState());
+    if(request.method==='GET'&&path==='/api/media-repair')return result(await read(path));
+    if(request.method==='POST'&&path==='/api/library-processing'){
+      const body=await request.clone().json().catch(()=>({})),state=await processingState();
+      const active=['running','paused'].includes(state.status);
+      if(body.speed_mode&&!['low','standard','high'].includes(body.speed_mode))return result({message:'处理速度无效。'},400);
+      if(body.action){
+        if(body.job_id&&body.job_id!==state.job_id)return result({message:'演示任务已结束，请重新操作。'},409);
+        if(body.action==='set_speed'){
+          state.speed_mode=body.speed_mode||'standard';
+          return result(state);
+        }
+        if(!active||!processingRun)return result({message:'当前没有可控制的演示任务。'},409);
+        if(body.action==='pause'&&state.status==='running'){
+          processingRun.elapsed+=Date.now()-processingRun.started;
+          state.status='paused';
+        }else if(body.action==='resume'&&state.status==='paused'){
+          processingRun.started=Date.now();state.status='running';
+        }else return result({message:'演示任务状态与操作不匹配。'},409);
+        return result(state);
+      }
+      if(active)return result({message:'演示任务正在进行。'},409);
+      const next={...state,status:'running',job_id:'demo-'+crypto.randomUUID(),requested_stage:body.stage||'scan',
+        stage:body.stage==='previews'?'生成视频预览':body.stage==='metadata'?'补全资料':'扫描文件',
+        speed_mode:body.speed_mode||state.speed_mode||'standard',checked:0,total:Math.max(1,Number(state.total)||123),
+        eta_seconds_min:30,eta_seconds_max:30,eta_kind:'measured',started_at:Date.now()/1000,error:null,completed_at:null};
+      processingRun={started:Date.now(),elapsed:0};snapshots.set(path,next);return result(next);
+    }
     if(request.method==='POST'&&path==='/api/library-shortcuts'){
       const body=await request.clone().json(),data=await read(path);
       if(body.action==='favorite'){
@@ -172,7 +216,7 @@
       dashboard.summary.history_sources=dashboard.sources.length;
       return result({removed:1,dashboard});
     }
-    if (request.method === 'POST' && ['/api/scraping/settings','/api/scraping/check','/api/scraping/amane-bridge/check','/api/scraping/amane-bridge/rebuild','/api/library-processing','/api/media-repair','/api/follow/check','/api/feeds/check','/api/taste/refresh'].includes(path)) {
+    if (request.method === 'POST' && ['/api/scraping/settings','/api/scraping/check','/api/scraping/amane-bridge/check','/api/scraping/amane-bridge/rebuild','/api/media-repair','/api/follow/check','/api/feeds/check','/api/taste/refresh'].includes(path)) {
       const body = await request.clone().json().catch(()=>({}));
       if (path === '/api/scraping/settings') {
         const data = await read('/api/scraping');

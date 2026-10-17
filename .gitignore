@@ -14,6 +14,8 @@
 !/scripts/import_assets.mjs
 !/scripts/check_package.mjs
 !/scripts/build_static.mjs
+!/scripts/check_browser.mjs
+!/scripts/check_filters.mjs
 !/tests/
 !/site/
 /site/*
