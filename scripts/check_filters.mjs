@@ -23,5 +23,5 @@ try{
   report.push({width,theme,normal,hover,selected,overflow,errors,url:page.url()});
   await context.close();
  }
-}finally{await browser.close();await writeFile(new URL('filter-report.json',out),JSON.stringify({base,sourceCommit:'6aa11819a66ad6c862c0893b9623887887f2ef09',report},null,2))}
+}finally{await browser.close();await writeFile(new URL('filter-report.json',out),JSON.stringify({base,sourceCommit:process.env.PEACH_SOURCE_COMMIT||null,report},null,2))}
 console.log(JSON.stringify(report));
