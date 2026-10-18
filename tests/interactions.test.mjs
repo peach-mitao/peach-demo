@@ -45,3 +45,12 @@ test('演示行为上报在浏览器确认，馆藏查询仍携带完整参数',
   assert.equal(p.calls.length,0);await p.fetch('/api/items?q=one&seed=123');await p.fetch('/api/items?q=two&seed=456');
   assert.deepEqual(p.calls.map(call=>call.search),['?q=one&seed=123','?q=two&seed=456']);
 });
+
+test('搜索记录在当前页面读写，刷新恢复空记录',async()=>{
+ const p=page(),post=body=>p.fetch('/api/search-history',{method:'POST',body:JSON.stringify(body)});
+ await post({query:'Billyhhyb'});await post({query:'Billyhhyb'});await post({query:'DEMO'});
+ assert.deepEqual((await(await p.fetch('/api/search-history?limit=1')).json()).items,['DEMO']);
+ await post({operation:'remove',query:'DEMO'});
+ assert.deepEqual((await(await p.fetch('/api/search-history')).json()).items,['Billyhhyb']);
+ assert.deepEqual((await(await page().fetch('/api/search-history')).json()).items,[]);assert.equal(p.calls.length,0);
+});

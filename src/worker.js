@@ -3,7 +3,8 @@
 // 写操作不落地：页面内交互适配提供临时状态，Worker 提供录制响应，刷新恢复录制状态。
 import {fixtureHash, fixtureKey} from './key.mjs';
 import {directoryPage} from './directory.mjs';
-import {discoveryPage} from './discovery.mjs';
+import {discoveryPage,feedDiscoveryPage} from './discovery.mjs';
+import {followPage} from './follow.mjs';
 
 const TYPES = {
   json: 'application/json; charset=utf-8', jpg: 'image/jpeg', png: 'image/png', webp: 'image/webp', avif: 'image/avif',
@@ -17,6 +18,8 @@ const MEDIA_PATHS = new Set(['/thumb', '/poster', '/cover', '/timeline', '/avata
   '/avatar-choice', '/healthz']);
 let manifest = null;
 let directory = null;
+let follow = null;
+let feedDiscoveries = null;
 const discoveries = new Map();
 // 演示馆藏几乎全是番号片，首页默认开大图（竖版封面）；访客自己切过的不动。与 record.mjs 的 DEMO_SETTINGS 一致。
 const DEMO_SETTINGS = `<script>try{const k='peach.settings.v1',s=JSON.parse(localStorage.getItem(k)||'{}');
@@ -35,11 +38,20 @@ const url=new URL(location.href);url.searchParams.set('media','images');history.
 const NOTICE = `<style>
 #postSetupTutorial{bottom:calc(var(--demo-notice-height,34px) + 24px);max-height:calc(100dvh - var(--demo-notice-height,34px) - 48px)}
 #toasts [data-sonner-toaster][data-y-position=bottom]{bottom:max(var(--offset-bottom,24px),calc(var(--demo-notice-height,34px) + 24px))}
+#searchMenu{max-height:min(60vh,520px,var(--demo-search-space,100vh))!important}
+#searchMenu [data-search-group]:not(:has([data-search-value])){display:none}
+[data-demo-copy="compact"]{display:none}
+@media(max-width:560px){
+ [data-demo-copy="full"]{display:none}
+ [data-demo-copy="compact"]{display:inline}
+ [data-demo-notice]{white-space:nowrap}
+ #searchMenu{max-height:min(70vh,var(--demo-search-space,100vh))!important}
+}
 </style><div role="note" data-demo-notice style="position:fixed;left:50%;transform:translateX(-50%);bottom:max(12px,env(safe-area-inset-bottom));z-index:2147483000;pointer-events:none;
 padding:6px 10px;border-radius:12px;width:max-content;box-sizing:border-box;text-align:center;max-width:calc(100vw - 24px);font:12px/1.4 system-ui,sans-serif;
 background:var(--color-background-primary-default,#fff);color:var(--color-text-secondary,#555);
 border:1px solid var(--color-separator-border,#0002);box-shadow:0 2px 8px #0001">
-Peach 演示站：数据是录制回放，操作不会保存 · <a href="https://peach.video/copyright/" target="_blank" rel="noopener" style="pointer-events:auto;color:inherit;text-decoration:underline">版权投诉 / DMCA</a></div>`;
+<span data-demo-copy="full">Peach 演示站：数据是录制回放，操作不会保存 · </span><span data-demo-copy="compact">演示站 · 操作不保存 · </span><a href="https://peach.video/copyright/" target="_blank" rel="noopener" style="display:inline;line-height:inherit;pointer-events:auto;color:inherit;text-decoration:underline"><span data-demo-copy="full">版权投诉 / DMCA</span><span data-demo-copy="compact">版权投诉</span></a></div>`;
 // 自动演示（site/_demo/tour.js）：只在地址带 tour 时同步插进 <head>，要赶在 app.js 读外观设置之前。
 const TOUR = '<script src="/_demo/tour.js"></script>';
 const INTERACTIONS = '<script src="/_demo/media-runtime.js"></script><script src="/_demo/interactions.js"></script>';
@@ -229,6 +241,22 @@ export default {
         return new Response(null, {status: 304, headers: {etag, 'cache-control': recorded.headers.get('cache-control')}});
       }
       return recorded;
+    }
+    if(method==='GET'&&url.pathname==='/api/follow'){
+      if(!follow){
+        const snapshot=await lookup(env,new URL('/api/follow?limit=100&offset=0',url),method);
+        if(snapshot)follow=await snapshot.json();
+      }
+      const page=follow&&followPage(follow,url.searchParams);
+      if(page)return json(JSON.stringify(page));
+    }
+    if(method==='GET'&&url.pathname==='/api/feeds/discoveries'){
+      if(!feedDiscoveries){
+        const snapshot=await lookup(env,new URL('/api/feeds/discoveries?limit=12',url),method);
+        if(snapshot)feedDiscoveries=await snapshot.json();
+      }
+      const page=feedDiscoveries&&feedDiscoveryPage(feedDiscoveries,url.searchParams);
+      if(page)return json(JSON.stringify(page));
     }
     if (method !== 'GET') return json('{"ok":true}');
     if (url.pathname === '/api/items') return fallbackCatalog(env,url);

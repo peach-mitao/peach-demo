@@ -16,6 +16,7 @@
 !/scripts/build_static.mjs
 !/scripts/check_browser.mjs
 !/scripts/check_filters.mjs
+!/scripts/check_search_recommendations.mjs
 !/tests/
 !/site/
 /site/*

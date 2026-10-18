@@ -2,7 +2,28 @@
 (() => {
   const overlays = () => {
     const notice=document.querySelector('[data-demo-notice]'),toasts=document.querySelector('#toasts');
-    if(notice)new ResizeObserver(()=>document.documentElement.style.setProperty('--demo-notice-height',notice.getBoundingClientRect().height+'px')).observe(notice);
+    const menu=document.querySelector('#searchMenu');
+    let queued=false;
+    const layout=()=>{
+      queued=false;
+      const viewport=window.visualViewport,bottom=viewport?viewport.offsetTop+viewport.height:innerHeight;
+      if(notice){
+        notice.style.bottom=`max(12px,env(safe-area-inset-bottom),${Math.max(12,innerHeight-bottom+12)}px)`;
+        document.documentElement.style.setProperty('--demo-notice-height',notice.getBoundingClientRect().height+'px');
+      }
+      if(menu){
+        const edge=notice?.checkVisibility()?Math.min(bottom-12,notice.getBoundingClientRect().top-12):bottom-12;
+        document.documentElement.style.setProperty('--demo-search-space',Math.max(0,edge-menu.getBoundingClientRect().top)+'px');
+      }
+    };
+    const schedule=()=>{if(!queued){queued=true;requestAnimationFrame(layout)}};
+    const observer=new ResizeObserver(schedule);
+    if(notice)observer.observe(notice);
+    if(menu){observer.observe(menu);new MutationObserver(schedule).observe(menu,{attributes:true,attributeFilter:['hidden']})}
+    window.addEventListener('resize',schedule);
+    window.visualViewport?.addEventListener('resize',schedule);
+    window.visualViewport?.addEventListener('scroll',schedule);
+    layout();
     if(toasts){
       const place=()=>{
         const dialogs=[...document.querySelectorAll('dialog[open]')];
@@ -31,6 +52,7 @@
     return responseJSON(response,globalThis.peachDemoMediaJSON(await response.json()));
   };
   const items = new Map();
+  let searchHistory = [];
   // 每个访客的草稿只存在当前页面内存中，刷新即恢复夹具。
   const snapshots = new Map();
   const pending = new Map();
@@ -108,6 +130,15 @@
     }
     const request = new Request(input instanceof Request ? input : url, init);
     const path = url.pathname;
+    if(path==='/api/search-history'&&['GET','POST'].includes(request.method)){
+      if(request.method==='POST'){
+        const body=await request.clone().json(),query=String(body.query||'').trim();
+        searchHistory=searchHistory.filter(value=>value.toLocaleLowerCase()!==query.toLocaleLowerCase());
+        if(query&&body.operation!=='remove')searchHistory=[query,...searchHistory].slice(0,100);
+      }
+      const limit=Math.max(0,Math.min(100,Number(url.searchParams.get('limit'))||10));
+      return result({items:searchHistory.slice(0,limit)});
+    }
     if(request.method==='POST'&&['/api/activity','/api/play'].includes(path))return result({ok:true});
     if(request.method==='GET'&&path==='/api/library-processing')return result(await processingState());
     if(request.method==='GET'&&path==='/api/media-repair')return result(await read(path));

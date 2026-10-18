@@ -7,8 +7,12 @@ import {discoveryPage} from '../src/discovery.mjs';
 if(!globalThis.crypto)globalThis.crypto=webcrypto;
 const origin='https://example.test';
 const portraitHash=await fixtureHash('GET /entity-image?id=102&kind=performer');
+const followHash=await fixtureHash('GET /api/follow?limit=100&offset=0');
+const feedDiscoveryHash=await fixtureHash('GET /api/feeds/discoveries?limit=12');
 const files=new Map([
- ['/_fixtures/manifest.json',JSON.stringify({fixtures:{[portraitHash]:'png'},paths:[],alias:{}})],
+ ['/_fixtures/manifest.json',JSON.stringify({fixtures:{[portraitHash]:'png',[followHash]:'json',[feedDiscoveryHash]:'json'},paths:[],alias:{}})],
+ [`/_fixtures/${followHash}.json`,JSON.stringify({sources:[{author_key:'entity:152',avatar_url:'/follow-avatar?provider=kemono&ref=demo'}],groups:[{primary:{id:1}}],has_more:false})],
+ [`/_fixtures/${feedDiscoveryHash}.json`,JSON.stringify({ok:true,more:true,items:Array.from({length:12},(_,i)=>({code:'DEMO-'+i}))})],
  [`/_fixtures/${portraitHash}.png`,new Uint8Array([8,9,10])],
  ['/_fixtures/indexes.json',JSON.stringify({creators:{kind:'creators',items:[],has_more:false,categories:{}},
   onlineAuthors:{kind:'performers',scope:'online',items:[{k:'Billyhhyb',entity_id:152,key:'entity:152',n:20}],has_more:false},
@@ -38,6 +42,21 @@ test('卖家与在线作者共享当前身份目录但各用自己的名册',asy
  const filtered=await (await call('/api/follow/authors?q=Billy&limit=1&offset=0')).json();
  assert.equal(filtered.total,1);assert.equal(filtered.items[0].k,'Billyhhyb');assert.equal(filtered.has_more,false);
  assert.equal((await (await call('/api/follow/authors?q=absent')).json()).total,0);
+});
+
+test('搜索推荐关注请求与作者目录共享头像来源',async()=>{
+ const response=await call('/api/follow?limit=20&sort=rand&seed=123');assert.equal(response.status,200);
+ const follow=await response.json(),authors=await(await call('/api/follow/authors?limit=3')).json();
+ const source=follow.sources.find(row=>row.author_key===authors.items[0].key);
+ assert.equal(source.avatar_url,'/follow-avatar?provider=kemono&ref=demo');assert.equal(follow.groups.length,1);
+ assert.equal((await call('/api/follow?author=unknown&sort=rand')).status,404);
+});
+
+test('订阅新作推荐返回已录制的首批作品',async()=>{
+ const response=await call('/api/feeds/discoveries?limit=5');assert.equal(response.status,200);
+ const page=await response.json();assert.equal(page.items.length,5);assert.equal(page.more,true);assert.equal(page.items[0].code,'DEMO-0');
+ assert.equal((await call('/api/feeds/discoveries?limit=20')).status,404);
+ assert.equal((await call('/api/feeds/discoveries?limit=5&provider=unknown')).status,404);
 });
 test('身份分类筛选与分页保留稳定 ID',async()=>{
  const performer=await (await call('/api/index?kind=performers&category=japanese_av')).json();
