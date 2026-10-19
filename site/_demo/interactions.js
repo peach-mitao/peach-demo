@@ -52,6 +52,9 @@
     return responseJSON(response,globalThis.peachDemoMediaJSON(await response.json()));
   };
   const items = new Map();
+  const folderRules = new Map();
+  const folderPlans = new Map();
+  let folderRevision = 0;
   let searchHistory = [];
   // 每个访客的草稿只存在当前页面内存中，刷新即恢复夹具。
   const snapshots = new Map();
@@ -72,6 +75,26 @@
     headers: {'content-type':'application/json; charset=utf-8','cache-control':'no-store'},
   });
   let processingRun = null;
+  const renderOrganize = (template, values, directory = false) => {
+    const text = String(template || '').trim().replaceAll('\\', '/');
+    if (/^(?:\/|[a-z]:)|(?:^|\/)\.\.(?:\/|$)/i.test(text) || (!directory && text.includes('/'))) throw Error('请使用相对目录，文件名不能包含目录分隔符。');
+    const fill = source => source.replace(/\{([a-z]+)\}/g, (_, key) => {
+      if (!Object.hasOwn(values, key)) throw Error(`不支持的占位符：{${key}}`);
+      return String(values[key] || '').replace(/[\\/:*?"<>|]/g, '_');
+    });
+    const optional = text.replace(/\[([^\[\]]*)\]/g, (_, group) => {
+      const keys = [...group.matchAll(/\{([a-z]+)\}/g)].map(match => match[1]);
+      keys.forEach(key => { if (!Object.hasOwn(values, key)) throw Error(`不支持的占位符：{${key}}`) });
+      return keys.some(key => !values[key]) ? '' : fill(group);
+    });
+    if (/[\[\]]/.test(optional)) throw Error('可选分组格式无效。');
+    const result = fill(optional);
+    if (/[{}]/.test(result)) throw Error('占位符格式无效。');
+    return result;
+  };
+  const organizeValues = item => ({number:item.code,code:item.code,title:item.catalog_title||item.name,
+    studio:item.studio||'',creator:item.creator||'',series:item.series||'',year:String(item.release||'').slice(0,4),
+    actors:(item.performers||[]).join('、'),cd:'',mosaic:item.is_jav?'有码':'',definition:'1080p'});
   const processingState = async () => {
     const state = await read('/api/library-processing');
     if (processingRun && state.status === 'running') {
@@ -130,6 +153,42 @@
     }
     const request = new Request(input instanceof Request ? input : url, init);
     const path = url.pathname;
+    if(path==='/api/folders'&&request.method==='GET'){
+      const response=await originalFetch(input,init);
+      if(!response.ok)return response;
+      const data=await response.json();
+      return responseJSON(response,{...data,rule:folderRules.get(data.selected?.id)||null,
+        rules:[...folderRules.values()],rules_revision:folderRevision});
+    }
+    if(['/api/folders/preview','/api/folders/rule'].includes(path)&&request.method==='POST'){
+      const body=await request.clone().json();
+      const response=await originalFetch('/api/folders?'+new URLSearchParams({folder:body.folder||''}));
+      if(!response.ok)return response;
+      const folder=(await response.json()).selected;
+      if(!folder)return result({message:'请选择演示目录。'},400);
+      if(path==='/api/folders/rule'&&body.expected_revision!==folderRevision)return result({message:'目录规则已更新，请重新预览。'},409);
+      if(path==='/api/folders/rule'&&body.action==='remove'){
+        folderRules.delete(folder.id);folderPlans.delete(folder.id);folderRevision++;
+        return result({ok:true,withdrawn:0});
+      }
+      if(!['category','creator','performer','seller','studio'].includes(body.purpose)||
+        (body.purpose!=='category'&&!String(body.name||'').trim()))return result({message:'请填写目录用途和关联名称。'},400);
+      const signature=JSON.stringify([body.purpose,body.name||'',body.recursive!==false,body.future!==false]);
+      if(path==='/api/folders/preview'){
+        const dataResponse=await originalFetch('/api/items?'+new URLSearchParams({folder:folder.id,folder_recursive:body.recursive===false?'0':'1',limit:'1000'}));
+        if(!dataResponse.ok)return dataResponse;
+        const data=await dataResponse.json(),plan=crypto.randomUUID();
+        folderPlans.set(folder.id,{plan,signature,revision:folderRevision});
+        return result({plan_version:plan,total:data.total,applicable:body.purpose==='category'?0:data.total,
+          withdrawn:0,conflicts:[],sample:data.items.slice(0,5).map(row=>({id:row.id,name:row.name}))});
+      }
+      const plan=folderPlans.get(folder.id);
+      if(!plan||plan.plan!==body.plan_version||plan.signature!==signature||plan.revision!==folderRevision)return result({message:'目录用途已改变，请重新预览。'},409);
+      folderRules.set(folder.id,{id:folder.id,location:folder.location,path:folder.path,purpose:body.purpose,
+        name:String(body.name||'').trim(),entity_id:null,recursive:body.recursive!==false,future:body.future!==false});
+      folderPlans.delete(folder.id);folderRevision++;
+      return result({ok:true,applied:0,conflicts:0});
+    }
     if(path==='/api/search-history'&&['GET','POST'].includes(request.method)){
       if(request.method==='POST'){
         const body=await request.clone().json(),query=String(body.query||'').trim();
@@ -140,7 +199,11 @@
       return result({items:searchHistory.slice(0,limit)});
     }
     if(request.method==='POST'&&['/api/activity','/api/play'].includes(path))return result({ok:true});
-    if(request.method==='GET'&&path==='/api/library-processing')return result(await processingState());
+    if(request.method==='GET'&&path==='/api/library-processing'){
+      if(url.searchParams.get('estimate')==='1')return result({traffic:{used_bytes:0,estimated_min_bytes:0,estimated_max_bytes:0,
+        metered_used_bytes:0,metered_estimated_min_bytes:0,metered_estimated_max_bytes:0,partial:false,unknown_files:false,sources:[]}});
+      return result(await processingState());
+    }
     if(request.method==='GET'&&path==='/api/media-repair')return result(await read(path));
     if(request.method==='POST'&&path==='/api/library-processing'){
       const body=await request.clone().json().catch(()=>({})),state=await processingState();
@@ -225,11 +288,22 @@
       if(!body.status_only)Object.assign(state,{status:'complete',check_id:'demo',scan_id:'demo',checked:state.total||0,completed_sources:state.total_sources||0,message:'演示检查完成，未访问真实文件或外部链接。'});
       return result(state);
     }
+    if(request.method==='GET'&&path==='/api/organize/example'){
+      const values={code:'ABC-123',number:'ABC-123',title:'标题',studio:'厂牌',creator:'创作者',series:'系列',year:'2024',actors:'甲、乙',cd:'2',mosaic:'无码',definition:'1080p'};
+      let field='file';
+      try {
+        const filename=renderOrganize(url.searchParams.get('file_template'),values)||'ABC-123 标题';field='dir';
+        const directory=renderOrganize(url.searchParams.get('dir_template'),values,true);
+        return result({ok:true,example:[directory,filename+'.mp4'].filter(Boolean).join('/')});
+      } catch(error) { return result({ok:false,error:error.message,field}) }
+    }
     if(request.method==='POST'&&path==='/api/organize/preview'){
       const body=await request.clone().json(),data=await read('/api/items?limit=1000');
-      const render=(template,item)=>String(template||'').replace(/\{(number|code|title|studio|creator)\}/g,(_,key)=>String(key==='number'?item.code:key==='title'?item.catalog_title||item.name:item[key]||'').replace(/[\\/:*?"<>|]/g,'_'));
-      const rows=data.items.filter(item=>!body.location||item.location===body.location).map(item=>({current_path:'R:\\Media\\'+item.name,
-        target_path:'R:\\Media\\'+(body.dir_template?render(body.dir_template,item)+'\\':'')+render(body.file_template,item)+'.mp4',action:'rename'}));
+      let rows;
+      try { rows=data.items.filter(item=>!body.location||item.location===body.location).map(item=>({current_path:'R:\\Media\\'+item.name,
+        target_path:'R:\\Media\\'+[renderOrganize(body.dir_template,organizeValues(item),true),
+          (renderOrganize(body.file_template,organizeValues(item))||item.name.replace(/\.[^.]+$/,''))+'.mp4'].filter(Boolean).join('\\'),action:'rename'})) }
+      catch(error) { return result({error:error.message,message:error.message},400) }
       return result({counts:{change:rows.length,unchanged:0},reasons:{},rows:rows.slice(0,20),truncated:rows.length>20});
     }
     if(request.method==='POST'&&['/api/organize/apply','/api/organize/rollback'].includes(path)){

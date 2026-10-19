@@ -1,8 +1,9 @@
 import { bindings, defineConfig } from "cf/config";
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
 	worker: {
-		name: "peach-demo",
+		name: mode === "preview" ? "peach-demo-folder-preview" : "peach-demo",
+		workersDev: mode === "preview" ? true : undefined,
 		compatibilityDate: "2026-09-20",
 		entrypoint: "src/worker.js",
 		observability: {
@@ -25,12 +26,10 @@ export default defineConfig({
 				"!/_demo/*",
 			],
 		},
-		domains: [
-			"demo.peach.video",
-		],
+		domains: mode === "preview" ? [] : ["demo.peach.video"],
 		env: {
 			ASSETS: bindings.assets(),
 			MEDIA: bindings.r2({ name: "peach-public-media" }),
 		},
 	},
-});
+}));

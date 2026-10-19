@@ -38,6 +38,8 @@ npm run check:deploy
 
 通过 `npm run sync -- <Peach 检出目录>` 同步已构建的 `web/`，包含 React 包、样式、字体与第三方许可。`app.css` 按应用的样式分区顺序拼接。不要在演示仓库修改应用构建产物。
 
+2026-10-20 同步 Peach 0.46.1（`5c4d40a9`，基于生产主线 `1b104d504`），覆盖全部前端产物，并补齐根目录品牌图标。目录树、文件夹筛选及用途规则由演示馆藏生成，操作只保留在当前页面内存中；刷新恢复。旧录制通过兼容层提供链接站标空映射、扫描流量估算与整理路径示例，不访问真实文件。`npm run test:folders` 验证模拟目录、筛选、封面与滚动边界；`test:browser` 包含编辑模式的切换与保存恢复。
+
 通过 `npm run assets:import -- <录制包目录>` 导入 `_fixtures/`、`_media/` 和可选的 `_demo/follow/`。录制包必须包含 `manifest.json`、`catalog.json` 和 `indexes.json`；名册保留稳定身份 ID，馆藏目录保留完整标签与实体作品范围。未录制的接口返回 404。录制响应、媒体、数据库与凭据不进 Git。
 
 `npm run assets:build` 从录制图片生成内容指纹静态副本和演示前端包，并生成私有视频清单 `_media/index.json`。清单记录编号、长度和 `demo/videos/<SHA-256>.mp4` 对象键，相同内容复用对象。原始视频留在本地录制目录，由 `site/.assetsignore` 排除在 Assets 发布范围外。`npm run build` 先生成这些素材，再执行 `cf build`。前端同步来源与版本应由维护者随同步更新记录，不从录制响应的历史服务版本推断当前代码。

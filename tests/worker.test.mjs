@@ -10,8 +10,10 @@ const origin='https://example.test';
 const portraitHash=await fixtureHash('GET /entity-image?id=102&kind=performer');
 const followHash=await fixtureHash('GET /api/follow?limit=100&offset=0');
 const feedDiscoveryHash=await fixtureHash('GET /api/feeds/discoveries?limit=12');
+const topsHash=await fixtureHash('GET /api/tops?n=60');
 const files=new Map([
- ['/_fixtures/manifest.json',JSON.stringify({fixtures:{[portraitHash]:'png',[followHash]:'json',[feedDiscoveryHash]:'json'},paths:[],alias:{}})],
+ ['/_fixtures/manifest.json',JSON.stringify({fixtures:{[portraitHash]:'png',[followHash]:'json',[feedDiscoveryHash]:'json',[topsHash]:'json'},paths:[],alias:{}})],
+ [`/_fixtures/${topsHash}.json`,JSON.stringify({performers:[],studios:[{id:10,k:'示例厂牌',n:1,rep:1,has_logo:false}]})],
  [`/_fixtures/${followHash}.json`,JSON.stringify({sources:[{author_key:'entity:152',avatar_url:'/follow-avatar?provider=kemono&ref=demo'}],groups:[{primary:{id:1}}],has_more:false})],
  [`/_fixtures/${feedDiscoveryHash}.json`,JSON.stringify({ok:true,more:true,items:Array.from({length:12},(_,i)=>({code:'DEMO-'+i}))})],
  [`/_fixtures/${portraitHash}.png`,new Uint8Array([8,9,10])],
@@ -23,7 +25,7 @@ const files=new Map([
   studioSearch:{kind:'studios',items:[{entity_id:2,k:'片商'},{entity_id:3,k:'旗下厂牌'}],has_more:false},
   performers:{kind:'performers',items:[{entity_id:102,k:'桥本有菜',identity_categories:['japanese_av']}],has_more:false,categories:{japanese_av:1}}})],
  ['/_fixtures/catalog.json',JSON.stringify({tag_categories:{'4K':'meta','剧情':'story'},entity_filters:{studio:{'父片商':[1]},agency:{'事务所':[1]},series:{'演示系列':[2]}},items:[
-  {id:1,name:'示例一',code:'DEMO-001',is_jav:true,tags:['剧情'],filter_tags:['剧情','4K'],performers:[],o_count:2,duration:120,size:100,location:'local'},
+  {id:1,name:'示例一',code:'DEMO-001',is_jav:true,studio:'示例厂牌',tags:['剧情'],filter_tags:['剧情','4K'],performers:[],o_count:2,duration:120,size:100,location:'local'},
   {id:2,name:'示例二',code:'DEMO-002',is_jav:true,tags:[],performers:[],o_count:5,duration:240,size:200,location:'local'}
  ]})],
  ['/_media/index.json',JSON.stringify({version:1,videos:{'1':{key:videoKey,size:8}}})],
@@ -36,6 +38,19 @@ const env={MEDIA:media().env.MEDIA,ASSETS:{async fetch(input){
  return new Response(input instanceof Request&&input.method==='HEAD'?null:body,{headers:video?{'content-type':'video/mp4','content-length':String(body.byteLength)}:{}});
 }}};
 const call=(path,init)=>worker.fetch(new Request(origin+path,init),env);
+
+test('文件夹接口、馆藏筛选和统计共享模拟目录',async()=>{
+ const response=await call('/api/folders?loc=local');assert.equal(response.status,200);
+ const page=await response.json(),root=page.roots[0];assert.equal(root.files,2);
+ const query=new URLSearchParams({folder:root.id});
+ assert.equal((await(await call('/api/items?'+query)).json()).total,2);
+ assert.equal((await(await call('/api/facets?'+query)).json()).stats.total,2);
+ assert.deepEqual((await(await call('/api/tops?n=60&'+query)).json()).studios.map(row=>[row.k,row.n]),[['示例厂牌',1]]);
+ query.set('folder_recursive','0');
+ assert.equal((await(await call('/api/items?'+query)).json()).total,0);
+ assert.deepEqual((await(await call('/api/tops?n=60&'+query)).json()),{performers:[],studios:[]});
+ assert.equal((await call('/api/folders?folder=missing')).status,404);
+});
 test('未录制的资料查询明确返回未取得',async()=>{
  const response=await call('/api/entity?kind=creator&id=999999');
  assert.equal(response.status,404);assert.equal(response.headers.get('x-peach-demo-missing'),'1');

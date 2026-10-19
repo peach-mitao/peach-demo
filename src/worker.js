@@ -6,6 +6,7 @@ import {directoryPage} from './directory.ts';
 import {discoveryPage,feedDiscoveryPage} from './discovery.ts';
 import {followPage} from './follow.ts';
 import {stream} from './stream.ts';
+import {folderIndex,folderItems,folderPage} from './folders.mjs';
 
 const TYPES = {
   json: 'application/json; charset=utf-8', jpg: 'image/jpeg', png: 'image/png', webp: 'image/webp', avif: 'image/avif',
@@ -93,12 +94,18 @@ async function lookup(env, url, method) {
 
 // 未单独录制的搜索与筛选从同一份演示馆藏计算，列表和筛选字段保持完整。
 let catalog = null;
-async function catalogItems(env,url) {
+let folders = null;
+async function loadCatalog(env,url) {
   catalog ??= await env.ASSETS.fetch(new URL('/_fixtures/catalog.json',url)).then(r=>r.json());
+  folders ??= folderIndex(catalog.items);
+  return catalog;
+}
+async function catalogItems(env,url) {
+  await loadCatalog(env,url);
   const p=url.searchParams,fold=text=>String(text??'').toLowerCase().replaceAll('-','');
   const words=fold(p.get('q')).split(/\s+/).filter(Boolean);
   const tags=(p.get('tag')||'').split(',').filter(Boolean);
-  return catalog.items.filter(it=>{
+  return folderItems(folders,catalog.items,p).filter(it=>{
     if(p.get('loc')&&!p.get('loc').split(',').includes(it.location))return false;
     if(p.get('jav')==='1'&&!it.is_jav)return false;
     for(const kind of ['creator','studio','performer','agency','series']){
@@ -195,6 +202,11 @@ export default {
     if (url.pathname.startsWith('/_fixtures/') || url.pathname.startsWith('/_media/')) return json('{"error":"not found"}', 404);
     manifest ??= await env.ASSETS.fetch(new URL('/_fixtures/manifest.json', url)).then((r) => r.json());
     const method = request.method === 'HEAD' ? 'GET' : request.method;
+    if(method==='GET'&&url.pathname==='/api/folders'){
+      await loadCatalog(env,url);
+      const page=folderPage(folders,url.searchParams);
+      return page?json(JSON.stringify(page)):json('{"message":"目录不存在或已移出演示库"}',404);
+    }
     if(method==='GET'&&url.pathname==='/api/jav/discoveries'){
       const scope=url.searchParams.get('scope')==='library'?'library':'external';
       if(!discoveries.has(scope)){
@@ -215,11 +227,27 @@ export default {
     if(method==='GET'&&url.pathname==='/api/facets'&&url.searchParams.get('state')!=='trash')return fallbackCatalog(env,url,true);
     const recorded = await lookup(env, url, method);
     if (recorded) {
+      if (url.pathname === '/api/links') {
+        const data = await recorded.json();
+        // 旧录制只有主机统计；新版按链接 ID 取站标，缺失时保留通用站标。
+        return json(JSON.stringify({...data, top_host_link_ids: data.top_host_link_ids ?? {}}));
+      }
       const etag = recorded.headers.get('etag');
       if (etag && request.headers.get('if-none-match') === etag) {
         return new Response(null, {status: 304, headers: {etag, 'cache-control': recorded.headers.get('cache-control')}});
       }
       return recorded;
+    }
+    if(method==='GET'&&url.pathname==='/api/tops'){
+      const snapshot=await lookup(env,new URL('/api/tops?n=60',url),method);
+      if(snapshot){
+        const data=await snapshot.json(),items=await catalogItems(env,url);
+        const limit=Math.max(1,Math.min(60,Number(url.searchParams.get('n'))||28));
+        const offset=Math.max(0,Number(url.searchParams.get('page'))||0)*limit;
+        const pick=(rows,kind)=>rows.map(row=>({...row,n:items.filter(item=>kind==='performer'?(item.performers||[]).includes(row.k):item.studio===row.k).length}))
+          .filter(row=>row.n).sort((a,b)=>b.n-a.n).slice(offset,offset+limit);
+        return json(JSON.stringify({performers:pick(data.performers,'performer'),studios:pick(data.studios,'studio')}));
+      }
     }
     if(method==='GET'&&url.pathname==='/api/follow'){
       if(!follow){

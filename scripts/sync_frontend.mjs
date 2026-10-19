@@ -23,6 +23,7 @@ for(const dir of ['dist','vendor'])await walk(dir);
 const staged=[];
 for(const name of names)staged.push({name,body:name==='app.css'?await readStylesheet(web):await readFile(path.join(web,name))});
 for(const name of ['javten','fc2ppvdb','avwikidb','github'])staged.push({name:`site-icon/${name}.png`,body:await readFile(path.join(source,'resources/site-marks',`${name}.png`))});
+for(const [resource,name] of [['peach-logo.png','peach-logo.png'],['peach.ico','favicon.ico']])staged.push({name,body:await readFile(path.join(source,'resources',resource))});
 for(const {name,body} of staged){const file=path.join(target,name);await mkdir(path.dirname(file),{recursive:true});await writeFile(file,body)}
 console.log(`同步 ${staged.length} 个前端文件；演示脚本、录制响应与媒体保持不变。`);
 }

@@ -18,7 +18,7 @@
   const highlight = document.createElement('div'); highlight.dataset.copyEditor = ''; highlight.dataset.copyHighlight = '';
   const bar = document.createElement('div'); bar.dataset.copyEditor = ''; bar.dataset.copyBar = '';
   const title = document.createElement('b'); title.textContent = '改字模式';
-  const hint = document.createElement('span'); hint.textContent = '点文字直接改，回车或点别处保存，Esc 取消';
+  const hint = document.createElement('span'); hint.textContent = '点文字编辑，切换照常；Alt+点击改控件文字；回车保存，Esc 取消';
   const status = document.createElement('span'); status.setAttribute('role', 'status'); bar.append(title, hint);
   const say = text => { status.textContent = text; };
   const button = (text, fn) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = text; b.onclick = fn; bar.append(b); return b; };
@@ -64,6 +64,10 @@
   addEventListener('scroll', () => { highlight.style.display = 'none'; }, true);
   document.addEventListener('click', event => {
     if (!active || saving || event.target.closest?.('[data-copy-editor]')) return;
+    if (!event.altKey && event.target.closest?.('[role="tab"], [role="switch"], [role="radiogroup"], [role="slider"], [role="checkbox"], [role="combobox"], [aria-expanded], [aria-pressed], [aria-haspopup], summary, input, select, label, [data-copy-interact]')) {
+      if (editing) commit();
+      return;
+    }
     if (editing) { event.preventDefault(); event.stopImmediatePropagation(); if (!editing.box.contains(event.target)) commit(); return; }
     const node = textAt(event.clientX, event.clientY); if (!node) return;
     event.preventDefault(); event.stopImmediatePropagation(); begin(node);

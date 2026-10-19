@@ -23,6 +23,8 @@
 !/scripts/check_browser.mjs
 !/scripts/check_filters.mjs
 !/scripts/check_search_recommendations.mjs
+!/scripts/check_folders.mjs
+!/scripts/check_edit.mjs
 !/tests/
 !/site/
 /site/*

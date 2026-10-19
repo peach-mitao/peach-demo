@@ -15,7 +15,7 @@ async function visibleImages(page){
    targets.forEach(img=>observer.observe(img));
   });
   let timeout;
-  try{await Promise.race([Promise.all(images.map(img=>img.decode())),new Promise((_,reject)=>{timeout=setTimeout(()=>reject(Error('可见图片解码超时')),10000)})])}
+  try{await Promise.race([Promise.all(images.map(img=>img.decode().catch(error=>{throw Error(`图片解码失败：${img.currentSrc}`,{cause:error})}))),new Promise((_,reject)=>{timeout=setTimeout(()=>reject(Error('可见图片解码超时')),10000)})])}
   finally{clearTimeout(timeout)}
   return images.map(img=>({src:img.currentSrc,naturalWidth:img.naturalWidth,width:img.getBoundingClientRect().width,height:img.getBoundingClientRect().height}));
  });
@@ -56,18 +56,16 @@ try{
    report.push({name,width,dpr,...state,errors:[...errors],failed:[...failed]});
   }
   await page.goto(base+'/data-cleanup',{waitUntil:'networkidle'});
-  const controls=page.locator('[data-processing-controls]').first();
-  await controls.getByRole('button',{name:'处理速度：标准',exact:true}).click();
-  const slider=page.getByRole('slider');await slider.focus();await slider.press('Home');await slider.press('Tab');
-  await page.keyboard.press('Escape');
-  await page.getByRole('dialog',{name:'处理速度',exact:true}).waitFor({state:'hidden'});
-  await controls.getByRole('button',{name:'处理速度：低占用',exact:true}).waitFor();
   const start=page.getByRole('button',{name:'同步媒体库',exact:true});
   await start.scrollIntoViewIfNeeded();
   await page.waitForFunction(()=>{const button=Array.from(document.querySelectorAll('button')).find(e=>e.textContent.trim()==='同步媒体库');if(!button)return false;const r=button.getBoundingClientRect();return button.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2))});
   await start.click();
   const dialog=page.getByRole('dialog',{name:'同步媒体库',exact:true});
+  const slider=dialog.getByRole('slider');await slider.focus();await slider.press('Home');await slider.press('Tab');
+  assert.doesNotMatch(await dialog.innerText(),/流量预估未取得/);
   await dialog.getByRole('button',{name:'同步媒体库',exact:true}).click();
+  const controls=page.locator('[data-processing-controls]').first();
+  await controls.getByRole('button',{name:'处理速度：低占用',exact:true}).waitFor();
   await controls.getByRole('button',{name:'暂停',exact:true}).click();
   await controls.getByRole('button',{name:'继续',exact:true}).waitFor();
   assert.equal(await page.evaluate(async()=> (await(await fetch('/api/library-processing')).json()).status),'paused');

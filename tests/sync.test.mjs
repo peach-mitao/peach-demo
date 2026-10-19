@@ -12,11 +12,14 @@ test('React 入口与构建包可同步到独立演示目录',async()=>{
   const files={'web/index.html':'<script type="module" src="/dist/peach-app.js"></script>','web/board.css':'board',
    'web/css/01-base.css':'base','web/dist/peach-app.js':'app','web/dist/peach-app.css':'react','web/vendor/license.txt':'license'};
   for(const name of ['javten','fc2ppvdb','avwikidb','github'])files[`resources/site-marks/${name}.png`]='icon';
+  files['resources/peach-logo.png']='logo';files['resources/peach.ico']='favicon';
   for(const [name,body] of Object.entries(files)){const file=path.join(source,name);await mkdir(path.dirname(file),{recursive:true});await writeFile(file,body)}
   await syncFrontend(source,target);
   assert.equal(await readFile(path.join(target,'dist/peach-app.js'),'utf8'),'app');
   assert.equal(await readFile(path.join(target,'app.css'),'utf8'),'base');
   assert.equal(await readFile(path.join(target,'index.html'),'utf8'),files['web/index.html']);
+  assert.equal(await readFile(path.join(target,'peach-logo.png'),'utf8'),'logo');
+  assert.equal(await readFile(path.join(target,'favicon.ico'),'utf8'),'favicon');
  }finally{await rm(root,{recursive:true,force:true})}
 });
 
