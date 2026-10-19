@@ -32,7 +32,7 @@ npm test
 npm run check:deploy
 ```
 
-`src/*.ts` 为录制键、媒体地址、名册、发现、关注分页和视频流提供类型契约。Node 直接运行可擦除类型的 TS，`tsc --noEmit` 独立检查类型；Cloudflare 配置也纳入类型检查。浏览器直接加载的交互保持 JS；维护脚本与 Node 测试使用原生 ESM。依赖版本只在 `package.json` 与锁文件维护，构建输出不进 Git。
+`src/*.ts` 为录制键、媒体地址、名册、发现、关注分页和视频流提供类型契约。Node 直接运行可擦除类型的 TS，`tsc --noEmit` 独立检查类型；Cloudflare 配置和 TS 维护脚本也纳入类型检查。浏览器直接加载的交互保持 JS；Node 测试使用原生 ESM。依赖版本只在 `package.json` 与锁文件维护，构建输出不进 Git。
 
 ## 前端与录制包
 
@@ -40,17 +40,47 @@ npm run check:deploy
 
 通过 `npm run assets:import -- <录制包目录>` 导入 `_fixtures/`、`_media/` 和可选的 `_demo/follow/`。录制包必须包含 `manifest.json`、`catalog.json` 和 `indexes.json`；名册保留稳定身份 ID，馆藏目录保留完整标签与实体作品范围。未录制的接口返回 404。录制响应、媒体、数据库与凭据不进 Git。
 
-`npm run assets:build` 从录制图片生成内容指纹静态副本和演示前端包，并生成私有视频长度清单 `_media/index.json`。JSON、原始清单和视频留在私有回放目录。`npm run build` 先生成这些素材，再执行 `cf build`。前端同步来源与版本应由维护者随同步更新记录，不从录制响应的历史服务版本推断当前代码。
+`npm run assets:build` 从录制图片生成内容指纹静态副本和演示前端包，并生成私有视频清单 `_media/index.json`。清单记录编号、长度和 `demo/videos/<SHA-256>.mp4` 对象键，相同内容复用对象。原始视频留在本地录制目录，由 `site/.assetsignore` 排除在 Assets 发布范围外。`npm run build` 先生成这些素材，再执行 `cf build`。前端同步来源与版本应由维护者随同步更新记录，不从录制响应的历史服务版本推断当前代码。
 
 ## 预览与发布
 
-素材齐备后用 `npm run dev` 启动 `http://127.0.0.1:8791/`。`?edit` 提供浏览器本地改字草稿，普通页面不应用草稿；`?tour=` 选择教程。搜索记录、收藏、扫描控制与演示写操作均不产生服务器持久写入。
+素材齐备后，先生成静态素材：
+
+```powershell
+npm run assets:build
+```
+
+查看视频对象数量和总字节数，不写入存储：
+
+```powershell
+npm run media:plan
+```
+
+导入本地 R2，并逐个回读核对 SHA-256：
+
+```powershell
+npm run media:local
+```
+
+用 `npm run dev` 启动 `http://127.0.0.1:8791/`。本地 R2 状态位于 `.wrangler/state`，与 cf 的 Wrangler 构建器共用，不访问远程桶。`?edit` 提供浏览器本地改字草稿，普通页面不应用草稿；`?tour=` 选择教程。搜索记录、收藏、扫描控制与演示写操作均不产生服务器持久写入。
 
 预览运行时，`npm run test:browser` 检查桌面、手机、图片、播放记录撤销和扫描控制；`npm run test:search` 检查搜索推荐、作者头像与视口变化。这些检查需要录制包和本机 Chrome。
 
-`npm run test:stream` 验证视频首段、中段、末段、后缀、HEAD、越界、播放跳转及进度条缩略图。视频流传递 HEAD、Range 与 If-Range；上游忽略范围时，使用私有长度清单流式截取，到达末端后取消读取。HEAD 不读取视频正文。Assets 绑定仍可能忽略 Range，因此尾段请求仍需跳过前面的字节，不能据此声称上游只读取所需范围。
+`npm run test:stream` 验证视频首段、中段、末段、后缀、HEAD、越界、播放跳转、卡片悬停预览及进度条缩略图。`/stream` 使用 `MEDIA` R2 绑定原生读取单个范围；HEAD 只读取对象元数据。If-Range 按 ETag 或修改时间判断，元数据与正文用 ETag 条件保持一致。图片、时间轴和九宫格由原有图片回放路径提供。
 
-使用已登录的 Cloudflare 账号执行 `npm run deploy`，入口会检查素材完整性并构建，再用 `cf deploy --prebuilt` 发布同一份产物。发布核对私有目录返回 404、视频 Range 返回 206、图片使用 `/_demo/images/`，并确认活动和播放上报不产生网络请求。静态缓存命中率与 Worker 调用数分别判断。
+远程视频使用既有 `peach-public-media` 桶。以下上传会产生 R2 写入和回读请求，只处理清单中的内容指纹对象，不删除桶中内容。上传前应取得该环境的发布授权，并使用已登录的 Cloudflare 账号：
+
+```powershell
+npm run media:upload
+```
+
+仅回读远程对象并核对长度和 SHA-256：
+
+```powershell
+npm run media:verify
+```
+
+`npm run deploy` 会检查素材完整性、构建并核验远程视频，再用 `cf deploy --prebuilt` 发布同一份产物；缺失或内容不符会拒绝发布。发布核对私有目录返回 404、视频 Range 返回 206、图片使用 `/_demo/images/`，并确认活动和播放上报不产生网络请求。R2 读取、静态缓存命中率与 Worker 调用数分别判断。
 
 ## Cloudflare 配置与依赖更新
 

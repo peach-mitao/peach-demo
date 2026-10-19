@@ -14,6 +14,10 @@
     "sync": "node scripts/sync_frontend.mjs",
     "assets:import": "node scripts/import_assets.mjs",
     "assets:build": "node scripts/build_static.mjs",
+    "media:plan": "node scripts/media_storage.ts plan",
+    "media:local": "node scripts/media_storage.ts upload --local",
+    "media:upload": "node scripts/media_storage.ts upload --remote",
+    "media:verify": "node scripts/media_storage.ts verify --remote",
     "build": "npm run assets:build && cf build",
     "precheck": "cf workers types",
     "check": "tsc --noEmit && node scripts/check.mjs",
@@ -24,7 +28,7 @@
     "test:stream": "node scripts/check_stream.mjs",
     "dev": "cf dev",
     "predev": "npm run assets:build",
-    "predeploy": "node scripts/check_package.mjs --assets && npm run build",
+    "predeploy": "node scripts/check_package.mjs --assets && npm run build && npm run media:verify",
     "deploy": "cf deploy --prebuilt"
   },
   "devDependencies": {

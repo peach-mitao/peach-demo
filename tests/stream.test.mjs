@@ -1,98 +1,67 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {stream} from '../src/stream.ts';
+import {media} from './media.mjs';
 
 const url = new URL('https://demo.example/stream?id=1');
-function assets({native = false, head = false} = {}) {
-  const stats = {reads: 0, cancels: 0, request: null};
-  const env = {ASSETS: {async fetch(request) {
-    stats.request = request;
-    const body = new ReadableStream({
-      pull(controller) {
-        stats.reads++;
-        const offset = (stats.reads - 1) * 2;
-        controller.enqueue(new Uint8Array([offset, offset + 1]));
-        if (native || stats.reads === 4) controller.close();
-      },
-      cancel() {stats.cancels++},
-    }, {highWaterMark: 0});
-    const response = new Response(head ? null : body, {status: native ? 206 : 200, headers: {
-      'content-type': 'video/mp4', 'content-length': native ? '2' : '8', etag: '"video"',
-      ...(native ? {'content-range': 'bytes 0-1/8'} : {}),
-    }});
-    response.arrayBuffer = () => {throw Error('禁止整段缓冲')};
-    return response;
-  }}};
-  return {env, stats};
-}
+const call = (env, init) => stream(new Request(url, init), env, url);
 
-test('Range 向上游传递，范围结束立即取消且不读取余段', async () => {
-  const {env, stats} = assets();
-  const response = await stream(new Request(url, {headers: {range: 'bytes=0-1'}}), env, url);
-  assert.equal(stats.request.headers.get('range'), 'bytes=0-1');
+test('大对象尾段仅向 R2 读取目标字节，HEAD 只读元数据', async () => {
+  const {env, stats} = media(1024 ** 3);
+  const response = await call(env, {headers: {range: 'bytes=-2'}});
   assert.equal(response.status, 206);
-  assert.deepEqual([...new Uint8Array(await response.arrayBuffer())], [0, 1]);
-  assert.equal(stats.reads, 1);
-  assert.equal(stats.cancels, 1);
+  assert.deepEqual(stats.gets[0].range, {offset: 1024 ** 3 - 2, length: 2});
+  assert.deepEqual(stats.gets[0].onlyIf, {etagMatches: 'video'});
+  assert.equal(stats.bytes, 0);
+  assert.deepEqual([...new Uint8Array(await response.arrayBuffer())], [254, 255]);
+  assert.equal(stats.bytes, 2);
+  const head = await call(env, {method: 'HEAD', headers: {range: 'bytes=0-1'}});
+  assert.equal(head.status, 200);
+  assert.equal(head.headers.get('content-length'), String(1024 ** 3));
+  assert.equal(await head.text(), '');
+  assert.equal(stats.gets.length, 1);
+  assert.equal(stats.indexes, 1);
 });
 
-test('原生分段直接回传，上游 HEAD 不读取视频正文', async () => {
-  const native = assets({native: true});
-  const partial = await stream(new Request(url, {headers: {range: 'bytes=0-1'}}), native.env, url);
-  assert.equal(partial.status, 206);
-  assert.equal(native.stats.reads, 0);
-  assert.deepEqual([...new Uint8Array(await partial.arrayBuffer())], [0, 1]);
-  const head = assets({head: true});
-  const response = await stream(new Request(url, {method: 'HEAD'}), head.env, url);
-  assert.equal(head.stats.request.method, 'HEAD');
-  assert.equal(head.stats.reads, 0);
-  assert.equal(await response.text(), '');
-});
-
-test('中段、末段、超长后缀与范围条件保留字节语义', async () => {
-  for (const [range, bytes] of [['bytes=2-4', [2, 3, 4]], ['bytes=6-', [6, 7]], ['bytes=-2', [6, 7]], ['bytes=-100', [0, 1, 2, 3, 4, 5, 6, 7]]]) {
-    const {env} = assets();
-    const response = await stream(new Request(url, {headers: {range}}), env, url);
+test('单范围、后缀、越界和 If-Range 保持 HTTP 字节语义', async () => {
+  for (const [range, expected] of [['bytes=0-1', [0,1]], ['bytes=2-4', [2,3,4]], ['bytes=6-', [6,7]], ['bytes=-2', [6,7]], ['bytes=-100', [0,1,2,3,4,5,6,7]]]) {
+    const {env} = media();
+    const response = await call(env, {headers: {range}});
     assert.equal(response.status, 206);
-    assert.deepEqual([...new Uint8Array(await response.arrayBuffer())], bytes);
+    assert.deepEqual([...new Uint8Array(await response.arrayBuffer())], expected);
   }
   for (const range of ['bytes=99-', 'bytes=4-2', 'bytes=-0', 'bytes=9007199254740992-']) {
-    const {env, stats} = assets();
-    assert.equal((await stream(new Request(url, {headers: {range}}), env, url)).status, 416);
-    assert.equal(stats.reads, 0);
-    assert.equal(stats.cancels, 1);
+    const {env, stats} = media();
+    const response = await call(env, {headers: {range}});
+    assert.equal(response.status, 416);
+    assert.equal(response.headers.get('content-range'), 'bytes */8');
+    assert.equal(stats.gets.length, 0);
   }
-  const {env} = assets();
-  const whole = await stream(new Request(url, {headers: {range: 'bytes=0-1', 'if-range': '"different"'}}), env, url);
-  assert.equal(whole.status, 200);
-  assert.equal((await whole.arrayBuffer()).byteLength, 8);
+  for (const [condition, status] of [['"different"', 200], ['W/"video"', 200], ['"video"', 206], ['Mon, 19 Oct 2026 00:00:00 GMT', 206], ['Sun, 18 Oct 2026 00:00:00 GMT', 200]]) {
+    const {env} = media();
+    const response = await call(env, {headers: {range: 'bytes=0-1', 'if-range': condition}});
+    assert.equal(response.status, status);
+    assert.equal((await response.arrayBuffer()).byteLength, status === 206 ? 2 : 8);
+  }
 });
 
-test('下游取消传递到视频源，单页兜底不伪装为视频', async () => {
-  const {env, stats} = assets();
-  const response = await stream(new Request(url, {headers: {range: 'bytes=0-3'}}), env, url);
+test('取消直接传递 R2 正文，缺失或不一致的素材明确拒绝', async () => {
+  const {env, stats, metadata} = media();
+  const response = await call(env, {headers: {range: 'bytes=0-3'}});
   await response.body.cancel();
-  assert.equal(stats.reads, 0);
+  assert.equal(stats.bytes, 0);
   assert.equal(stats.cancels, 1);
-  const missing = {ASSETS: {fetch: async () => new Response('<html>SPA</html>', {headers: {'content-type': 'text/html'}})}};
-  assert.equal((await stream(new Request(url), missing, url)).status, 404);
+  metadata.size = 9;
+  assert.equal((await call(env)).status, 503);
+  env.MEDIA.head = async () => null;
+  assert.equal((await call(env)).status, 404);
+  const missing = media().env;
+  missing.ASSETS.fetch = async () => new Response('<html>SPA</html>');
+  assert.equal((await call(missing)).status, 503);
 });
 
-test('Assets 缺少长度头时复用私有长度清单，HEAD 不取视频正文', async () => {
-  let indexes = 0, heads = 0;
-  const env = {ASSETS: {async fetch(request) {
-    if (new URL(request.url).pathname.endsWith('index.json')) {indexes++; return Response.json({'1': 8})}
-    if (request.method === 'HEAD') {heads++; return new Response(null, {headers: {'content-type': 'video/mp4'}})}
-    return new Response(new Uint8Array([0,1,2,3,4,5,6,7]), {headers: {'content-type': 'video/mp4'}});
-  }}};
-  for (const range of ['bytes=0-1', 'bytes=-2']) {
-    const response = await stream(new Request(url, {headers: {range}}), env, url);
-    assert.equal(response.status, 206);
-    assert.equal((await response.arrayBuffer()).byteLength, 2);
-  }
-  const head = await stream(new Request(url, {method: 'HEAD'}), env, url);
-  assert.equal(head.headers.get('content-length'), '8');
-  assert.equal(await head.text(), '');
-  assert.equal(indexes, 1);
-  assert.equal(heads, 1);
+test('对象变更条件失败不回传无正文的成功响应', async () => {
+  const {env, metadata} = media();
+  env.MEDIA.get = async () => metadata;
+  assert.equal((await call(env)).status, 503);
 });

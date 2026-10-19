@@ -4,6 +4,7 @@ import {webcrypto} from 'node:crypto';
 import {fixtureHash,fixtureKey} from '../src/key.ts';
 import worker from '../src/worker.js';
 import {discoveryPage} from '../src/discovery.ts';
+import {media,videoKey} from './media.mjs';
 if(!globalThis.crypto)globalThis.crypto=webcrypto;
 const origin='https://example.test';
 const portraitHash=await fixtureHash('GET /entity-image?id=102&kind=performer');
@@ -25,10 +26,10 @@ const files=new Map([
   {id:1,name:'示例一',code:'DEMO-001',is_jav:true,tags:['剧情'],filter_tags:['剧情','4K'],performers:[],o_count:2,duration:120,size:100,location:'local'},
   {id:2,name:'示例二',code:'DEMO-002',is_jav:true,tags:[],performers:[],o_count:5,duration:240,size:200,location:'local'}
  ]})],
- ['/_media/1.mp4',new Uint8Array([0,1,2,3,4,5,6,7])],
+ ['/_media/index.json',JSON.stringify({version:1,videos:{'1':{key:videoKey,size:8}}})],
  ['/favicon.ico',new Uint8Array([1,2,3])]
 ]);
-const env={ASSETS:{async fetch(input){
+const env={MEDIA:media().env.MEDIA,ASSETS:{async fetch(input){
  const name=new URL(input instanceof Request?input.url:input).pathname;
  if(!files.has(name))return new Response('not found',{status:404});
  const body=files.get(name),video=name.endsWith('.mp4');

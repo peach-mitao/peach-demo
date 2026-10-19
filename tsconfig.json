@@ -10,5 +10,5 @@
     "skipLibCheck": true,
     "types": ["node"]
   },
-  "include": ["src/**/*.ts", "cloudflare.config.ts", "wrangler.config.ts", ".cloudflare/types/**/*.d.ts"]
+  "include": ["src/**/*.ts", "scripts/**/*.ts", "cloudflare.config.ts", "wrangler.config.ts", ".cloudflare/types/**/*.d.ts"]
 }

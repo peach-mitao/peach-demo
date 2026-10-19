@@ -19,12 +19,14 @@
 !/scripts/check.mjs
 !/scripts/check_stream.mjs
 !/scripts/build_static.mjs
+!/scripts/media_storage.ts
 !/scripts/check_browser.mjs
 !/scripts/check_filters.mjs
 !/scripts/check_search_recommendations.mjs
 !/tests/
 !/site/
 /site/*
+!/site/.assetsignore
 !/site/_demo/
 /site/_demo/*
 !/site/_demo/interactions.js

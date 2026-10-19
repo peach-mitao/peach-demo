@@ -7,6 +7,8 @@ import vm from 'node:vm';
 import {fixtureHash} from '../src/key.ts';
 import {mediaURL,mediaJSON,mediaHTML} from '../src/media.ts';
 import {buildStatic,staticImageExpressions} from '../scripts/build_static.mjs';
+import {createHash} from 'node:crypto';
+import {mediaFiles} from '../scripts/media_storage.ts';
 
 test('静态图片解析与录制键、版本参数、别名及原路径兜底一致',async()=>{
   const images={};
@@ -56,7 +58,12 @@ test('构建导出带内容指纹的图片，私有 JSON 不进入静态映射',
     await writeFile(path.join(site,`_fixtures/${own}.png`),'image');await writeFile(path.join(site,`_fixtures/${json}.json`),'{"private":true}');
     await writeFile(path.join(site,'dist/peach-app.js'),'globalThis.image="/cover?code=one"');
     const first=await buildStatic(site);assert.equal(Object.keys(first.images).length,2);assert.equal(first.images[own],first.images[alias]);assert.equal(first.images[json],undefined);
-    assert.deepEqual(JSON.parse(await readFile(path.join(site,'_media/index.json'),'utf8')),{'1':5});
+    const key=`demo/videos/${createHash('sha256').update('video').digest('hex')}.mp4`;
+    assert.deepEqual(JSON.parse(await readFile(path.join(site,'_media/index.json'),'utf8')),{version:1,videos:{'1':{key,size:5}}});
+    assert.equal((await mediaFiles(site))[0].key,key);
+    await writeFile(path.join(site,'_media/1.mp4'),'corrupted');
+    await assert.rejects(mediaFiles(site),/素材与清单不一致/);
+    await writeFile(path.join(site,'_media/1.mp4'),'video');
     assert.match(first.images[own],/^\/_demo\/images\/[a-f0-9]{64}\.png$/);
     assert.equal(await readFile(path.join(site,first.images[own]),'utf8'),'image');
     assert.equal(await readFile(path.join(site,'dist/peach-app.js'),'utf8'),'globalThis.image="/cover?code=one"');

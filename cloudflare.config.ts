@@ -30,6 +30,7 @@ export default defineConfig({
 		],
 		env: {
 			ASSETS: bindings.assets(),
+			MEDIA: bindings.r2({ name: "peach-public-media" }),
 		},
 	},
 });

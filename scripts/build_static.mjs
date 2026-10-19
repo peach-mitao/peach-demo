@@ -1,5 +1,5 @@
 // 从本地录制图片生成公开静态副本；JSON、原始清单和视频保留在私有回放目录。
-import {readFile,writeFile,mkdir,readdir,copyFile,stat} from 'node:fs/promises';
+import {readFile,writeFile,mkdir,readdir,copyFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {fileURLToPath,pathToFileURL} from 'node:url';
 import path from 'node:path';
@@ -48,13 +48,18 @@ export function staticImageExpressions(source){
 }
 
 export async function buildStatic(site=path.join(root,'site')){
-  // 视频长度保存在私有目录，供不提供 Content-Length 的 Assets 绑定计算 Range。
-  const media=path.join(site,'_media'),sizes={};
+  // 内容指纹同时用作不可变 R2 对象键，编号清单仅供 Worker 查询。
+  const media=path.join(site,'_media'),videos={};
   await mkdir(media,{recursive:true});
   for(const entry of await readdir(media,{withFileTypes:true})){
-    if(entry.isFile()&&/^\d+\.mp4$/.test(entry.name))sizes[entry.name.slice(0,-4)]=(await stat(path.join(media,entry.name))).size;
+    if(entry.isFile()&&/^\d+\.mp4$/.test(entry.name)){
+      const body=await readFile(path.join(media,entry.name));
+      if(!body.length)throw Error(`演示视频为空：${entry.name}`);
+      const hash=createHash('sha256').update(body).digest('hex');
+      videos[entry.name.slice(0,-4)]={key:`demo/videos/${hash}.mp4`,size:body.length};
+    }
   }
-  await writeFile(path.join(media,'index.json'),JSON.stringify(sizes));
+  await writeFile(path.join(media,'index.json'),JSON.stringify({version:1,videos}));
   const manifest=JSON.parse(await readFile(path.join(site,'_fixtures/manifest.json'),'utf8'));
   const images={},out=path.join(site,'_demo/images');await mkdir(out,{recursive:true});
   for(const [key,ext] of Object.entries(manifest.fixtures)){

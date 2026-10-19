@@ -4,7 +4,10 @@ import {chromium} from 'playwright';
 const base = process.env.BASE || 'http://127.0.0.1:8791';
 const hoverOnly = process.argv.includes('--hover-only');
 if (!hoverOnly) {
-const whole = Buffer.from(await (await fetch(base + '/stream?id=1')).arrayBuffer());
+const full = await fetch(base + '/stream?id=1');
+assert.equal(full.status, 200);
+assert.equal(full.headers.get('content-type'), 'video/mp4');
+const whole = Buffer.from(await full.arrayBuffer());
 assert.ok(whole.length > 0);
 for (const [range, start, end] of [
   ['bytes=0-99', 0, 100], [`bytes=${Math.floor(whole.length / 2)}-${Math.floor(whole.length / 2) + 99}`, Math.floor(whole.length / 2), Math.floor(whole.length / 2) + 100],
@@ -18,7 +21,13 @@ for (const [range, start, end] of [
 assert.equal((await fetch(base + '/stream?id=1', {headers: {range: `bytes=${whole.length}-`}})).status, 416);
 const head = await fetch(base + '/stream?id=1', {method: 'HEAD'});
 assert.equal(head.status, 200);
+assert.equal(head.headers.get('content-length'), String(whole.length));
 assert.equal((await head.arrayBuffer()).byteLength, 0);
+for (const [condition, status] of [[head.headers.get('etag'), 206], ['"different"', 200]]) {
+  const response = await fetch(base + '/stream?id=1', {headers: {range: 'bytes=-2', 'if-range': condition}});
+  assert.equal(response.status, status);
+  assert.ok(Buffer.from(await response.arrayBuffer()).equals(status === 206 ? whole.subarray(-2) : whole));
+}
 assert.equal((await fetch(base + '/stream?id=999999')).status, 404);
 console.log('PASS: 视频首段、中段、末段、超长后缀、HEAD、越界与缺失文件');
 }
@@ -27,7 +36,7 @@ const browser = await chromium.launch({channel: 'chrome'});
 try {
   if (!hoverOnly) for (const width of [1440, 390]) {
    for (const fallback of [false, true]) {
-    const page = await browser.newPage({viewport: {width, height: 900}, reducedMotion: 'reduce'});
+    const page = await browser.newPage({viewport: {width, height: width === 390 ? 844 : 900}, reducedMotion: 'reduce'});
     try {
       await page.addInitScript(() => localStorage.setItem('peach.settings.v1', JSON.stringify({detailAutoplay: false})));
       if (fallback) await page.route('**/api/timeline?**', route => route.fulfill({json: null}));
