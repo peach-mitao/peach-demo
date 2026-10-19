@@ -4,7 +4,7 @@
   "type": "module",
   "license": "AGPL-3.0-only",
   "engines": {
-    "node": ">=24"
+    "node": ">=24.12.0"
   },
   "repository": {
     "type": "git",
@@ -13,21 +13,28 @@
   "scripts": {
     "sync": "node scripts/sync_frontend.mjs",
     "assets:import": "node scripts/import_assets.mjs",
-    "build": "node scripts/build_static.mjs",
-    "check": "node --check src/worker.js && node --check src/media.mjs && node --check scripts/build_static.mjs && node --check src/directory.mjs && node --check src/discovery.mjs && node --check src/follow.mjs && node --check site/_demo/interactions.js && node --check site/_demo/copy-editor.js && node --check site/_demo/tour.js && node scripts/check_package.mjs",
+    "assets:build": "node scripts/build_static.mjs",
+    "build": "npm run assets:build && cf build",
+    "precheck": "cf workers types",
+    "check": "tsc --noEmit && node scripts/check.mjs",
+    "check:deploy": "cf deploy --dry-run",
     "test": "node --test tests/*.test.mjs",
     "test:browser": "node scripts/check_browser.mjs && node scripts/check_filters.mjs",
     "test:search": "node scripts/check_search_recommendations.mjs",
-    "dev": "wrangler dev --ip 127.0.0.1 --port 8791",
-    "predev": "npm run build",
+    "test:stream": "node scripts/check_stream.mjs",
+    "dev": "cf dev",
+    "predev": "npm run assets:build",
     "predeploy": "node scripts/check_package.mjs --assets && npm run build",
-    "deploy": "wrangler deploy"
+    "deploy": "cf deploy --prebuilt"
   },
   "devDependencies": {
     "@noble/hashes": "2.4.0",
+    "@types/node": "24.19.2",
     "acorn": "8.19.0",
+    "cf": "1.0.0-beta.18",
     "esbuild": "0.28.2",
-    "playwright": "1.58.1",
-    "wrangler": "4.141.0"
+    "playwright": "1.64.1",
+    "typescript": "7.0.2",
+    "wrangler": "4.151.2"
   }
 }

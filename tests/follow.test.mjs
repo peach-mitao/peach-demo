@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {followPage} from '../src/follow.mjs';
+import {followPage} from '../src/follow.ts';
 const snapshot={sources:[{author_key:'entity:152',avatar_url:'/follow-avatar?provider=kemono&ref=demo'}],
  author_aliases:[],counts:{new:3},groups:[1,2,3].map(id=>({primary:{id},release_key:String(id)})),has_more:false};
 

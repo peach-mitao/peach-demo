@@ -3,7 +3,17 @@ updates:
   - package-ecosystem: npm
     directory: /
     schedule:
-      interval: weekly
+      interval: daily
+    ignore:
+      - dependency-name: '@types/node'
+        update-types: ['version-update:semver-major']
+    groups:
+      tooling:
+        patterns: ['*']
+        update-types: [minor, patch]
+      security:
+        applies-to: security-updates
+        patterns: ['*']
   - package-ecosystem: github-actions
     directory: /
     schedule:

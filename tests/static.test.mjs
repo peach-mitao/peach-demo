@@ -4,8 +4,8 @@ import {mkdtemp,mkdir,writeFile,readFile,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
 import vm from 'node:vm';
-import {fixtureHash} from '../src/key.mjs';
-import {mediaURL,mediaJSON,mediaHTML} from '../src/media.mjs';
+import {fixtureHash} from '../src/key.ts';
+import {mediaURL,mediaJSON,mediaHTML} from '../src/media.ts';
 import {buildStatic,staticImageExpressions} from '../scripts/build_static.mjs';
 
 test('静态图片解析与录制键、版本参数、别名及原路径兜底一致',async()=>{
@@ -50,11 +50,13 @@ test('构建导出带内容指纹的图片，私有 JSON 不进入静态映射',
   const site=await mkdtemp(path.join(tmpdir(),'peach-static-'));
   try{
     await mkdir(path.join(site,'_fixtures'));await mkdir(path.join(site,'dist'));
+    await mkdir(path.join(site,'_media'));await writeFile(path.join(site,'_media/1.mp4'),'video');
     const own=await fixtureHash('GET /cover?code=one'),alias=await fixtureHash('GET /cover?code=two'),json=await fixtureHash('GET /api/item?id=1');
     await writeFile(path.join(site,'_fixtures/manifest.json'),JSON.stringify({fixtures:{[own]:'png',[json]:'json'},alias:{[alias]:own}}));
     await writeFile(path.join(site,`_fixtures/${own}.png`),'image');await writeFile(path.join(site,`_fixtures/${json}.json`),'{"private":true}');
     await writeFile(path.join(site,'dist/peach-app.js'),'globalThis.image="/cover?code=one"');
     const first=await buildStatic(site);assert.equal(Object.keys(first.images).length,2);assert.equal(first.images[own],first.images[alias]);assert.equal(first.images[json],undefined);
+    assert.deepEqual(JSON.parse(await readFile(path.join(site,'_media/index.json'),'utf8')),{'1':5});
     assert.match(first.images[own],/^\/_demo\/images\/[a-f0-9]{64}\.png$/);
     assert.equal(await readFile(path.join(site,first.images[own]),'utf8'),'image');
     assert.equal(await readFile(path.join(site,'dist/peach-app.js'),'utf8'),'globalThis.image="/cover?code=one"');
