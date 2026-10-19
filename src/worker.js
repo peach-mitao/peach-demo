@@ -266,6 +266,20 @@ export default {
       if(page)return json(JSON.stringify(page));
     }
     if (method !== 'GET') return json('{"ok":true}');
+    if(url.pathname==='/api/downloads'&&[...url.searchParams.keys()].every(key=>['limit','before_id'].includes(key))){
+      const snapshot=await lookup(env,new URL('/api/downloads?limit=50',url),method);
+      if(snapshot){
+        const data=await snapshot.json(),limit=Math.max(1,Math.min(50,Number(url.searchParams.get('limit'))||20));
+        const before=Number(url.searchParams.get('before_id'));
+        const rows=data.tasks.filter(row=>!before||row.id<before);
+        const tasks=rows.slice(0,limit),more=rows.length>limit;
+        return json(JSON.stringify({...data,tasks,has_more:more,next_before_id:more?tasks.at(-1).id:null}));
+      }
+    }
+    if((url.pathname==='/site-mark'&&/^[a-z0-9.-]+$/i.test(url.searchParams.get('domain')||''))
+      ||(url.pathname==='/link-mark'&&/^[1-9]\d*$/.test(url.searchParams.get('id')||''))){
+      return new Response('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></svg>',{headers:{'content-type':TYPES.svg,'cache-control':'public, max-age=86400'}});
+    }
     if (url.pathname === '/api/items') return fallbackCatalog(env,url);
     if (url.pathname === '/api/suggest') return suggest(env, url);
     if (url.pathname === '/api/facets') return fallbackCatalog(env,url,true);
@@ -290,7 +304,7 @@ export default {
       .on('script[src="/dist/peach-app.js"]', {element: script=>script.setAttribute('src','/dist/demo-peach-app.js')})
       .on('body', {element: (body) => {
         body.append(NOTICE, {html: true});
-        if(url.searchParams.has('edit')){body.setAttribute('data-peach-copy-mode','local');body.append('<script src="/_demo/copy-editor.js" defer></script>',{html:true})}
+        if(url.searchParams.has('edit')){body.setAttribute('data-peach-copy-mode','local');body.append('<script src="/_demo/copy-editor-core.js" defer></script><script src="/_demo/copy-editor.js" defer></script>',{html:true})}
       }})
       .transform(page);
   },

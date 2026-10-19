@@ -12,6 +12,7 @@
   },
   "scripts": {
     "sync": "node scripts/sync_frontend.mjs",
+    "edit:sync": "node scripts/sync_copy_editor.mjs",
     "assets:import": "node scripts/import_assets.mjs",
     "assets:build": "node scripts/build_static.mjs",
     "media:plan": "node scripts/media_storage.ts plan",
@@ -26,6 +27,7 @@
     "test:browser": "node scripts/check_browser.mjs && node scripts/check_filters.mjs && node scripts/check_edit.mjs",
     "test:search": "node scripts/check_search_recommendations.mjs",
     "test:folders": "node scripts/check_folders.mjs",
+    "test:routes": "node scripts/check_routes.mjs",
     "test:stream": "node scripts/check_stream.mjs",
     "dev": "cf dev",
     "predev": "npm run assets:build",

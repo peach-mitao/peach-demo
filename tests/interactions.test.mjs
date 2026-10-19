@@ -24,6 +24,16 @@ test('新版确认弹窗取得零成本的演示预估，不读取真实任务',
   assert.equal(estimate.traffic.estimated_max_bytes,0);assert.deepEqual(estimate.traffic.sources,[]);assert.equal(p.calls.length,0);
 });
 
+test('视频预览设置只保存在页面草稿，扫描任务与设置使用同一策略',async()=>{
+  const p=page();assert.equal((await(await p.fetch('/api/media-processing')).json()).metadata_only,false);
+  const result=await p.fetch('/api/media-processing',{method:'POST',body:JSON.stringify({metadata_only:true})});
+  assert.equal((await result.json()).metadata_only,true);
+  assert.equal((await(await p.fetch('/api/library-processing')).json()).metadata_only,true);
+  assert.equal((await(await page().fetch('/api/media-processing')).json()).metadata_only,false);
+  assert.equal((await p.fetch('/api/media-processing',{method:'POST',body:'{}'})).status,400);
+  assert.equal(p.calls.filter(call=>call.path==='/api/media-processing').length,0);
+});
+
 test('整理示例支持新旧番号键、可选分组和目录，并返回明确的模板错误',async()=>{
   const p=page(),example=async(file,dir='')=>(await p.fetch('/api/organize/example?'+new URLSearchParams({file_template:file,dir_template:dir}))).json();
   assert.equal((await example('')).example,'ABC-123 标题.mp4');

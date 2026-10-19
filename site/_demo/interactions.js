@@ -97,6 +97,7 @@
     actors:(item.performers||[]).join('、'),cd:'',mosaic:item.is_jav?'有码':'',definition:'1080p'});
   const processingState = async () => {
     const state = await read('/api/library-processing');
+    state.metadata_only=snapshots.get('/api/media-processing')?.metadata_only??state.metadata_only??false;
     if (processingRun && state.status === 'running') {
       const elapsed = processingRun.elapsed + Date.now() - processingRun.started;
       const fraction = Math.min(1, elapsed / 30000);
@@ -199,6 +200,15 @@
       return result({items:searchHistory.slice(0,limit)});
     }
     if(request.method==='POST'&&['/api/activity','/api/play'].includes(path))return result({ok:true});
+    if(path==='/api/media-processing'&&['GET','POST'].includes(request.method)){
+      const policy=snapshots.get(path)||{metadata_only:false};
+      if(request.method==='POST'){
+        const body=await request.clone().json().catch(()=>({}));
+        if(typeof body.metadata_only!=='boolean')return result({message:'视频预览设置无效。'},400);
+        policy.metadata_only=body.metadata_only;
+      }
+      snapshots.set(path,policy);return result(policy);
+    }
     if(request.method==='GET'&&path==='/api/library-processing'){
       if(url.searchParams.get('estimate')==='1')return result({traffic:{used_bytes:0,estimated_min_bytes:0,estimated_max_bytes:0,
         metered_used_bytes:0,metered_estimated_min_bytes:0,metered_estimated_max_bytes:0,partial:false,unknown_files:false,sources:[]}});

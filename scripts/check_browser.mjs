@@ -42,7 +42,11 @@ try{
    assert.equal(state.overflow,false,`${name} ${width}/${dpr} 横向溢出`);
    assert.ok(state.text?.length>10,`${name} 内容未取得`);
    assert.ok(state.images.every(img=>img.naturalWidth>0),`${name} 可见图片加载失败`);
-   if(name==='data')assert.ok(await page.getByRole('button',{name:'同步媒体库',exact:true}).count());
+   if(name==='data'){
+    assert.ok(await page.getByRole('button',{name:'同步媒体库',exact:true}).count());
+    const links=page.locator('#link-manager');
+    if(await links.count()){await links.scrollIntoViewIfNeeded();await visibleImages(page)}
+   }
    if(name==='feeds')assert.match(state.text,/凉森玲梦/);
    if(name==='follow-table')assert.match(state.text,/Billyhhyb/);
    if(name==='player'){

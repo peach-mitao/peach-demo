@@ -1,5 +1,7 @@
 /*
 !/.gitignore
+!/.gitattributes
+!/copy-editor-source.json
 !/.github/
 !/README.md
 !/LICENSE
@@ -14,6 +16,7 @@
 !/scripts/
 /scripts/*
 !/scripts/sync_frontend.mjs
+!/scripts/sync_copy_editor.mjs
 !/scripts/import_assets.mjs
 !/scripts/check_package.mjs
 !/scripts/check.mjs
@@ -25,6 +28,7 @@
 !/scripts/check_search_recommendations.mjs
 !/scripts/check_folders.mjs
 !/scripts/check_edit.mjs
+!/scripts/check_routes.mjs
 !/tests/
 !/site/
 /site/*
@@ -34,3 +38,4 @@
 !/site/_demo/interactions.js
 !/site/_demo/tour.js
 !/site/_demo/copy-editor.js
+!/site/_demo/copy-editor-core.js

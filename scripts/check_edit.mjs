@@ -24,6 +24,13 @@ try {
     await page.waitForFunction(()=>document.querySelector('[data-copy-bar] [role="status"]')?.textContent.includes('已保存'));
     await page.reload({waitUntil:'networkidle'});
     await page.getByRole('heading',{name:`编辑预览 ${width}`,exact:true}).waitFor();
+    const updated=page.getByRole('heading',{name:`编辑预览 ${width}`,exact:true});
+    await updated.click({trial:true});
+    const erase=await updated.evaluate(element=>{const range=document.createRange();range.selectNodeContents(element);const rect=range.getClientRects()[0];return {x:rect.left+12,y:rect.top+rect.height/2}});
+    await page.mouse.click(erase.x,erase.y);await editor.fill('');await editor.press('Enter');
+    await page.waitForFunction(()=>document.querySelector('[data-copy-bar] [role="status"]')?.textContent.includes('已删除'));
+    await page.reload({waitUntil:'networkidle'});
+    assert.equal(await page.getByRole('heading',{name:`编辑预览 ${width}`,exact:true}).count(),0);
     assert.deepEqual(errors,[]);
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
     console.log(`PASS ${width}: 演示编辑模式切换目录、切换布局、改字与刷新恢复`);

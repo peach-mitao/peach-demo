@@ -11,8 +11,10 @@ const portraitHash=await fixtureHash('GET /entity-image?id=102&kind=performer');
 const followHash=await fixtureHash('GET /api/follow?limit=100&offset=0');
 const feedDiscoveryHash=await fixtureHash('GET /api/feeds/discoveries?limit=12');
 const topsHash=await fixtureHash('GET /api/tops?n=60');
+const downloadsHash=await fixtureHash('GET /api/downloads?limit=50');
 const files=new Map([
- ['/_fixtures/manifest.json',JSON.stringify({fixtures:{[portraitHash]:'png',[followHash]:'json',[feedDiscoveryHash]:'json',[topsHash]:'json'},paths:[],alias:{}})],
+ ['/_fixtures/manifest.json',JSON.stringify({fixtures:{[portraitHash]:'png',[followHash]:'json',[feedDiscoveryHash]:'json',[topsHash]:'json',[downloadsHash]:'json'},paths:[],alias:{}})],
+ [`/_fixtures/${downloadsHash}.json`,JSON.stringify({available:true,providers:[],tasks:[{id:3},{id:2},{id:1}]})],
  [`/_fixtures/${topsHash}.json`,JSON.stringify({performers:[],studios:[{id:10,k:'示例厂牌',n:1,rep:1,has_logo:false}]})],
  [`/_fixtures/${followHash}.json`,JSON.stringify({sources:[{author_key:'entity:152',avatar_url:'/follow-avatar?provider=kemono&ref=demo'}],groups:[{primary:{id:1}}],has_more:false})],
  [`/_fixtures/${feedDiscoveryHash}.json`,JSON.stringify({ok:true,more:true,items:Array.from({length:12},(_,i)=>({code:'DEMO-'+i}))})],
@@ -38,6 +40,19 @@ const env={MEDIA:media().env.MEDIA,ASSETS:{async fetch(input){
  return new Response(input instanceof Request&&input.method==='HEAD'?null:body,{headers:video?{'content-type':'video/mp4','content-length':String(body.byteLength)}:{}});
 }}};
 const call=(path,init)=>worker.fetch(new Request(origin+path,init),env);
+
+test('新版任务页按较小批次分页读取已录制的云下载任务',async()=>{
+ const first=await(await call('/api/downloads?limit=2')).json();assert.deepEqual(first.tasks.map(row=>row.id),[3,2]);
+ assert.equal(first.has_more,true);assert.equal(first.next_before_id,2);
+ const next=await(await call('/api/downloads?limit=2&before_id=2')).json();assert.deepEqual(next.tasks.map(row=>row.id),[1]);
+ assert.equal(next.has_more,false);assert.equal(next.next_before_id,null);
+});
+
+test('未录制的网站图标使用通用标识，不请求外部站点',async()=>{
+ const response=await call('/site-mark?domain=example.com');assert.equal(response.status,200);
+ assert.equal(response.headers.get('content-type'),'image/svg+xml');assert.match(await response.text(),/<svg/);
+ assert.equal((await call('/link-mark?id=12')).headers.get('content-type'),'image/svg+xml');
+});
 
 test('文件夹接口、馆藏筛选和统计共享模拟目录',async()=>{
  const response=await call('/api/folders?loc=local');assert.equal(response.status,200);
