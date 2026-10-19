@@ -1,11 +1,11 @@
 // 从本地录制图片生成公开静态副本；JSON、原始清单和视频保留在私有回放目录。
-import {readFile,writeFile,mkdir,readdir,copyFile} from 'node:fs/promises';
+import {readFile,writeFile,mkdir,readdir,copyFile,stat} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {fileURLToPath,pathToFileURL} from 'node:url';
 import path from 'node:path';
 import {parse} from 'acorn';
 import {build} from 'esbuild';
-import {IMAGE_PATHS,IMAGE_EXTENSIONS} from '../src/media.mjs';
+import {IMAGE_PATHS,IMAGE_EXTENSIONS} from '../src/media.ts';
 const root=fileURLToPath(new URL('../',import.meta.url));
 
 function prefix(node){
@@ -48,6 +48,13 @@ export function staticImageExpressions(source){
 }
 
 export async function buildStatic(site=path.join(root,'site')){
+  // 视频长度保存在私有目录，供不提供 Content-Length 的 Assets 绑定计算 Range。
+  const media=path.join(site,'_media'),sizes={};
+  await mkdir(media,{recursive:true});
+  for(const entry of await readdir(media,{withFileTypes:true})){
+    if(entry.isFile()&&/^\d+\.mp4$/.test(entry.name))sizes[entry.name.slice(0,-4)]=(await stat(path.join(media,entry.name))).size;
+  }
+  await writeFile(path.join(media,'index.json'),JSON.stringify(sizes));
   const manifest=JSON.parse(await readFile(path.join(site,'_fixtures/manifest.json'),'utf8'));
   const images={},out=path.join(site,'_demo/images');await mkdir(out,{recursive:true});
   for(const [key,ext] of Object.entries(manifest.fixtures)){
@@ -58,7 +65,7 @@ export async function buildStatic(site=path.join(root,'site')){
     await copyFile(source,path.join(out,name));images[key]=`/_demo/images/${name}`;
   }
   for(const [alias,key] of Object.entries(manifest.alias||{}))if(images[key])images[alias]=images[key];
-  const runtime=await build({stdin:{contents:`import {mediaURL,mediaJSON,mediaHTML} from './src/media.mjs';const images=${JSON.stringify(images)};globalThis.peachDemoMedia=value=>mediaURL(value,images,location.origin);globalThis.peachDemoMediaJSON=value=>mediaJSON(value,images,location.origin);globalThis.peachDemoHTML=value=>mediaHTML(value,images,location.origin);`,resolveDir:root},bundle:true,write:false,format:'iife',minify:true,platform:'browser',target:'es2022'});
+  const runtime=await build({stdin:{contents:`import {mediaURL,mediaJSON,mediaHTML} from './src/media.ts';const images=${JSON.stringify(images)};globalThis.peachDemoMedia=value=>mediaURL(value,images,location.origin);globalThis.peachDemoMediaJSON=value=>mediaJSON(value,images,location.origin);globalThis.peachDemoHTML=value=>mediaHTML(value,images,location.origin);`,resolveDir:root},bundle:true,write:false,format:'iife',minify:true,platform:'browser',target:'es2022'});
   await writeFile(path.join(site,'_demo/media-runtime.js'),runtime.outputFiles[0].contents);
   let count=0;
   for(const entry of await readdir(path.join(site,'dist'))){

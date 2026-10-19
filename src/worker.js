@@ -1,10 +1,11 @@
-// Peach 演示站：页面是 Peach 自己的前端，接口与媒体按 scripts/record.mjs 录下的响应回放。
+// Peach 演示站：页面使用 Peach 前端，接口与媒体按本地录制包回放。
 // 馆藏列表和筛选读录制目录，按请求参数计算；其余接口依次查完整键、同路径录制响应和兜底。
 // 写操作不落地：页面内交互适配提供临时状态，Worker 提供录制响应，刷新恢复录制状态。
-import {fixtureHash, fixtureKey} from './key.mjs';
-import {directoryPage} from './directory.mjs';
-import {discoveryPage,feedDiscoveryPage} from './discovery.mjs';
-import {followPage} from './follow.mjs';
+import {fixtureHash, fixtureKey} from './key.ts';
+import {directoryPage} from './directory.ts';
+import {discoveryPage,feedDiscoveryPage} from './discovery.ts';
+import {followPage} from './follow.ts';
+import {stream} from './stream.ts';
 
 const TYPES = {
   json: 'application/json; charset=utf-8', jpg: 'image/jpeg', png: 'image/png', webp: 'image/webp', avif: 'image/avif',
@@ -21,7 +22,7 @@ let directory = null;
 let follow = null;
 let feedDiscoveries = null;
 const discoveries = new Map();
-// 演示馆藏几乎全是番号片，首页默认开大图（竖版封面）；访客自己切过的不动。与 record.mjs 的 DEMO_SETTINGS 一致。
+// 演示馆藏首页默认开大图（竖版封面），保留访客已选择的布局。
 const DEMO_SETTINGS = `<script>try{const k='peach.settings.v1',s=JSON.parse(localStorage.getItem(k)||'{}');
 if(!('homeLayout' in s))s.homeLayout='big';localStorage.setItem(k,JSON.stringify(s))}catch(_e){}</script>`;
 // 演示数据里的关注更新全是图片帖，而关注页默认是视频模式（只认地址栏的 media 参数），直接进去是空的。
@@ -67,28 +68,6 @@ async function fixture(env, url, ext) {
   // 缓存一天会让老访客看到上一版的图。图片每次都回来问一声，ETag 由静态资源层按内容给，没变就回 304。
   headers.set('cache-control', ext.ext === 'json' ? 'no-store' : 'public, max-age=0, must-revalidate');
   return new Response(response.body, {status: 200, headers});
-}
-
-// 静态资源这一层不认 Range，Safari 的播放器拿不到 206 会拒播。片段每段几十 KB，整段取出来按请求切。
-async function stream(request, env, url) {
-  const id = url.searchParams.get('id') ?? '';
-  if (!/^\d+$/.test(id)) return json('{"error":"unavailable"}', 404);
-  const asset = await env.ASSETS.fetch(new URL(`/_media/${id}.mp4`, url));
-  if (!asset.ok) return json('{"error":"unavailable"}', 404);
-  const body = new Uint8Array(await asset.arrayBuffer());
-  const headers = {'content-type': 'video/mp4', 'accept-ranges': 'bytes', 'cache-control': 'public, max-age=86400'};
-  const match = /^bytes=(\d*)-(\d*)$/.exec(request.headers.get('range') ?? '');
-  if (!match || (!match[1] && !match[2])) {
-    return new Response(request.method === 'HEAD' ? null : body, {headers: {...headers, 'content-length': String(body.length)}});
-  }
-  const start = match[1] ? Number(match[1]) : Math.max(0, body.length - Number(match[2]));
-  const end = match[1] && match[2] ? Math.min(Number(match[2]), body.length - 1) : body.length - 1;
-  if (start >= body.length || start > end) {
-    return new Response(null, {status: 416, headers: {...headers, 'content-range': `bytes */${body.length}`}});
-  }
-  const slice = body.subarray(start, end + 1);
-  return new Response(request.method === 'HEAD' ? null : slice, {status: 206, headers: {...headers,
-    'content-range': `bytes ${start}-${end}/${body.length}`, 'content-length': String(slice.length)}});
 }
 
 async function lookup(env, url, method) {
@@ -165,7 +144,7 @@ async function fallbackCatalog(env,url,facets=false) {
   const offset=Math.max(0,Number(url.searchParams.get('offset'))||0),limit=Math.min(1000,Math.max(1,Number(url.searchParams.get('limit'))||60));
   return json(JSON.stringify({total:items.length,bytes:sum('size'),items:items.slice(offset,offset+limit),has_more:offset+limit<items.length}));
 }
-// 没录过的联想：用 record.mjs --suggest 存的联想目录，照 Peach 的 q_suggest（src/peach/web_entity.py）过滤与排序。
+// 联想从录制目录过滤与排序，遵循 Peach 的 q_suggest（src/peach/web_entity.py）。
 // 不到 3 个字符的拉丁输入比词首（整串开头或空格之后），其余比子串；同类里规范名前缀命中的在前，再按作品数、名字。
 const SUGGEST_GROUPS = [['performer', '女优'], ['creator', '创作者'], ['studio', '厂牌'], ['agency', '事务所'],
   ['series', '系列'], ['tag', '标签'], ['asset', '视频']];

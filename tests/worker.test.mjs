@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {webcrypto} from 'node:crypto';
-import {fixtureHash,fixtureKey} from '../src/key.mjs';
+import {fixtureHash,fixtureKey} from '../src/key.ts';
 import worker from '../src/worker.js';
-import {discoveryPage} from '../src/discovery.mjs';
+import {discoveryPage} from '../src/discovery.ts';
 if(!globalThis.crypto)globalThis.crypto=webcrypto;
 const origin='https://example.test';
 const portraitHash=await fixtureHash('GET /entity-image?id=102&kind=performer');
@@ -28,7 +28,12 @@ const files=new Map([
  ['/_media/1.mp4',new Uint8Array([0,1,2,3,4,5,6,7])],
  ['/favicon.ico',new Uint8Array([1,2,3])]
 ]);
-const env={ASSETS:{async fetch(input){const name=new URL(input instanceof Request?input.url:input).pathname;return files.has(name)?new Response(files.get(name)):new Response('not found',{status:404})}}};
+const env={ASSETS:{async fetch(input){
+ const name=new URL(input instanceof Request?input.url:input).pathname;
+ if(!files.has(name))return new Response('not found',{status:404});
+ const body=files.get(name),video=name.endsWith('.mp4');
+ return new Response(input instanceof Request&&input.method==='HEAD'?null:body,{headers:video?{'content-type':'video/mp4','content-length':String(body.byteLength)}:{}});
+}}};
 const call=(path,init)=>worker.fetch(new Request(origin+path,init),env);
 test('未录制的资料查询明确返回未取得',async()=>{
  const response=await call('/api/entity?kind=creator&id=999999');
