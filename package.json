@@ -13,25 +13,28 @@
   "scripts": {
     "sync": "node scripts/sync_frontend.mjs",
     "assets:import": "node scripts/import_assets.mjs",
-    "build": "node scripts/build_static.mjs",
+    "assets:build": "node scripts/build_static.mjs",
+    "build": "npm run assets:build && cf build",
+    "precheck": "cf workers types",
     "check": "tsc --noEmit && node scripts/check.mjs",
-    "check:deploy": "wrangler deploy --dry-run --outdir .cache/worker",
+    "check:deploy": "cf deploy --dry-run",
     "test": "node --test tests/*.test.mjs",
     "test:browser": "node scripts/check_browser.mjs && node scripts/check_filters.mjs",
     "test:search": "node scripts/check_search_recommendations.mjs",
     "test:stream": "node scripts/check_stream.mjs",
-    "dev": "wrangler dev --ip 127.0.0.1 --port 8791",
-    "predev": "npm run build",
+    "dev": "cf dev",
+    "predev": "npm run assets:build",
     "predeploy": "node scripts/check_package.mjs --assets && npm run build",
-    "deploy": "wrangler deploy"
+    "deploy": "cf deploy --prebuilt"
   },
   "devDependencies": {
     "@noble/hashes": "2.4.0",
+    "@types/node": "24.19.2",
     "acorn": "8.19.0",
+    "cf": "1.0.0-beta.18",
     "esbuild": "0.28.2",
     "playwright": "1.64.1",
-    "wrangler": "4.151.2",
     "typescript": "7.0.2",
-    "@types/node": "24.19.2"
+    "wrangler": "4.151.2"
   }
 }

@@ -2,6 +2,8 @@ import assert from 'node:assert/strict';
 import {chromium} from 'playwright';
 
 const base = process.env.BASE || 'http://127.0.0.1:8791';
+const hoverOnly = process.argv.includes('--hover-only');
+if (!hoverOnly) {
 const whole = Buffer.from(await (await fetch(base + '/stream?id=1')).arrayBuffer());
 assert.ok(whole.length > 0);
 for (const [range, start, end] of [
@@ -19,13 +21,16 @@ assert.equal(head.status, 200);
 assert.equal((await head.arrayBuffer()).byteLength, 0);
 assert.equal((await fetch(base + '/stream?id=999999')).status, 404);
 console.log('PASS: 视频首段、中段、末段、超长后缀、HEAD、越界与缺失文件');
+}
 
 const browser = await chromium.launch({channel: 'chrome'});
 try {
-  for (const width of [1440, 390]) {
+  if (!hoverOnly) for (const width of [1440, 390]) {
+   for (const fallback of [false, true]) {
     const page = await browser.newPage({viewport: {width, height: 900}, reducedMotion: 'reduce'});
     try {
       await page.addInitScript(() => localStorage.setItem('peach.settings.v1', JSON.stringify({detailAutoplay: false})));
+      if (fallback) await page.route('**/api/timeline?**', route => route.fulfill({json: null}));
       const errors = [];
       page.on('pageerror', error => errors.push(error.message));
       await page.goto(base + '/assets/1', {waitUntil: 'networkidle'});
@@ -52,7 +57,32 @@ try {
       });
       assert.ok(await image.getAttribute('src'));
       assert.deepEqual(errors, []);
-      console.log(`PASS: ${width}px 视频元数据、解码、跳转与进度条悬停缩略图`);
+      console.log(`PASS: ${width}px 视频元数据、解码、跳转与${fallback ? '九宫格回退' : '时间轴'}缩略图`);
     } finally {await page.close()}
+   }
   }
+  const page = await browser.newPage({viewport: {width: 1440, height: 900}});
+  try {
+    await page.addInitScript(() => localStorage.setItem('peach.settings.v1', JSON.stringify({detailAutoplay: false, homeLayout: 'big', hoverPreview: 'video'})));
+    await page.goto(base + '/?loc=local', {waitUntil: 'networkidle'});
+    const card = page.locator('[data-hover-mode="video"]').first();
+    await card.scrollIntoViewIfNeeded();
+    await page.waitForTimeout(250);
+    await page.waitForFunction(() => !window.__scrolling);
+    await page.mouse.move(0, 0);
+    const picture = await card.locator('[data-media-pic]').boundingBox();
+    await page.mouse.move(picture.x + picture.width / 2, Math.min(850, picture.y + picture.height / 2));
+    const hover = page.locator('video.hv').first();
+    await hover.waitFor({state: 'attached'});
+    await page.waitForFunction(() => {
+      const node = document.querySelector('video.hv');
+      return node?.duration > 0 && node.videoWidth > 0 && node.currentTime > .1;
+    });
+    await hover.evaluate(node => {node.currentTime = node.duration * .8});
+    await page.waitForFunction(() => {
+      const node = document.querySelector('video.hv');
+      return node && !node.seeking && node.readyState >= 2;
+    });
+    console.log('PASS: 卡片视频预览解码与跳转');
+  } finally {await page.close()}
 } finally {await browser.close()}
