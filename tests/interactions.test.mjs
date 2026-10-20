@@ -2,10 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import {readFile} from 'node:fs/promises';
+import {configuration,cloudProxies,downloadTasks,providers} from '../src/showcase.mjs';
 const source=await readFile(new URL('../site/_demo/interactions.js',import.meta.url),'utf8');
 function page(respond=()=>({status:'complete',id:1,items:[]})){
   let now=Date.now();
-  const calls=[],context={Request,Response,Headers,URL,URLSearchParams,crypto,Date:class extends Date{static now(){return now}},
+  const calls=[],context={Request,Response,Headers,URL,URLSearchParams,crypto,Blob,Date:class extends Date{static now(){return now}},
     location:{href:'https://demo.example/',origin:'https://demo.example',search:''},
     document:{readyState:'loading',addEventListener(){}},
     fetch:async(input,init)=>{const url=input instanceof Request?new URL(input.url):new URL(input,'https://demo.example');calls.push({path:url.pathname,search:url.search,method:input.method||init?.method||'GET'});return new Response(JSON.stringify(respond(url)),{headers:{'content-type':'application/json'}})}};
@@ -17,6 +18,51 @@ test('固定处理状态合并并发读取，重复轮询不产生网络请求',
   assert.equal((await (await p.fetch('/api/library-processing')).json()).status,'complete');assert.equal(p.calls.length,1);
   const write=await p.fetch('/api/library-processing',{method:'POST',body:'{}'});assert.equal((await write.json()).status,'running');
   assert.match((await (await p.fetch('/api/library-processing')).json()).job_id,/^demo-/);assert.equal(p.calls.length,1);
+});
+
+test('配置与代理草稿可读取保存结果，凭据只保留已保存标记',async()=>{
+  const p=page(url=>url.pathname.endsWith('cloud-proxies')?cloudProxies():configuration({updates:{},facts:[],tunnel:{},push_discovery:{}},'1.2.3'));
+  const payload={id:'demo-cloud-1',revision:'demo-1',api:{mode:'http',host:'proxy.example.com',port:8080,password:'temporary-secret'}};
+  const saved=await(await p.fetch('/api/configuration/cloud-proxies',{method:'POST',body:JSON.stringify(payload)})).json();
+  assert.equal(saved.api.password_set,true);assert.equal(saved.api.password,undefined);
+  const reread=await(await p.fetch('/api/configuration/cloud-proxies')).json();
+  assert.equal(reread.accounts[0].api.host,'proxy.example.com');assert.equal(JSON.stringify(reread).includes('temporary-secret'),false);
+  assert.ok(p.calls.every(call=>call.method==='GET'));
+});
+
+test('下载任务取消与重新提交只改变当前页面草稿',async()=>{
+  const initial=()=>({available:true,providers,tasks:downloadTasks([{id:1,name:'示例一'},{id:2,name:'示例二'},{id:3,name:'示例三'}])});
+  const p=page(initial);
+  await p.fetch('/api/downloads/cancel',{method:'POST',body:JSON.stringify({id:30})});
+  let state=await(await p.fetch('/api/downloads?limit=20')).json();assert.equal(state.tasks[0].state,'cancelled');
+  await p.fetch('/api/downloads',{method:'POST',body:JSON.stringify({magnet:state.tasks[2].source_uri})});
+  state=await(await p.fetch('/api/downloads?limit=20')).json();assert.equal(state.tasks[2].state,'remote_running');
+  assert.equal((await(await page(initial).fetch('/api/downloads')).json()).tasks[0].state,'remote_running');
+  assert.equal(p.calls.filter(call=>call.method!=='GET').length,0);
+});
+
+test('想要清单移除与重新寻找同步阶段计数',async()=>{
+  const p=page(()=>({items:[{id:1,phase:'given_up'},{id:2,phase:'searching'}],counts:{},scraping:false}));
+  await p.fetch('/api/wants',{method:'POST',body:JSON.stringify({action:'reset',ids:[1]})});
+  assert.equal((await(await p.fetch('/api/wants')).json()).counts.searching,2);
+  await p.fetch('/api/wants',{method:'POST',body:JSON.stringify({action:'remove',ids:[2]})});
+  const state=await(await p.fetch('/api/wants')).json();assert.equal(state.counts.searching,1);assert.deepEqual(state.items.map(row=>row.id),[1]);
+});
+
+test('接回文件记录后列表移除已接回条目',async()=>{
+  const p=page(()=>({total:1,items:[{id:900001}]}));
+  const result=await(await p.fetch('/api/orphan-records/attach',{method:'POST',body:JSON.stringify({id:900001,target:1})})).json();
+  assert.equal(result.batch,'demo-attach');assert.equal((await(await p.fetch('/api/orphan-records')).json()).total,0);
+  assert.ok(p.calls.every(call=>call.method==='GET'));
+});
+
+test('首次设置与字幕文件停留在浏览器，不发送输入内容',async()=>{
+  const p=page();
+  const done=await(await p.fetch('/api/setup',{method:'POST',body:JSON.stringify({access_password:'temporary-secret',data_root:'private-folder'})})).json();
+  assert.equal(done.url,'/');assert.equal(JSON.stringify(done).includes('temporary-secret'),false);
+  const caption='WEBVTT\n\n00:00.000 --> 00:02.000\n演示字幕\n';
+  const response=await p.fetch('/api/subtitles/convert?name=demo.vtt',{method:'POST',body:caption});
+  assert.equal(await response.text(),caption);assert.equal(p.calls.length,0);
 });
 
 test('新版确认弹窗取得零成本的演示预估，不读取真实任务',async()=>{

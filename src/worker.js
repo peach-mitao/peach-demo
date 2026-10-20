@@ -7,6 +7,7 @@ import {discoveryPage,feedDiscoveryPage} from './discovery.ts';
 import {followPage} from './follow.ts';
 import {stream} from './stream.ts';
 import {folderIndex,folderItems,folderPage} from './folders.mjs';
+import {resources} from './showcase.mjs';
 
 const TYPES = {
   json: 'application/json; charset=utf-8', jpg: 'image/jpeg', png: 'image/png', webp: 'image/webp', avif: 'image/avif',
@@ -22,10 +23,12 @@ let manifest = null;
 let directory = null;
 let follow = null;
 let feedDiscoveries = null;
+let entryPages = null;
 const discoveries = new Map();
 // 演示馆藏首页默认开大图（竖版封面），保留访客已选择的布局。
 const DEMO_SETTINGS = `<script>try{const k='peach.settings.v1',s=JSON.parse(localStorage.getItem(k)||'{}');
-if(!('homeLayout' in s))s.homeLayout='big';localStorage.setItem(k,JSON.stringify(s))}catch(_e){}</script>`;
+if(!('homeLayout' in s))s.homeLayout='big';if(!('detailAutoplay' in s))s.detailAutoplay=false;
+localStorage.setItem(k,JSON.stringify(s))}catch(_e){}</script>`;
 // 演示数据里的关注更新全是图片帖，而关注页默认是视频模式（只认地址栏的 media 参数），直接进去是空的。
 // 从别处进关注页、或直接打开 /follow 时补上 media=images；已经在关注页里切回视频的不拦。
 const FOLLOW_IMAGES = `<script>(()=>{const fix=u=>{try{const url=new URL(u,location.href);
@@ -200,8 +203,27 @@ export default {
     const url = new URL(request.url);
     if (url.pathname === '/stream') return stream(request, env, url);
     if (url.pathname.startsWith('/_fixtures/') || url.pathname.startsWith('/_media/')) return json('{"error":"not found"}', 404);
+    if(['/login','/setup','/api/setup/questions','/api/setup','/api/setup/restore'].includes(url.pathname)){
+      entryPages ??= await env.ASSETS.fetch(new URL('/_fixtures/entry-pages.json',url)).then(response=>response.ok?response.json():null);
+      if(!entryPages)return json('{"error":"入口页录制未取得"}',404);
+      if(url.pathname==='/api/setup/questions')return json(JSON.stringify(entryPages.questions));
+      if(url.pathname.startsWith('/api/setup'))return json(JSON.stringify({url:'/',scan_requested:false,history_guide:false,standalone:false,redirect:null,facts:[{term:'数据目录',value:'C:\\Users\\peach\\peach-data'}]}));
+      if(request.method==='POST')return Response.redirect(new URL('/',url),303);
+      return new Response(entryPages[url.pathname.slice(1)].replace('</head>',INTERACTIONS+'</head>').replace('</body>',NOTICE+'</body>'),{headers:{'content-type':'text/html; charset=utf-8','cache-control':'no-store'}});
+    }
     manifest ??= await env.ASSETS.fetch(new URL('/_fixtures/manifest.json', url)).then((r) => r.json());
     const method = request.method === 'HEAD' ? 'GET' : request.method;
+    if(method==='GET'&&['/api/jav/resources','/api/resources/search'].includes(url.pathname)){
+      await loadCatalog(env,url);
+      const code=(url.searchParams.get('code')||'').toUpperCase();
+      const item=catalog.items.find(item=>item.code?.toUpperCase()===code);
+      return json(JSON.stringify(item?resources(item,url.pathname==='/api/resources/search'):{state:'ready',items:[],warnings:[],error:'',complete:true}));
+    }
+    if(method==='GET'&&url.pathname.startsWith('/api/subtitles/')){
+      if(url.pathname==='/api/subtitles/search')return json(JSON.stringify({results:[{id:'demo',title:'Peach 演示字幕',language:'中文',format:'WebVTT'}],more:false}));
+      if(url.pathname==='/api/subtitles/subtitlecat/demo')return json(JSON.stringify({files:[{index:0,name:'Peach 演示字幕.vtt',playable:true,language:'中文'}]}));
+      if(url.pathname==='/api/subtitles/subtitlecat/demo/0')return new Response('WEBVTT\n\n00:00.000 --> 00:10.000\nPeach 演示字幕\n',{headers:{'content-type':TYPES.vtt}});
+    }
     if(method==='GET'&&url.pathname==='/api/folders'){
       await loadCatalog(env,url);
       const page=folderPage(folders,url.searchParams);
@@ -276,7 +298,7 @@ export default {
         return json(JSON.stringify({...data,tasks,has_more:more,next_before_id:more?tasks.at(-1).id:null}));
       }
     }
-    if((url.pathname==='/site-mark'&&/^[a-z0-9.-]+$/i.test(url.searchParams.get('domain')||''))
+    if((url.pathname==='/site-mark'&&(/^[a-z0-9.-]+$/i.test(url.searchParams.get('domain')||'')||/^[a-z0-9_-]+$/i.test(url.searchParams.get('source')||'')))
       ||(url.pathname==='/link-mark'&&/^[1-9]\d*$/.test(url.searchParams.get('id')||''))){
       return new Response('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></svg>',{headers:{'content-type':TYPES.svg,'cache-control':'public, max-age=86400'}});
     }

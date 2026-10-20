@@ -41,6 +41,20 @@ const env={MEDIA:media().env.MEDIA,ASSETS:{async fetch(input){
 }}};
 const call=(path,init)=>worker.fetch(new Request(origin+path,init),env);
 
+test('资源查询只用演示馆藏生成可回放候选',async()=>{
+ const response=await call('/api/jav/resources?code=DEMO-001');assert.equal(response.status,200);
+ const data=await response.json();assert.equal(data.items.length,1);assert.match(data.items[0].uri,/^magnet:/);
+ assert.equal(typeof(await(await call('/api/resources/search?code=DEMO-001')).json()).items[0].size,'number');
+ assert.deepEqual((await(await call('/api/jav/resources?code=UNKNOWN')).json()).items,[]);
+});
+
+test('字幕搜索和加载使用演示文本',async()=>{
+ const data=await(await call('/api/subtitles/search?q=DEMO')).json();assert.equal(data.results[0].id,'demo');
+ const files=await(await call('/api/subtitles/subtitlecat/demo')).json();assert.equal(files.files[0].playable,true);
+ const response=await call('/api/subtitles/subtitlecat/demo/0');assert.match(response.headers.get('content-type'),/text\/vtt/);
+ assert.match(await response.text(),/^WEBVTT/);
+});
+
 test('新版任务页按较小批次分页读取已录制的云下载任务',async()=>{
  const first=await(await call('/api/downloads?limit=2')).json();assert.deepEqual(first.tasks.map(row=>row.id),[3,2]);
  assert.equal(first.has_more,true);assert.equal(first.next_before_id,2);

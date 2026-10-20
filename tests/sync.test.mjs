@@ -4,6 +4,8 @@ import {mkdtemp,mkdir,writeFile,readFile,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
 import {readStylesheet,syncFrontend} from '../scripts/sync_frontend.mjs';
+import {execFileSync} from 'node:child_process';
+import {createHash} from 'node:crypto';
 
 test('React 入口与构建包可同步到独立演示目录',async()=>{
  const root=path.resolve(await mkdtemp(path.join(tmpdir(),'peach-demo-react-')));
@@ -14,7 +16,10 @@ test('React 入口与构建包可同步到独立演示目录',async()=>{
   for(const name of ['javten','fc2ppvdb','avwikidb','github','minnano-av'])files[`resources/site-marks/${name}.png`]='icon';
   files['resources/site-marks/ORIGIN.md']='来源说明';
   files['resources/peach-logo.png']='logo';files['resources/peach.ico']='favicon';
+  files['src/peach/__init__.py']='__version__ = "1.2.3"';
   for(const [name,body] of Object.entries(files)){const file=path.join(source,name);await mkdir(path.dirname(file),{recursive:true});await writeFile(file,body)}
+  execFileSync('git',['init',source]);
+  execFileSync('git',['-C',source,'-c','user.name=Demo Test','-c','user.email=demo@example.com','commit','--allow-empty','-m','fixture']);
   await syncFrontend(source,target);
   assert.equal(await readFile(path.join(target,'dist/peach-app.js'),'utf8'),'app');
   assert.equal(await readFile(path.join(target,'app.css'),'utf8'),'base');
@@ -23,6 +28,10 @@ test('React 入口与构建包可同步到独立演示目录',async()=>{
   assert.equal(await readFile(path.join(target,'favicon.ico'),'utf8'),'favicon');
   assert.equal(await readFile(path.join(target,'site-icon/minnano-av.png'),'utf8'),'icon');
   assert.equal(await readFile(path.join(target,'site-icon/ORIGIN.md'),'utf8'),'来源说明');
+  const provenance=JSON.parse(await readFile(path.join(target,'_demo/frontend-source.json'),'utf8'));
+  assert.equal(provenance.version,'1.2.3');assert.match(provenance.commit,/^[a-f0-9]{40}$/);
+  assert.equal(provenance.files['dist/peach-app.js'],createHash('sha256').update('app').digest('hex'));
+  assert.equal(JSON.stringify(provenance).includes(root),false);
  }finally{await rm(root,{recursive:true,force:true})}
 });
 

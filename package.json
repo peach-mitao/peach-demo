@@ -14,7 +14,7 @@
     "sync": "node scripts/sync_frontend.mjs",
     "edit:sync": "node scripts/sync_copy_editor.mjs",
     "assets:import": "node scripts/import_assets.mjs",
-    "assets:build": "node scripts/build_static.mjs",
+    "assets:build": "node scripts/prepare_showcase.mjs && node scripts/build_static.mjs",
     "media:plan": "node scripts/media_storage.ts plan",
     "media:local": "node scripts/media_storage.ts upload --local",
     "media:upload": "node scripts/media_storage.ts upload --remote",

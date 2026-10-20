@@ -1,6 +1,9 @@
 // 演示交互的状态留在当前页面内存中，刷新即恢复录制值。
 (() => {
   const overlays = () => {
+    document.querySelector('form[action="/login"]')?.addEventListener('submit',event=>{
+      event.preventDefault();location.assign('/');
+    });
     const notice=document.querySelector('[data-demo-notice]'),toasts=document.querySelector('#toasts');
     const menu=document.querySelector('#searchMenu');
     let queued=false;
@@ -114,6 +117,38 @@
   const configuration = async (path, body) => {
     const config = await read('/api/configuration');
     const key = path.slice('/api/configuration/'.length);
+    if(key==='downloads/check'||key==='downloads/folder')return read('/api/configuration/downloads/check');
+    if(key==='downloads'){
+      const {token: _token,...safe}=body;
+      config.downloads.config={...config.downloads.config,...safe};
+      return {...config.downloads,report:await read('/api/configuration/downloads/check')};
+    }
+    if(key.startsWith('downloads/pikpak/')){
+      const account=config.downloads.pikpak;
+      account.logged_in=!key.endsWith('logout');
+      account.username=account.logged_in?'demo@example.com':'';
+      return key.endsWith('/login')?{ok:true,settings:config.downloads}:config.downloads;
+    }
+    if(key==='cloud-proxies'){
+      const state=await read(path),account=state.accounts.find(row=>row.id===body.id);
+      if(!account)throw Error('演示账号不存在');
+      for(const field of ['api','data'])if(body[field]){
+        const {password,clear_password,...value}=body[field];
+        account[field]={...account[field],...value,password_set:clear_password?false:Boolean(password||account[field].password_set)};
+      }
+      return account;
+    }
+    if(key==='indexers'){
+      const state=await read(path);
+      state.indexers=(body.indexers||[]).map(({api_key,clear_api_key,...row})=>({...row,api_key_set:clear_api_key?false:Boolean(api_key||row.api_key_set)}));
+      return state;
+    }
+    if(key==='jav-browser'){
+      const state=await read(path);
+      state.enabled=body.action!=='disable';state.provider=body.provider||state.provider;
+      state.active_provider=state.enabled?state.provider:'';
+      return {...state,...(state.enabled?{token:'demo-preview-token'}:{})};
+    }
     if (key === 'entry-links') {
       config.entry_links.sites = config.entry_links.sites.map(site => ({...site,host:body.sites?.[site.key]?.host ?? site.host}));
       return config.entry_links;
@@ -154,6 +189,88 @@
     }
     const request = new Request(input instanceof Request ? input : url, init);
     const path = url.pathname;
+    if(['/api/setup','/api/setup/restore'].includes(path)&&request.method==='POST')return result({
+      url:'/',restored:path.endsWith('/restore'),scan_requested:false,history_guide:false,standalone:false,redirect:null,
+      facts:[{term:'数据目录',value:'C:\\Users\\peach\\peach-data'}],
+    });
+    if(path==='/api/subtitles/convert'&&request.method==='POST'){
+      const name=url.searchParams.get('name')||'';
+      if(!name.toLowerCase().endsWith('.vtt'))return result({error:'演示站可加载 WebVTT 文件或在线演示字幕。'},400);
+      return new Response(await request.text(),{headers:{'content-type':'text/vtt; charset=utf-8'}});
+    }
+    if(path==='/api/wants/magnets'){
+      const state=await read('/api/wants'),want=state.items.find(row=>row.id===Number(url.searchParams.get('id')));
+      if(!want)return result({state:'unavailable',items:[],error:'条目不存在'},404);
+      if(!want.code||['unreleased','acquired'].includes(want.phase))return result({state:'unavailable',items:[],error:''});
+      return originalFetch('/api/jav/resources?'+new URLSearchParams({code:want.code}));
+    }
+    if(path==='/api/wants'){
+      const state=await read(path);
+      if(request.method==='GET')return result(url.searchParams.has('follow')?{want:state.items.find(row=>row.follow_item_id===Number(url.searchParams.get('follow')))||null}:state);
+      const body=await request.clone().json();
+      if(body.action==='remove')state.items=state.items.filter(row=>!body.ids.includes(row.id));
+      if(body.action==='reset')for(const item of state.items)if(body.ids.includes(item.id))item.phase='searching';
+      const existing=state.items.find(row=>body.code?row.code===body.code:body.follow_item_id&&row.follow_item_id===body.follow_item_id);
+      if(body.action==='add'&&!existing){
+        state.items.unshift({id:Date.now(),code:body.code||null,title:body.code||'演示想要作品',origin:'code',phase:'searching',
+          performers:'',studio:'',release_date:null,cover:null,remote_cover:false,search_count:0,scraped:false,created_at:new Date().toISOString(),follow_item_id:body.follow_item_id||null});
+      }
+      state.counts=Object.fromEntries(['searching','unreleased','given_up','acquired'].map(phase=>[phase,state.items.filter(row=>row.phase===phase).length]));
+      return result(body.action==='add'?{created:!existing,want:existing||state.items[0]}:{ok:true});
+    }
+    if(path==='/api/orphan-records'&&request.method==='GET')return result(await read(path));
+    if(path==='/api/orphan-records/attach'&&request.method==='POST'){
+      const body=await request.clone().json(),state=await read('/api/orphan-records');
+      state.items=state.items.filter(row=>row.id!==body.id&&row.id!==body.asset_id);state.total=state.items.length;
+      return result({ok:true,moved:1,batch:'demo-attach'});
+    }
+    if(path==='/api/downloads'||path.startsWith('/api/downloads/')){
+      const state=await read('/api/downloads');
+      if(request.method==='GET'){
+        const before=Number(url.searchParams.get('before_id')),limit=Math.max(1,Math.min(50,Number(url.searchParams.get('limit'))||20));
+        const rows=state.tasks.filter(row=>!before||row.id<before),tasks=rows.slice(0,limit),more=rows.length>limit;
+        return result({...state,tasks,has_more:more,next_before_id:more?tasks.at(-1).id:null});
+      }
+      const body=await request.clone().json(),task=state.tasks.find(row=>row.id===body.id);
+      if(path==='/api/downloads'){
+        let previous=state.tasks.find(row=>row.source_uri===body.magnet);
+        if(!previous){
+          const provider=state.providers.find(row=>row.key===body.provider);
+          if(!provider)return result({ok:false,message:'请选择演示下载渠道'},400);
+          previous={...state.tasks[0],id:Math.max(0,...state.tasks.map(row=>row.id))+1,source_uri:body.magnet,code:body.code||'',
+            display_name:body.title||body.code||'演示云下载',provider:provider.key,provider_label:provider.label,target:provider.target};
+          state.tasks.unshift(previous);
+        }
+        Object.assign(previous,{state:'remote_running',state_label:'下载中',cancellable:true,resubmittable:false,failure_reason:null,failure_detail:null,progress:0});
+        return result({ok:true,outcome:'submitted',task:previous});
+      }
+      if(task){
+        if(path.endsWith('/cancel'))Object.assign(task,{state:'cancelled',state_label:'已取消',cancellable:false,progress:null});
+        if(path.endsWith('/postprocess'))Object.assign(task,{postprocess_state:'complete',postprocess_label:'整理完成',postprocess_retryable:false});
+        return result({ok:true,task});
+      }
+      return result({ok:false,message:'演示任务不存在'},404);
+    }
+    if(path==='/api/configuration'){
+      const config=await read(path);
+      if(request.method==='POST'){
+        const body=await request.clone().json();
+        for(const key of ['media_dirs','media_sources','port'])if(Object.hasOwn(body,key))config[key]=body[key];
+      }
+      return result(config);
+    }
+    if(path.startsWith('/api/configuration/')&&request.method==='GET'&&snapshots.has(path))return result(snapshots.get(path));
+    if(path==='/api/subtitles/memory'){
+      const key=path+url.search,state=await read(key);
+      if(request.method==='PUT'){
+        const body=await request.clone().json();state.selected=body.selected;
+        if(body.track){
+          const track={key:body.track.key,name:body.track.name,src:URL.createObjectURL(new Blob([body.track.text],{type:'text/vtt'}))};
+          state.tracks=[...state.tracks.filter(row=>row.key!==track.key),track];
+        }
+      }
+      return result(state);
+    }
     if(path==='/api/folders'&&request.method==='GET'){
       const response=await originalFetch(input,init);
       if(!response.ok)return response;

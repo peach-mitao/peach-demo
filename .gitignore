@@ -16,6 +16,10 @@
 !/scripts/
 /scripts/*
 !/scripts/sync_frontend.mjs
+!/scripts/prepare_showcase.mjs
+!/scripts/demo_pages.mjs
+!/scripts/record_pages.mjs
+!/scripts/record_entry_pages.py
 !/scripts/sync_copy_editor.mjs
 !/scripts/import_assets.mjs
 !/scripts/check_package.mjs
