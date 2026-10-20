@@ -11,8 +11,13 @@ try{
     page.on('request',request=>{if(request.method()!=='GET'&&new URL(request.url()).pathname.startsWith('/api/tag-management'))writes.push(request.url())});
     const key='/api/tag-management'+(scope==='online'?'?scope=online':'');
     const inventory=()=>page.evaluate(async key=>(await fetch(key)).json(),key);
-    const ready=()=>page.waitForFunction(()=>![...document.querySelectorAll('[data-tag-manager] [data-skeleton]')].some(element=>element.checkVisibility()));
-    const confirm=async label=>{await page.getByRole('dialog').getByRole('button',{name:label,exact:true}).click();await page.getByRole('dialog').waitFor({state:'hidden'});await ready()};
+    const ready=()=>page.waitForFunction(()=>![...document.querySelectorAll('[data-tag-manager] [data-skeleton],[data-tag-manager] [aria-busy="true"]')].some(element=>element.checkVisibility()));
+    const confirm=async label=>{
+      await page.getByRole('dialog').getByRole('button',{name:label,exact:true}).click();
+      await page.getByRole('dialog').waitFor({state:'hidden'});
+      // 成功回调在库存刷新后清空选择，此时才开始下一项操作。
+      await page.locator('[data-tag-manager] [data-selection-dock]').waitFor({state:'hidden'});await ready();
+    };
     const select=async name=>page.locator('[data-tag-manager] [data-k]').filter({hasText:name}).first().click();
     try{
       await page.goto(base+'/tags'+(scope==='online'?'?scope=online':''),{waitUntil:'networkidle'});
