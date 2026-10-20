@@ -21,7 +21,7 @@ if(!source)throw Error('Peach 源码未取得：npm run sync -- <Peach 检出目
 source=path.resolve(source);
 const web=path.join(source,'web'),names=['index.html','app.css','board.css'];
 async function walk(dir){for(const entry of await readdir(path.join(web,dir),{withFileTypes:true})){const name=`${dir}/${entry.name}`;if(entry.isDirectory())await walk(name);else if(!name.endsWith('.map'))names.push(name)}}
-for(const dir of ['dist','vendor'])await walk(dir);
+for(const dir of ['dist','vendor','integrations'])await walk(dir);
 const staged=[];
 for(const name of names)staged.push({name,body:name==='app.css'?await readStylesheet(web):await readFile(path.join(web,name))});
 for(const entry of await readdir(path.join(source,'resources/site-marks'),{withFileTypes:true})){

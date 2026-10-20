@@ -2,7 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import {readFile} from 'node:fs/promises';
-import {configuration,cloudProxies,downloadTasks,providers} from '../src/showcase.mjs';
+import {configuration,cloudProxies,providers} from '../src/showcase.mjs';
+import {downloadTasks} from './showcase-fixtures.mjs';
 import * as tagManagement from '../src/tag-management.mjs';
 const source=await readFile(new URL('../site/_demo/interactions.js',import.meta.url),'utf8');
 function page(respond=()=>({status:'complete',id:1,items:[]})){
@@ -81,6 +82,7 @@ test('标签管理预览和写入保存在页面，浏览词表同步更新',asy
 test('新版确认弹窗取得零成本的演示预估，不读取真实任务',async()=>{
   const p=page();const estimate=await(await p.fetch('/api/library-processing?estimate=1&stage=all')).json();
   assert.equal(estimate.traffic.estimated_max_bytes,0);assert.deepEqual(estimate.traffic.sources,[]);assert.equal(p.calls.length,0);
+  assert.deepEqual({...estimate.traffic.disk},{estimated_bytes:0,temporary_bytes:0,volumes:[],cache_unknown:false,can_fit:null});
 });
 
 test('视频预览设置只保存在页面草稿，扫描任务与设置使用同一策略',async()=>{

@@ -13,6 +13,7 @@ const feedDiscoveryHash=await fixtureHash('GET /api/feeds/discoveries?limit=12')
 const topsHash=await fixtureHash('GET /api/tops?n=60');
 const downloadsHash=await fixtureHash('GET /api/downloads?limit=50');
 const files=new Map([
+ ['/_fixtures/entry-pages.json',JSON.stringify({userscript_bridge:{html:'<meta name="peach-userscript-bridge" content="1">',headers:{'content-type':'text/html','x-frame-options':'SAMEORIGIN','content-security-policy':"default-src 'none'; frame-ancestors 'self'; base-uri 'none'"}}})],
  ['/_fixtures/manifest.json',JSON.stringify({fixtures:{[portraitHash]:'png',[followHash]:'json',[feedDiscoveryHash]:'json',[topsHash]:'json',[downloadsHash]:'json'},paths:[],alias:{}})],
  [`/_fixtures/${downloadsHash}.json`,JSON.stringify({available:true,providers:[],tasks:[{id:3},{id:2},{id:1}]})],
  [`/_fixtures/${topsHash}.json`,JSON.stringify({performers:[],studios:[{id:10,k:'示例厂牌',n:1,rep:1,has_logo:false}]})],
@@ -41,11 +42,19 @@ const env={MEDIA:media().env.MEDIA,ASSETS:{async fetch(input){
 }}};
 const call=(path,init)=>worker.fetch(new Request(origin+path,init),env);
 
-test('资源查询只用演示馆藏生成可回放候选',async()=>{
- const response=await call('/api/jav/resources?code=DEMO-001');assert.equal(response.status,200);
- const data=await response.json();assert.equal(data.items.length,1);assert.match(data.items[0].uri,/^magnet:/);
- assert.equal(typeof(await(await call('/api/resources/search?code=DEMO-001')).json()).items[0].size,'number');
- assert.deepEqual((await(await call('/api/jav/resources?code=UNKNOWN')).json()).items,[]);
+test('用户脚本桥接页使用录制内容及同源限制',async()=>{
+ const response=await call('/integrations/peach-userscript-bridge');
+ assert.equal(response.status,200);assert.match(await response.text(),/peach-userscript-bridge/);
+ assert.equal(response.headers.get('x-frame-options'),'SAMEORIGIN');
+ assert.match(response.headers.get('content-security-policy'),/frame-ancestors 'self'/);
+});
+
+test('未启用的资源搜索保留空状态且不生成磁链候选',async()=>{
+ for(const route of ['/api/jav/resources?code=DEMO-001','/api/resources/search?code=DEMO-001','/api/jav/resources?code=UNKNOWN']){
+  const response=await call(route);assert.equal(response.status,200);
+  const data=await response.json();assert.equal(data.state,'unavailable');assert.deepEqual(data.items,[]);
+  assert.equal(data.error,'资源搜索未启用');
+ }
 });
 
 test('字幕搜索和加载使用演示文本',async()=>{

@@ -15,6 +15,7 @@ def main():
     sys.path.insert(0, str(source / "src"))
     from peach import onboarding
     from peach.routes_auth import login_html
+    from peach.routes_jav_browser import userscript_bridge
     from peach.routes_pages import setup_shell, _question_view, _CLOUD_HELP, _CLOUD_HELP_URL, _CLOUD_HELP_LABEL
     from peach.media_configuration import SOURCE_OPTIONS
 
@@ -40,7 +41,9 @@ def main():
     payload["remote_reporting"] = {"usage": False, "errors": False, "available": True,
                                    "fields": {"usage": "版本与系统信息", "errors": "故障类型与代码位置"}, "notice": ""}
     commit = subprocess.check_output(["git", "-C", str(source), "rev-parse", "HEAD"], text=True).strip()
-    pages = {"commit": commit, "login": login_html("/"), "setup": setup_shell(), "questions": payload}
+    bridge = userscript_bridge()
+    pages = {"commit": commit, "login": login_html("/"), "setup": setup_shell(), "questions": payload,
+             "userscript_bridge": {"html": bytes(bridge.body).decode('utf-8'), "headers": dict(bridge.headers)}}
     target.mkdir(parents=True, exist_ok=True)
     (target / "entry-pages.json").write_text(json.dumps(pages, ensure_ascii=False), encoding="utf-8")
     print("已录制应用登录页、首次设置页与题目；未读取真实配置。")

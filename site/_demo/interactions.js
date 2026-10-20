@@ -352,8 +352,9 @@
       snapshots.set(path,policy);return result(policy);
     }
     if(request.method==='GET'&&path==='/api/library-processing'){
-      if(url.searchParams.get('estimate')==='1')return result({traffic:{used_bytes:0,estimated_min_bytes:0,estimated_max_bytes:0,
-        metered_used_bytes:0,metered_estimated_min_bytes:0,metered_estimated_max_bytes:0,partial:false,unknown_files:false,sources:[]}});
+      if(url.searchParams.get('estimate')==='1')return result({traffic:{used_bytes:0,estimated_bytes:0,estimated_min_bytes:0,estimated_max_bytes:0,
+        metered_used_bytes:0,metered_estimated_bytes:0,metered_estimated_min_bytes:0,metered_estimated_max_bytes:0,partial:false,unknown_files:false,sources:[],
+        disk:{estimated_bytes:0,temporary_bytes:0,volumes:[],cache_unknown:false,can_fit:null}}});
       return result(await processingState());
     }
     if(request.method==='GET'&&path==='/api/media-repair')return result(await read(path));

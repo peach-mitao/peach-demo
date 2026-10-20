@@ -65,6 +65,7 @@ try{
   await page.waitForFunction(()=>{const button=Array.from(document.querySelectorAll('button')).find(e=>e.textContent.trim()==='同步媒体库');if(!button)return false;const r=button.getBoundingClientRect();return button.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2))});
   await start.click();
   const dialog=page.getByRole('dialog',{name:'同步媒体库',exact:true});
+   await dialog.getByRole('region',{name:'磁盘预估',exact:true}).waitFor();
   const slider=dialog.getByRole('slider');await slider.focus();await slider.press('Home');await slider.press('Tab');
   assert.doesNotMatch(await dialog.innerText(),/流量预估未取得/);
   await dialog.getByRole('button',{name:'同步媒体库',exact:true}).click();

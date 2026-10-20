@@ -1,4 +1,4 @@
-// 演示专用配置与任务。只使用公开占位地址和已导入的演示作品。
+// 演示专用连接配置，只使用公开占位地址。
 export const sources = [
   {location:'local', root:'R:\\Media', path:'R:\\Media', library:'演示馆藏', library_icon:'local', online:true, cost:'free'},
   {location:'115', root:'A:\\115', path:'A:\\115', library:'115 收藏', library_icon:'115', online:true, cost:'metered'},
@@ -39,26 +39,4 @@ export function configuration(recorded, version) {
     prefixes:[{prefix:'/115/Peach',root:'A:\\115'},{prefix:'/PikPak/Peach',root:'B:\\PikPak'}]};
   // 操作系统卸载保持不可执行；演示不能创建真实系统操作。
   return data;
-}
-export function downloadTasks(items) {
-  return items.slice(0,3).map((item,index)=>({id:30-index,info_hash:null,provider:providers[index].key,provider_label:providers[index].label,
-    source_uri:`magnet:?xt=urn:btih:${String(index+1).repeat(40)}`,display_name:item.catalog_title||item.name,target:providers[index].target,
-    code:item.code||'',state:['remote_running','ingested','failed'][index],state_label:['下载中','已入库','下载失败'][index],
-    remote_state:['downloading','completed','error'][index],remote_state_label:['下载中','已完成','下载失败'][index],
-    failure_reason:index===2?'source_unavailable':null,failure_detail:index===2?'来源暂时不可用，可重新提交。':null,
-    progress:index===0?0.64:index===1?1:0,remote_name:item.name,ledger_path:index===1?'R:\\Media\\'+item.name:null,
-    asset_id:index===1?item.id:null,submitted_at:'2026-10-20T08:00:00Z',updated_at:'2026-10-20T08:10:00Z',
-    finished_at:index?'2026-10-20T08:10:00Z':null,blocked:false,cancellable:index===0,resubmittable:index===2,
-    postprocess_state:index===1?'complete':'pending',postprocess_label:index===1?'整理完成':'等待下载',postprocess_detail:null,
-    postprocess_run_id:null,postprocessed_at:null,postprocess_active:false,postprocess_retryable:false,
-  }));
-}
-export function resources(item, numericSize=false) {
-  const id=String(item.id).padStart(40,'0');
-  return {state:'ready',error:'',warnings:[],complete:true,checked_at:'2026-10-20T08:00:00Z',items:[{
-    id:'demo-'+item.id,protocol:'magnet',info_hash:id,uri:`magnet:?xt=urn:btih:${id}`,
-    name:item.code?`${item.code} 演示资源 1080p`:'演示资源 1080p',size:numericSize?4*1024**3:'4 GiB',
-    files:'1',date:'2026-10-20',attributes:['1080p'],source:'演示索引器',source_url:'',origins:['演示索引器'],
-    resolution:1080,codec:'H.264',seeders:12,chinese:false,uncensored:false,
-  }]};
 }

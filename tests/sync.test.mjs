@@ -12,7 +12,8 @@ test('React 入口与构建包可同步到独立演示目录',async()=>{
  try{
   const source=path.join(root,'app'),target=path.join(root,'site');
   const files={'web/index.html':'<script type="module" src="/dist/peach-app.js"></script>','web/board.css':'board',
-   'web/css/01-base.css':'base','web/dist/peach-app.js':'app','web/dist/peach-app.css':'react','web/vendor/license.txt':'license'};
+   'web/css/01-base.css':'base','web/dist/peach-app.js':'app','web/dist/peach-app.css':'react','web/vendor/license.txt':'license',
+   'web/integrations/peach-jav.user.js':'userscript'};
   for(const name of ['javten','fc2ppvdb','avwikidb','github','minnano-av'])files[`resources/site-marks/${name}.png`]='icon';
   files['resources/site-marks/ORIGIN.md']='来源说明';
   files['resources/peach-logo.png']='logo';files['resources/peach.ico']='favicon';
@@ -26,6 +27,7 @@ test('React 入口与构建包可同步到独立演示目录',async()=>{
   assert.equal(await readFile(path.join(target,'index.html'),'utf8'),files['web/index.html']);
   assert.equal(await readFile(path.join(target,'peach-logo.png'),'utf8'),'logo');
   assert.equal(await readFile(path.join(target,'favicon.ico'),'utf8'),'favicon');
+  assert.equal(await readFile(path.join(target,'integrations/peach-jav.user.js'),'utf8'),'userscript');
   assert.equal(await readFile(path.join(target,'site-icon/minnano-av.png'),'utf8'),'icon');
   assert.equal(await readFile(path.join(target,'site-icon/ORIGIN.md'),'utf8'),'来源说明');
   const provenance=JSON.parse(await readFile(path.join(target,'_demo/frontend-source.json'),'utf8'));

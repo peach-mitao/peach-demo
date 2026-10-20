@@ -82,9 +82,16 @@ try{
           await page.waitForFunction(contentReady,null,{timeout:12000});
         }catch(error){loadError=error.message.split('\n')[0]}
         await page.screenshot({path:fileURLToPath(new URL(`${prefix}-settled.png`,out)),fullPage:false});
-        const state=await page.evaluate(()=>({overflow:document.documentElement.scrollWidth>innerWidth,
+        const state=await page.evaluate(()=>{
+          const head=document.querySelector('[data-index-head]'),title=head?.querySelector('h2')?.getBoundingClientRect();
+          const search=head?.querySelector('[data-index-search]')?.getBoundingClientRect();
+          const controls=head?[...head.querySelectorAll('[data-shortcuts-trigger],[data-tag-mode],[data-index-layout]')]:[];
+          const indexHeader=title&&search?{searchWidth:search.width,aligned:[search,...controls.map(node=>node.getBoundingClientRect())]
+            .every(box=>Math.abs(box.top+box.bottom-title.top-title.bottom)<2)}:null;
+          return {indexHeader,overflow:document.documentElement.scrollWidth>innerWidth,
           title:document.title,text:document.body.innerText.slice(-5000),
-          brokenImages:Array.from(document.images).filter(img=>img.checkVisibility()&&img.complete&&!img.naturalWidth).map(img=>img.currentSrc)}));
+          brokenImages:Array.from(document.images).filter(img=>img.checkVisibility()&&img.complete&&!img.naturalWidth).map(img=>img.currentSrc)};
+        });
         state.loading=!(await page.evaluate(contentReady));
         report.push({width,route,mode,states,loadError,errors:[...errors],failed:[...failed],requests:[...requests],...state});
         console.log(`${width} ${route} ${mode}: ${failed.length} 失败请求，${errors.length} 运行错误${loadError?'，加载未就绪':''}`);
@@ -96,7 +103,8 @@ try{
   await writeFile(new URL('report.json',out),JSON.stringify({base,routes,report},null,2));
 }
 if(verify){
-  const failures=report.filter(row=>row.errors.length||row.failed.length||row.overflow||row.loading||row.brokenImages.length||row.loadError||/演示回放未取得|演示数据读取失败/.test(row.text));
+  const failures=report.filter(row=>row.errors.length||row.failed.length||row.overflow||row.loading||row.brokenImages.length||row.loadError
+    ||(row.indexHeader&&(!row.indexHeader.aligned||row.indexHeader.searchWidth<64))||/演示回放未取得|演示数据读取失败/.test(row.text));
   if(failures.length)throw Error(`界面覆盖未通过：${failures.map(row=>`${row.width} ${row.route}`).join('、')}`);
   console.log(`PASS: ${routes.length} 个入口，桌面和手机全部通过。`);
 }

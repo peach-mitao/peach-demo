@@ -7,7 +7,6 @@ import {discoveryPage,feedDiscoveryPage} from './discovery.ts';
 import {followPage} from './follow.ts';
 import {stream} from './stream.ts';
 import {folderIndex,folderItems,folderPage} from './folders.mjs';
-import {resources} from './showcase.mjs';
 
 const TYPES = {
   json: 'application/json; charset=utf-8', jpg: 'image/jpeg', png: 'image/png', webp: 'image/webp', avif: 'image/avif',
@@ -203,9 +202,10 @@ export default {
     const url = new URL(request.url);
     if (url.pathname === '/stream') return stream(request, env, url);
     if (url.pathname.startsWith('/_fixtures/') || url.pathname.startsWith('/_media/')) return json('{"error":"not found"}', 404);
-    if(['/login','/setup','/api/setup/questions','/api/setup','/api/setup/restore'].includes(url.pathname)){
+    if(['/login','/setup','/api/setup/questions','/api/setup','/api/setup/restore','/integrations/peach-userscript-bridge'].includes(url.pathname)){
       entryPages ??= await env.ASSETS.fetch(new URL('/_fixtures/entry-pages.json',url)).then(response=>response.ok?response.json():null);
       if(!entryPages)return json('{"error":"入口页录制未取得"}',404);
+      if(url.pathname==='/integrations/peach-userscript-bridge')return new Response(entryPages.userscript_bridge.html,{headers:entryPages.userscript_bridge.headers});
       if(url.pathname==='/api/setup/questions')return json(JSON.stringify(entryPages.questions));
       if(url.pathname.startsWith('/api/setup'))return json(JSON.stringify({url:'/',scan_requested:false,history_guide:false,standalone:false,redirect:null,facts:[{term:'数据目录',value:'C:\\Users\\peach\\peach-data'}]}));
       if(request.method==='POST')return Response.redirect(new URL('/',url),303);
@@ -214,10 +214,7 @@ export default {
     manifest ??= await env.ASSETS.fetch(new URL('/_fixtures/manifest.json', url)).then((r) => r.json());
     const method = request.method === 'HEAD' ? 'GET' : request.method;
     if(method==='GET'&&['/api/jav/resources','/api/resources/search'].includes(url.pathname)){
-      await loadCatalog(env,url);
-      const code=(url.searchParams.get('code')||'').toUpperCase();
-      const item=catalog.items.find(item=>item.code?.toUpperCase()===code);
-      return json(JSON.stringify(item?resources(item,url.pathname==='/api/resources/search'):{state:'ready',items:[],warnings:[],error:'',complete:true}));
+      return json(JSON.stringify({state:'unavailable',items:[],warnings:[],error:'资源搜索未启用',complete:true}));
     }
     if(method==='GET'&&url.pathname.startsWith('/api/subtitles/')){
       if(url.pathname==='/api/subtitles/search')return json(JSON.stringify({results:[{id:'demo',title:'Peach 演示字幕',language:'中文',format:'WebVTT'}],more:false}));
