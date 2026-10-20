@@ -33,6 +33,7 @@
 !/scripts/check_folders.mjs
 !/scripts/check_edit.mjs
 !/scripts/check_routes.mjs
+!/scripts/check_tag_management.mjs
 !/tests/
 !/site/
 /site/*

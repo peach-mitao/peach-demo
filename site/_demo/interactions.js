@@ -62,6 +62,7 @@
   // 每个访客的草稿只存在当前页面内存中，刷新即恢复夹具。
   const snapshots = new Map();
   const pending = new Map();
+  const tagPlans = new Map();
   const read = async path => {
     if (!snapshots.has(path)) {
       if(!pending.has(path))pending.set(path,(async()=>{
@@ -189,6 +190,30 @@
     }
     const request = new Request(input instanceof Request ? input : url, init);
     const path = url.pathname;
+    if(path==='/api/tag-management'||path==='/api/tag-management/preview'){
+      const body=request.method==='GET'?{}:await request.clone().json();
+      const scope=body.scope||url.searchParams.get('scope')||'local',key='/api/tag-management'+(scope==='online'?'?scope=online':'');
+      const inventory=await read(key);
+      if(request.method==='GET')return result(inventory);
+      try{
+        if(path.endsWith('/preview')){
+          const catalog=await read('/api/items?limit=1000');
+          const plan=globalThis.peachDemoTags.previewTags(inventory,body,catalog.items,crypto.randomUUID());
+          tagPlans.set(plan.token,plan);return result(plan);
+        }
+        const plan=tagPlans.get(body.token);if(!plan)return result({message:'请先预览操作范围'},409);
+        snapshots.set(key,globalThis.peachDemoTags.applyTagPlan(inventory,plan,body));tagPlans.delete(body.token);
+        return result({ok:true});
+      }catch(error){return result({message:error.message},400)}
+    }
+    if(request.method==='GET'&&((path==='/api/index'&&url.searchParams.get('kind')==='tags')||path==='/api/follow/tags')){
+      const key='/api/tag-management'+(path==='/api/follow/tags'?'?scope=online':'');
+      if(snapshots.has(key)){
+        const inventory=snapshots.get(key);
+        const source=path==='/api/follow/tags'&&url.searchParams.get('types')!=='all'?{...inventory,items:inventory.items.filter(row=>row.cat==='general')}:inventory;
+        return result(globalThis.peachDemoTags.tagDirectory(source,url.searchParams));
+      }
+    }
     if(['/api/setup','/api/setup/restore'].includes(path)&&request.method==='POST')return result({
       url:'/',restored:path.endsWith('/restore'),scan_requested:false,history_guide:false,standalone:false,redirect:null,
       facts:[{term:'数据目录',value:'C:\\Users\\peach\\peach-data'}],

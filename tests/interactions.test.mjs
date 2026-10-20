@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import {readFile} from 'node:fs/promises';
 import {configuration,cloudProxies,downloadTasks,providers} from '../src/showcase.mjs';
+import * as tagManagement from '../src/tag-management.mjs';
 const source=await readFile(new URL('../site/_demo/interactions.js',import.meta.url),'utf8');
 function page(respond=()=>({status:'complete',id:1,items:[]})){
   let now=Date.now();
@@ -11,6 +12,7 @@ function page(respond=()=>({status:'complete',id:1,items:[]})){
     document:{readyState:'loading',addEventListener(){}},
     fetch:async(input,init)=>{const url=input instanceof Request?new URL(input.url):new URL(input,'https://demo.example');calls.push({path:url.pathname,search:url.search,method:input.method||init?.method||'GET'});return new Response(JSON.stringify(respond(url)),{headers:{'content-type':'application/json'}})}};
   context.window=context;context.peachDemoMedia=value=>value;context.peachDemoMediaJSON=value=>value;
+  context.peachDemoTags=tagManagement;
   vm.runInNewContext(source,context);return {fetch:context.fetch,calls,advance:ms=>{now+=ms}};
 }
 test('固定处理状态合并并发读取，重复轮询不产生网络请求',async()=>{
@@ -63,6 +65,17 @@ test('首次设置与字幕文件停留在浏览器，不发送输入内容',asy
   const caption='WEBVTT\n\n00:00.000 --> 00:02.000\n演示字幕\n';
   const response=await p.fetch('/api/subtitles/convert?name=demo.vtt',{method:'POST',body:caption});
   assert.equal(await response.text(),caption);assert.equal(p.calls.length,0);
+});
+
+test('标签管理预览和写入保存在页面，浏览词表同步更新',async()=>{
+  const original={revision:0,duplicate_groups:[],items:[{entity_id:1,k:'旅行',aliases:[],originals:['旅行'],hidden:false,n:1}]};
+  const p=page(url=>url.pathname==='/api/items'?{items:[{tags:['旅行']}]}:structuredClone(original));
+  const command={operation:'rename',ids:[1],name:'远行'};
+  const plan=await(await p.fetch('/api/tag-management/preview',{method:'POST',body:JSON.stringify(command)})).json();
+  assert.equal(plan.assets,1);
+  assert.equal((await p.fetch('/api/tag-management',{method:'POST',body:JSON.stringify({...command,token:plan.token})})).status,200);
+  assert.equal((await(await p.fetch('/api/index?kind=tags')).json()).items[0].k,'远行');
+  assert.ok(p.calls.every(call=>call.method==='GET'));assert.equal(original.items[0].k,'旅行');
 });
 
 test('新版确认弹窗取得零成本的演示预估，不读取真实任务',async()=>{

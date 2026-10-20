@@ -2,12 +2,13 @@
 import {mkdir,writeFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import {chromium} from 'playwright';
-import {demoPages} from './demo_pages.mjs';
+import {demoScenarios} from './demo_pages.mjs';
 
 const base=process.env.BASE||'http://127.0.0.1:8791';
 const verify=process.argv.includes('--verify');
 const asked=process.argv.indexOf('--route');
-const routes=asked<0?await demoPages():process.argv.slice(asked+1).filter(value=>!value.startsWith('--'));
+const scenarios=asked<0?await demoScenarios():process.argv.slice(asked+1).filter(value=>!value.startsWith('--')).map(route=>({route,mode:process.argv.includes('--manage')?'tag-management':'browse'}));
+const routes=scenarios.map(row=>row.route);
 const browser=await chromium.launch({channel:'chrome'});
 const out=new URL(process.env.COVERAGE_OUT||'../evidence/coverage/',import.meta.url);await mkdir(out,{recursive:true});
 const report=[];
@@ -37,10 +38,11 @@ try{
       if(response.status()>=400)failed.push({path:url.pathname+url.search,status:response.status()});
     });
     try{
-      for(const [index,route] of routes.entries()){
+      for(const [index,{route,mode}] of scenarios.entries()){
         errors=[];failed=[];requests=[];let loadError='';
         try{
           await page.goto(base+route,{waitUntil:'networkidle',timeout:30000});
+          if(mode==='tag-management')await page.locator('[data-tag-mode]').click();
           await page.waitForFunction(contentReady,null,{timeout:12000});
         }catch(error){loadError=error.message.split('\n')[0]}
         await page.evaluate(()=>window.scrollTo(0,0));
@@ -53,17 +55,39 @@ try{
           const name=await tab.innerText();
           try{
             await tab.click({timeout:5000});await page.waitForLoadState('networkidle',{timeout:12000});
+            if(mode==='tag-management'&&await page.locator('[data-tag-mode]').getAttribute('aria-pressed')==='false')await page.locator('[data-tag-mode]').click();
             await page.waitForFunction(contentReady,null,{timeout:12000});
             await page.screenshot({path:fileURLToPath(new URL(`${prefix}-tab-${at}.png`,out)),fullPage:false});
           }catch(error){errors.push(`${name}: ${error.message.split('\n')[0]}`)}
           states.push(name);
         }
+        if(mode==='tag-management'){
+          const manager=page.locator('[data-tag-manager]');
+          for(const name of ['已隐藏','使用中']){
+            await manager.getByRole('button',{name,exact:true}).click();await page.waitForFunction(contentReady,null,{timeout:12000});
+            await page.screenshot({path:fileURLToPath(new URL(`${prefix}-${name==='已隐藏'?'hidden':'active'}.png`,out)),fullPage:false});
+            states.push(name);
+          }
+          const edit=manager.getByRole('button',{name:/^编辑标签 /}).first();
+          if(await edit.count()){
+            await edit.click();await page.getByRole('dialog').waitFor();
+            await page.screenshot({path:fileURLToPath(new URL(`${prefix}-rename.png`,out)),fullPage:false});
+            await page.getByRole('dialog').getByRole('button',{name:'取消',exact:true}).click();states.push('重命名弹层');
+          }
+        }
+        // 截图与布局使 IntersectionObserver 启动资源查询；在取最终状态前等待布局回调及其请求。
+        await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+        try{
+          await page.waitForLoadState('networkidle',{timeout:12000});
+          await page.waitForFunction(contentReady,null,{timeout:12000});
+        }catch(error){loadError=error.message.split('\n')[0]}
+        await page.screenshot({path:fileURLToPath(new URL(`${prefix}-settled.png`,out)),fullPage:false});
         const state=await page.evaluate(()=>({overflow:document.documentElement.scrollWidth>innerWidth,
           title:document.title,text:document.body.innerText.slice(-5000),
           brokenImages:Array.from(document.images).filter(img=>img.checkVisibility()&&img.complete&&!img.naturalWidth).map(img=>img.currentSrc)}));
         state.loading=!(await page.evaluate(contentReady));
-        report.push({width,route,states,loadError,errors:[...errors],failed:[...failed],requests:[...requests],...state});
-        console.log(`${width} ${route}: ${failed.length} 失败请求，${errors.length} 运行错误${loadError?'，加载未就绪':''}`);
+        report.push({width,route,mode,states,loadError,errors:[...errors],failed:[...failed],requests:[...requests],...state});
+        console.log(`${width} ${route} ${mode}: ${failed.length} 失败请求，${errors.length} 运行错误${loadError?'，加载未就绪':''}`);
       }
     }finally{await context.close()}
   }

@@ -26,6 +26,11 @@ if(process.argv.includes('--assets')){
   assert.ok((await stat(new URL(`site/_fixtures/${hash}.json`,root))).size>0,path);
   return JSON.parse(await readFile(new URL(`site/_fixtures/${hash}.json`,root),'utf8'));
  }
+ for(const scope of ['local','online']){
+  const inventory=await recorded('/api/tag-management'+(scope==='online'?'?scope=online':''));
+  assert.ok(inventory.items.length>0,`标签管理库存未取得：${scope}`);
+  assert.equal(inventory.items.length,indexes[scope==='online'?'onlineTags':'tags'].items.length,`标签管理库存不完整：${scope}`);
+ }
  for(const [key,kind] of Object.entries({performers:'performer',creators:'creator',studios:'studio',studioSearch:'studio',agencies:'agency',tags:'tag',onlineAuthors:'creator',onlineTags:'tag',onlineGeneralTags:'tag'})){
   const page=indexes[key];assert.ok(page&&Array.isArray(page.items)&&!page.has_more,`名册未取齐：${key}`);
   for(const row of page.items){

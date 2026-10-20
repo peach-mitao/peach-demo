@@ -46,3 +46,7 @@ export async function demoPages(site=new URL('../site/',import.meta.url)) {
   if(follow?.groups?.[0])routes.push('/posts/'+follow.groups[0].primary.id);
   return [...new Set(routes)];
 }
+export async function demoScenarios(){
+  return [...(await demoPages()).map(route=>({route,mode:'browse'})),
+    {route:'/tags',mode:'tag-management'},{route:'/tags?scope=online',mode:'tag-management'}];
+}

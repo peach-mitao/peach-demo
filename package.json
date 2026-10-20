@@ -28,6 +28,7 @@
     "test:search": "node scripts/check_search_recommendations.mjs",
     "test:folders": "node scripts/check_folders.mjs",
     "test:routes": "node scripts/check_routes.mjs",
+    "test:tags": "node scripts/check_tag_management.mjs",
     "test:stream": "node scripts/check_stream.mjs",
     "dev": "cf dev",
     "predev": "npm run assets:build",

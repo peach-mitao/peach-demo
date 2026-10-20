@@ -70,7 +70,7 @@ export async function buildStatic(site=path.join(root,'site')){
     await copyFile(source,path.join(out,name));images[key]=`/_demo/images/${name}`;
   }
   for(const [alias,key] of Object.entries(manifest.alias||{}))if(images[key])images[alias]=images[key];
-  const runtime=await build({stdin:{contents:`import {mediaURL,mediaJSON,mediaHTML} from './src/media.ts';const images=${JSON.stringify(images)};globalThis.peachDemoMedia=value=>mediaURL(value,images,location.origin);globalThis.peachDemoMediaJSON=value=>mediaJSON(value,images,location.origin);globalThis.peachDemoHTML=value=>mediaHTML(value,images,location.origin);`,resolveDir:root},bundle:true,write:false,format:'iife',minify:true,platform:'browser',target:'es2022'});
+  const runtime=await build({stdin:{contents:`import {mediaURL,mediaJSON,mediaHTML} from './src/media.ts';import * as tags from './src/tag-management.mjs';globalThis.peachDemoTags=tags;const images=${JSON.stringify(images)};globalThis.peachDemoMedia=value=>mediaURL(value,images,location.origin);globalThis.peachDemoMediaJSON=value=>mediaJSON(value,images,location.origin);globalThis.peachDemoHTML=value=>mediaHTML(value,images,location.origin);`,resolveDir:root},bundle:true,write:false,format:'iife',minify:true,platform:'browser',target:'es2022'});
   await writeFile(path.join(site,'_demo/media-runtime.js'),runtime.outputFiles[0].contents);
   let count=0;
   for(const entry of await readdir(path.join(site,'dist'))){
