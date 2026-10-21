@@ -3,6 +3,7 @@
 !/.gitattributes
 !/copy-editor-source.json
 !/.github/
+!/.gitlab-ci.yml
 !/README.md
 !/LICENSE
 !/NOTICE.md
