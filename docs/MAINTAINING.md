@@ -14,7 +14,7 @@
 npm ci
 ```
 
-生成 Cloudflare 运行时类型，检查 TypeScript、JS 语法和工程入口：
+生成浏览器脚本与 Cloudflare 运行时类型，检查 TypeScript、构建产物语法和工程入口：
 
 ```powershell
 npm run check
@@ -32,7 +32,9 @@ npm test
 npm run check:deploy
 ```
 
-`src/*.ts` 为录制键、媒体地址、名册、发现、关注分页和视频流提供类型契约。Node 直接运行可擦除类型的 TS，`tsc --noEmit` 独立检查类型；Cloudflare 配置和 TS 维护脚本也纳入类型检查。浏览器直接加载的交互保持 JS；Node 测试使用原生 ESM。依赖版本只在 `package.json` 与锁文件维护，构建输出不进 Git。
+站点维护的 JavaScript 源码统一使用 TypeScript：`src/` 提供回放与媒体协议，`browser/` 提供交互、导览和编辑适配，`scripts/` 与 `tests/` 分别提供维护入口和回归。Node 直接运行可擦除类型的 TS；`tsconfig.json` 与 `tsconfig.browser.json` 分别严格检查 Node／Worker 和浏览器代码。检查入口拒绝在这些源码目录新增 `.js` 或 `.mjs`。
+
+`npm run browser:build` 通过 esbuild 将浏览器源码编译到 `site/_demo/*.js`，不提交编译副本。素材构建和检查入口自动执行此步骤。应用同步包、第三方库及按来源锁定的共享编辑核心保持 JS 产物，通过指纹校验来源，不在本仓库维护副本实现。依赖版本只在 `package.json` 与锁文件维护。
 
 ## 前端与录制包
 
@@ -42,7 +44,7 @@ npm run check:deploy
 
 同步前端后，使用应用的 Python 环境执行 `scripts/record_entry_pages.py <应用检出目录>`。它直接调用同一检出的登录页、首次设置页、题目定义和用户脚本检测页，将占位配置写入私有录制包的 `entry-pages.json`，不读取实际配置、账本或服务。检测页保留应用的同源和 CSP 限制；脚本版本、最低连接版本和安装地址读取同步的发布清单。入口页提交必须与前端指纹一致，否则素材构建拒绝继续。演示入口为 `/login` 和 `/setup`，提交只返回演示结果。
 
-`scripts/prepare_showcase.mjs` 在素材构建时补齐演示连接配置：本地、115 与 PikPak 媒体库，CloudDrive API／数据代理、下载渠道、浏览器添加 JAV、索引器和诊断选项。业务状态从私有录制包的 `recorded-state.json` 读取，使用已批准公开的真实任务、想要清单和文件记录；没有记录时保留空状态，个人历史不随本地预览自动公开。下载任务须属于已导入馆藏，剔除来源地址、磁链、私有路径和错误细节；资产和后续任务只有身份也在录制范围内才显示链接。资源搜索保持未启用，不生成候选。字幕搜索返回明确命名的演示文本，不连接来源。诊断和馆藏上传默认关闭。凭据输入只保留页面内的已保存标记，卸载和真实系统操作不可执行。
+`scripts/prepare_showcase.ts` 在素材构建时补齐演示连接配置：本地、115 与 PikPak 媒体库，CloudDrive API／数据代理、下载渠道、浏览器添加 JAV、索引器和诊断选项。业务状态从私有录制包的 `recorded-state.json` 读取，使用已批准公开的真实任务、想要清单和文件记录；没有记录时保留空状态，个人历史不随本地预览自动公开。下载任务须属于已导入馆藏，剔除来源地址、磁链、私有路径和错误细节；资产和后续任务只有身份也在录制范围内才显示链接。资源搜索保持未启用，不生成候选。字幕搜索返回明确命名的演示文本，不连接来源。诊断和馆藏上传默认关闭。凭据输入只保留页面内的已保存标记，卸载和真实系统操作不可执行。
 
 标签页的铅笔按钮进入管理模式。本地与在线标签均有独立库存，支持预览影响范围、改名、合并、隐藏和恢复；预览令牌绑定操作与库存版本。管理结果同步到标签浏览目录，刷新恢复录制数据，不产生服务器写入。`npm run test:tags` 在桌面与手机验证完整操作及刷新恢复。
 
@@ -50,7 +52,7 @@ npm run check:deploy
 
 站标目录完整同步应用的 `resources/site-marks/`，包含来源说明。视频预览开关和扫描策略共享当前页面草稿；任务页按现有录制任务分页，未录制 favicon 显示通用站点标识。
 
-`scripts/demo_pages.mjs` 统一登记 59 个场景，包含浏览页、全部配置分区、登录与首次设置、各类详情，以及本地和在线标签管理模式。`node scripts/record_pages.mjs` 录制桌面与 390×844 手机画面、可见分区、标签隐藏状态与改名弹层和实际请求，报告写入本地 `evidence/coverage/`；`npm run test:routes` 对同一清单执行验收，拒绝运行错误、接口或图片缺失、未结束的等待态和横向溢出。采样等待布局触发的懒加载请求结束。两者需要已导入的演示录制包，默认使用端口 8791，可用 `BASE` 指定预览地址。
+`scripts/demo_pages.ts` 统一登记 59 个场景，包含浏览页、全部配置分区、登录与首次设置、各类详情，以及本地和在线标签管理模式。`node scripts/record_pages.ts` 录制桌面与 390×844 手机画面、可见分区、标签隐藏状态与改名弹层和实际请求，报告写入本地 `evidence/coverage/`；`npm run test:routes` 对同一清单执行验收，拒绝运行错误、接口或图片缺失、未结束的等待态和横向溢出。采样等待布局触发的懒加载请求结束。两者需要已导入的演示录制包，默认使用端口 8791，可用 `BASE` 指定预览地址。
 
 `?edit` 与应用、官网共用唯一的 `frontend/src/copy-editor-core.js`；`site/_demo/copy-editor.js` 只提供浏览器草稿和工具条。普通点击切换页面控件，Alt+点击编辑控件文字；清空文字可删除，刷新后保留本浏览器的编辑草稿。核心由 `edit:sync` 从应用固定提交同步，`copy-editor-source.json` 记录完整提交及 SHA-256，`npm run check` 拒绝副本漂移。不要单独修改同步副本。
 
@@ -58,7 +60,9 @@ npm run check:deploy
 
 通过 `npm run assets:import -- <录制包目录>` 导入 `_fixtures/`、`_media/` 和可选的 `_demo/follow/`。录制包必须包含 `manifest.json`、`catalog.json`、`indexes.json` 和业务状态快照 `recorded-state.json`；名册保留稳定身份 ID，馆藏目录保留完整标签与实体作品范围。未录制的接口返回 404。录制响应、媒体、数据库与凭据不进 Git。
 
-`npm run assets:build` 从录制图片生成内容指纹静态副本和演示前端包，并生成私有视频清单 `_media/index.json`。清单记录编号、长度和 `demo/videos/<SHA-256>.mp4` 对象键，相同内容复用对象。原始视频留在本地录制目录，由 `site/.assetsignore` 排除在 Assets 发布范围外。`npm run build` 先生成这些素材，再执行 `cf build`。前端同步来源与版本应由维护者随同步更新记录，不从录制响应的历史服务版本推断当前代码。
+`npm run assets:build` 从 `site/` 生成 `public/`：静态页面、内容指纹图片、384／960 像素 WebP、公开快照、回放运行时和前端包。播放器模块按应用 AST 声明预打包为按需加载的单个 ESM。原始视频、录制目录与内部清单不进入 `public/`；公开快照只按已支持的读取契约导出，凭据、来源 URI 和私人路径被清除。Worker 与浏览器共用 `src/replay.ts`，不能分别修改查询算法。
+
+构建生成私有视频清单 `_media/index.json`，记录编号、长度和 `demo/videos/<SHA-256>.mp4` 对象键，相同内容复用对象。公开视频映射只包含已批准内容的编号、对象键与长度。浏览器视频请求为 `/stream?id=<编号>&v=<内容指纹>`，省略播放会话；匹配当前对象时允许一年不可变缓存，陈旧指纹返回 404。无版本参数的兼容路径逐次校验；Worker 复用对象元数据并对范围读取附带 ETag 条件，内容不一致时拒绝返回成功。公网使用 R2 绑定，本地使用本地 R2。`npm run build` 先生成素材，再执行 `cf build`。前端同步来源与版本由维护者随同步更新记录，不从录制响应的历史服务版本推断当前代码。
 
 ## 预览与发布
 
@@ -80,9 +84,11 @@ npm run media:plan
 npm run media:local
 ```
 
-用 `npm run dev` 启动 `http://127.0.0.1:8791/`。本地 R2 状态位于 `.wrangler/state`，与 cf 的 Wrangler 构建器共用，不访问远程桶。`?edit` 提供浏览器本地改字草稿，普通页面不应用草稿；`?tour=` 选择教程。搜索记录、收藏、扫描控制与演示写操作均不产生服务器持久写入。
+用 `npm run dev` 启动 `http://127.0.0.1:8791/`。本地 R2 状态位于 `.wrangler/state`，与 cf 的 Wrangler 构建器共用，不访问远程桶。`?edit` 提供浏览器本地改字草稿，普通页面不应用草稿；`?tour=` 选择教程。搜索记录、收藏、扫描控制与演示写操作均不产生服务器持久写入。普通 HTML 与深链直接走 Assets；API、探活、登录表单、媒体兼容路径和私有目录拦截由明确的 `runWorkerFirst` 路径处理。
 
 预览运行时，`npm run test:browser` 检查桌面、手机、图片、播放记录撤销和扫描控制；`npm run test:search` 检查搜索推荐、作者头像与视口变化。这些检查需要录制包和本机 Chrome。
+
+`npm run test:replay` 验证桌面与手机的首页、搜索和关注页没有动态 API 网络请求，首页静置 60 秒不新增请求。快照按场景首次需要时加载；同一内容的并发读取只产生一次网络请求。图片、快照和构建脚本均使用内容指纹与长期缓存，HTML 保持更新校验。新增读取契约时扩展 `scripts/build_replay.ts` 的公开清单，缺失数据明确返回未取得，不回退到来源服务。同步样式仍走既有前端同步入口，不在 `public/` 手工编辑。
 
 `npm run test:stream` 验证视频首段、中段、末段、后缀、HEAD、越界、播放跳转、卡片悬停预览及进度条缩略图。`/stream` 使用 `MEDIA` R2 绑定原生读取单个范围；HEAD 只读取对象元数据。If-Range 按 ETag 或修改时间判断，元数据与正文用 ETag 条件保持一致。图片、时间轴和九宫格由原有图片回放路径提供。
 

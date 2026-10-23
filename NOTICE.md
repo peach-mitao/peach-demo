@@ -4,4 +4,4 @@
 
 录制响应、数据库、媒体、照片、封面和关注图不随 Git 仓库发布。部署需要独立提供本地录制包；源码许可不授予其中第三方素材的权利。投诉入口为 `https://peach.video/copyright/`。
 
-静态图片地址解析使用 MIT 许可的 `@noble/hashes`，其许可随 `media-runtime.js` 构建产物保留。构建工具使用 MIT 许可的 Acorn 与 esbuild。
+静态图片地址解析使用 MIT 许可的 `@noble/hashes`，其许可随回放运行时构建产物保留。构建工具使用 MIT 许可的 Acorn 与 esbuild，以及 Apache-2.0 许可的 Sharp。
