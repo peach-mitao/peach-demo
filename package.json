@@ -15,6 +15,8 @@
     "edit:sync": "node scripts/sync_copy_editor.ts",
     "assets:import": "node scripts/import_assets.ts",
     "browser:build": "node scripts/build_browser.ts",
+    "behavior:check": "node scripts/check_behavior.ts",
+    "behavior:capture": "node scripts/capture_behavior.ts",
     "assets:build": "npm run browser:build && node scripts/prepare_showcase.ts && node scripts/build_public.ts",
     "media:plan": "node scripts/media_storage.ts plan",
     "media:local": "node scripts/media_storage.ts upload --local",
@@ -35,7 +37,7 @@
     "test:replay": "node scripts/check_replay.ts",
     "dev": "cf dev",
     "predev": "npm run assets:build",
-    "predeploy": "node scripts/check_package.ts --assets && npm run build && npm run media:verify",
+    "predeploy": "node scripts/check_package.ts --assets && npm run build && npm run behavior:check && npm run media:verify",
     "deploy": "cf deploy --prebuilt"
   },
   "devDependencies": {

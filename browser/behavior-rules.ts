@@ -1,0 +1,63 @@
+import type {Rule} from './assets/behavior-contract.ts';
+const rule=(id:string,label:string,selector:string,region=false):Rule=>({id,label,selector,region});
+const pages=['unseen','watch-later','flagged','jav','performers','creators','studios','agencies','tags','follow','playlists','wall','immerse','stats','taste','review','data-cleanup','duplicates','quality-goals','sources','tasks','subscriptions','junk-files','trash','settings'];
+export const demoRules:Rule[]=[
+ rule('external.source','打开来源','a[href^="https://"],a[href^="http://"]'),
+ rule('userscript.install','安装 Peach 用户脚本','a[href="/integrations/peach-jav.user.js"]'),
+ rule('region.header','顶栏','header.top',true),rule('region.sidebar','侧栏','[data-sidebar-scroll]',true),rule('region.content','内容','main',true),rule('region.grid','卡片网格','#grid',true),rule('region.search','搜索菜单','#searchMenu',true),rule('region.drawer','抽屉','#drawer',true),rule('region.player','播放器','.video-js',true),
+ rule('link.home','首页','a[href="/"],a[href="/?browse=folders"],a[href="/?jav=1"]'),
+ ...pages.map(id=>rule('link.'+id,id,`a[href="/${id}"],a[href^="/${id}?"],a[href^="/${id}/"]`)),
+ ...['assets','works','series','posts'].map(id=>rule('open.'+id,id,`a[href^="/${id}/"]`)),
+ ...['appearance','playback','jav','search','content','library','subscriptions','downloads','network','maintenance','diagnostics'].map(id=>rule('settings.'+id,id,`a[href="/settings/${id}"]`)),
+ rule('external.site','官网','a[href^="https://peach.video"]'),rule('external.github','GitHub','a[href^="https://github.com"]'),rule('privacy.open','统计偏好','a[href="https://peach.video/privacy/analytics"]'),
+ ...['filterBtn','density','combo','feedNew','brandHome'].map(id=>rule('control.'+id.toLowerCase(),id,`button#${id},[role="button"]#${id}`)),
+ ...['play-control','mute-control','fullscreen-control','picture-in-picture-control','playback-rate','subs-caps-button','volume-panel','progress-control'].map(id=>rule('video.'+id,id,`.vjs-${id}`)),
+ rule('faq.expand','展开说明','summary'),
+ rule('nav.skip','跳到正文','a[href="#main"]'),rule('nav.home','首页','#brandHome'),rule('nav.wall','播放墙','#wallBtn'),rule('nav.immerse','沉浸模式','#immerseBtn'),rule('nav.settings','设置','#settingsBtn'),rule('appearance.glow','背景效果','#boardGlowBtn'),rule('selection.toggle','多选模式','#selectMode'),
+ rule('asset.preview','打开预览','[data-media-preview]'),rule('asset.open','打开详情','[data-media-open],[data-media-title],button[data-open]'),rule('asset.later','稍后看','[data-later]'),
+ rule('entity.profile','打开资料','button[data-entity-kind],button[aria-label^="打开资料页："]'),rule('entity.index','打开索引','[data-index-cell]'),rule('entity.tag','标签','[data-media-tag],[data-catalog-tag],[data-alpha-tag],[data-follow-tag]'),rule('entity.favorite','收藏实体','[data-favorite]'),rule('entity.sort','实体排序','[data-entity-sort]'),
+ rule('tier.performer','艺人筛选','[data-tier-performer]'),rule('tier.studio','厂牌筛选','[data-tier-studio]'),rule('taste.score','口味评分','[data-jav-taste-score]'),
+ rule('feed.save','保存关注内容','[data-follow-save]'),rule('feed.status','关注内容状态','[data-follow-status]'),rule('feed.open','打开关注内容','[data-follow-open]'),
+ rule('feed.seen','标记已看','[data-feed-action]:has(use[href="#i-check"])'),rule('feed.favorite','收藏关注内容','[data-feed-action]:has(use[href="#i-star"])'),rule('feed.dismiss','排除关注内容','[data-feed-action]:has(use[href="#i-x"])'),rule('nav.item','侧栏导航','[data-nav]'),
+ rule('video.seek.back','后退十秒','button[aria-label="后退 10 秒"]'),rule('video.seek.forward','前进十秒','button[aria-label="前进 10 秒"]'),rule('form.submit','提交表单','button[type="submit"]'),
+ rule('asset.detail','打开详情','button[aria-label^="打开 "][aria-label$="详情"]'),
+ rule('shortcuts.open','我的收藏','[data-shortcuts-trigger]'),rule('entity.batch','换一批','[data-entity-batch]'),rule('folder.toggle','文件夹模式','[data-folder-mode-toggle]'),rule('playlist.open','打开播放列表','[data-mix-open]'),rule('playlist.menu','播放列表操作','[data-playlist-menu]'),rule('filter.sidebar','侧栏筛选','[data-sidebar-chip]'),rule('theme.change','切换主题','[data-board-theme]'),
+ rule('view.tab','切换分区','[data-tab]'),rule('entity.tag','标签筛选','[data-entity-tag],[data-tag-pill]'),rule('tags.manage','管理标签','[data-tag-mode]'),rule('external.source','作品来源','a[data-button-link][href^="https://"]'),
+ ...['manage','recheck','work','filter','provider','images-only','collection','older'].map(id=>rule('follow.'+id,'关注：'+id,`[data-follow-${id}]`)),
+ rule('view.media','切换媒体类型','[data-media-view]'),rule('wall.back','退出播放墙','[data-wall-back]'),rule('wall.tools','播放墙工具','[data-wall-tools-button]'),
+ rule('immerse.close','退出沉浸模式','[data-immerse-close]'),rule('immerse.profile','查看资料','[data-immerse-avatar],[data-immerse] a[href="#"]'),rule('immerse.detail','查看作品','[data-immerse-title]'),rule('immerse.feedback','播放反馈','[data-immerse-circle]'),
+ rule('setup.folder','选择媒体文件夹','button[aria-label="选择文件夹"]'),rule('setup.source','媒体来源','button[aria-label^="媒体来源 "]'),rule('setup.strategy','媒体读取策略','button[aria-label^="媒体读取策略 "]'),
+ rule('folder.expand','展开目录','button[aria-label="扩展"]'),
+ ...[
+  'cleanup-go','cover-crop','edit-playlist','entity-more','entity-state','entry-mark','fb','follow-image-item','follow-origin','glass-pill','glow-chip','glow-preset','glow-reset','glow-stop-toggle','icon-state','jav-preview-toggle','junk-action','link-check','manage','media-next-reason','media-thumbnail','mix-item','queue-item','namepick-toggle','player-stats-button','player-theater','player-time','queue-remove','ranking-toggle','rate','related-performer','remove-tag','resource-scan','reveal','select-trigger','settings-dialog-close','sidebar-add','sidebar-add-trigger','sidebar-hide','sidebar-move','stage-action','stage-action-link','stage-close','sync','tag','tag-plus','tag-chip','title-fold','wall-tile',
+ ].map(id=>rule('action.'+id,id,`[data-${id}]`)),
+ rule('ranking.item','选择排名项','[data-expandable-ranking-list] button'),rule('tags.jump','按首字跳转','[data-alpha-jump] button'),
+ rule('view.tab','切换分区','[role="tab"]'),rule('form.choice','选择选项','[role="combobox"],[role="option"],[role="radio"],[role="checkbox"],[role="switch"],button[data-rac][aria-haspopup]'),
+ rule('form.field','编辑字段','input:not([type="hidden"]),select,textarea'),
+ rule('source.media','来源内容','a[href="?media=online"]'),rule('settings.subscriptions','来源与订阅设置','button[data-button-link][href="/settings/subscriptions"]'),
+ {...rule('settings.subscriptions','来源与订阅设置','button'),textPrefix:'来源与订阅设置'},
+ rule('asset.open','打开视频','button[data-middle-truncate],button.w-review-cover-narrow,[data-goal-id] h3 button'),
+ rule('asset.feedback','播放反馈','button[data-kind]'),rule('video.expand','展开播放器控件','[data-player-expand]'),rule('nav.search','搜索','#searchBtn'),
+ rule('stats.segment','选择图表分组','section:has(> div[role="img"]) > .inline-grid button[aria-pressed]'),
+ rule('taste.explore','探索口味线索','section:has(> header > p.text-title-2-regular) > div.flex.flex-col.gap-2 > button'),
+ rule('library.icon','选择媒体库图标','button[aria-label^="媒体库图标 "]'),
+ rule('subscription.select','选择来源','button[aria-label^="全选 "]'),rule('subscription.collapse','收起来源','button[aria-label^="收起 "]'),rule('subscription.all','全部来源','button[aria-label="全部来源"]'),rule('subscription.collapse-all','全部收起','button[aria-label="全部收起"]'),
+ ...['number','title','studio','series','year','actors','cd','mosaic','definition'].map(id=>rule('template.token.'+id,'整理模板字段',`button[aria-label$="{${id}}"]`)),
+ ...[
+  ['entity.avatar','更换'],['source.check','检查'],['source.pull','拉取'],['item.remove','移除'],['browser.remove','删除'],['browser.stop','停止读取'],['asset.preview','预览'],['asset.open','打开'],['tag.edit','编辑标签'],
+ ].map(([id,label])=>rule(id!,label!,`button[aria-label^="${label}"]`)),
+ ...['开启字幕','设置','媒体库图标 1','分析范围','连接方式','检查频率','更多取得浏览记录的方式','更多同步方式','表格视图','默认视图','选择整理路径'].map(label=>rule('control.'+({设置:'settings','开启字幕':'subtitles','媒体库图标 1':'library-icon','分析范围':'scope','连接方式':'connection','检查频率':'frequency','更多取得浏览记录的方式':'browser-methods','更多同步方式':'sync-methods','表格视图':'table','默认视图':'default','选择整理路径':'folder'}[label]||'option'),label,`button[aria-label="${label}"]`)),
+ ...[
+  ['setup.existing','使用已有数据目录'],['setup.add','添加媒体库'],['source.search','查找资源'],['wishlist.toggle','想要'],['wishlist.toggle','已想要'],
+  ['library.status','已入库'],['item.add','添加'],['asset.add','添加作品'],['filter.all','全部'],['filter.performer','女优'],['filter.creator','动画作者'],['filter.clear','清除筛选'],['app.install','安装'],['alias.save','保存别名'],['settings.save','保存配置'],['app.version','查看版本'],['source.search','查找'],
+  ['template.studio','厂牌 / 番号目录'],['template.studio','厂牌分目录'],['template.title','番号 标题'],['source.credentials','打开来源和凭证'],['asset.original','打开原视频'],['account.logout','登出'],['browser.read','读取浏览器记录'],['settings.token','更新渠道与令牌'],['browser.close','关闭浏览器添加'],['browser.credentials','获取凭据'],
+  ['app.update','检查更新'],['source.check','检查连接'],['source.check','检查全部'],['app.upstream','检查上游版本'],['review.reject','拒绝'],['cleanup.repair','开始修复'],['source.pull','立即拉取'],['duplicates.largest','留最大'],['duplicates.longest','留最长'],['network.public','启动公网入口'],['app.update','去看更新'],['follow.seen','全部标记已看'],['follow.ignore','全部忽略'],['view.collapse','全部收起'],['selection.page','全选本页'],
+  ['alias.add','添加别名'],['source.add','添加来源'],['browser.add','添加浏览器'],['prefix.add','添加前缀'],['source.add','添加索引器'],['folder.add','添加文件夹'],['review.skip','跳过'],['review.approve','通过'],['library.sync','同步媒体库'],['diagnostics.download','下载诊断报告'],['table.columns','显示列'],['app.uninstall','卸载 Peach'],['source.remove','移除索引器 1'],['asset.preview','预览'],['cover.preview','预览上传内容'],['duplicates.recycle','整组回收'],['cover.retry','重试样图'],['tutorial.open','重新打开教程'],['source.reload','重新读取'],['source.check','重新检测'],['source.check','重新检查'],['table.reset','重置列宽'],
+  ['tags.repair','整理重复标签'],['selection.results','选择当前结果'],['selection.clear','清空选择'],['selection.clear','清空'],['selection.apply','显示结果'],['item.rename','重命名'],['tags.merge','合并'],['item.restore','恢复'],['item.hide','隐藏'],['source.retry','立即重试'],
+  ['settings.configure','Peach 配置'],['library.select','本地演示库'],
+ ].map(([id,label])=>({...rule(id!,label!,'button'),text:label})),
+];
+export function demoState(){
+ const params=new URLSearchParams(location.search),allowed=new Set(['folders','images','videos','table','grid','discover','library','wants','list','add','feeds','animation','online','local']);
+ return [...(params.get('jav')==='1'?['jav.enabled']:[]),...['browse','media','view','tab','scope','category'].flatMap(key=>{const value=params.get(key);return value&&allowed.has(value)?[key+'.'+value]:[]})].join(':')||'default';
+}

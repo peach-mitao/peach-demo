@@ -2,6 +2,7 @@
 !/.gitignore
 !/.gitattributes
 !/copy-editor-source.json
+!/behavior-source.json
 !/.github/
 !/.gitlab-ci.yml
 !/README.md
@@ -22,6 +23,7 @@
 !/scripts/prepare_showcase.ts
 !/scripts/demo_pages.ts
 !/scripts/record_pages.ts
+!/scripts/browser_state.ts
 !/scripts/record_entry_pages.py
 !/scripts/sync_copy_editor.ts
 !/scripts/import_assets.ts
@@ -31,6 +33,12 @@
 !/scripts/build_static.ts
 !/scripts/build_public.ts
 !/scripts/build_browser.ts
+!/scripts/behavior_version.ts
+!/scripts/capture_behavior.ts
+!/scripts/behavior_artifacts.ts
+!/scripts/check_behavior.ts
+!/scripts/sync_behavior.ts
+/browser/behavior-version.ts
 !/scripts/ast.ts
 !/scripts/build_replay.ts
 !/scripts/check_replay.ts

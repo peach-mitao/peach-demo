@@ -6,3 +6,4 @@ declare var peachDemoMedia:((value:string)=>string)|undefined;
 declare var peachDemoMediaJSON:((value:unknown)=>unknown)|undefined;
 declare var peachDemoTags:typeof import('../src/tag-management.ts');
 interface Window {peachDemoTimelineFallbacks:number;__scrolling?:boolean}
+interface Window {PEACH_ENTRY_REFERRER?:string;PEACH_LOCALE_REDIRECTING?:boolean;PeachBehavior?:{flush():Promise<void>;mark():void;stop():void;context():{site:string;version:string;page:string;viewport:string;state:string;lang:string};coverage():{tag:string;attributes:string[]}[]}}

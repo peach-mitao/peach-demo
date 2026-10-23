@@ -4,6 +4,8 @@ Peach 的在线体验入口，复用应用前端，通过录制数据展示馆�
 
 固定读取、搜索、筛选和分页在浏览器回放，页面与图片使用静态资源，视频通过 R2 的范围读取提供。站点维护代码使用 TypeScript，应用同步包保持来源指纹；构建和验证方式见[维护说明](docs/MAINTAINING.md)。
 
+点击与匿名访问动线接入官网共用的 Cloudflare 分析链路。UI 改版时的标识、截图与发布检查见[行为统计维护](docs/ANALYTICS.md)。
+
 [打开演示站](https://demo.peach.video/) · [访问官网](https://peach.video/)
 
 ## 关联项目

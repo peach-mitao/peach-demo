@@ -3,6 +3,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
 import { demoScenarios } from './demo_pages.ts';
+import {contentReady} from './browser_state.ts';
 const base = process.env.BASE || 'http://127.0.0.1:8791';
 const verify = process.argv.includes('--verify');
 const asked = process.argv.indexOf('--route');
@@ -12,16 +13,6 @@ const browser = await chromium.launch({ channel: 'chrome' });
 const out = new URL(process.env.COVERAGE_OUT || '../evidence/coverage/', import.meta.url);
 await mkdir(out, { recursive: true });
 const report = [];
-function contentReady() {
-    const immerse = (document.querySelector('[data-immerse]:not([hidden])') as HTMLElement);
-    if (immerse)
-        return Boolean((immerse.querySelector('video') as HTMLVideoElement)?.readyState >= 2);
-    const scope = [...(document.querySelectorAll('dialog[open],[role="dialog"][aria-modal="true"]') as NodeListOf<HTMLElement>)].find(element => element.checkVisibility()) || document;
-    return ![...(scope.querySelectorAll('[data-skeleton],[aria-busy="true"]') as NodeListOf<HTMLElement>)].some(element => {
-        const rect = element.getBoundingClientRect();
-        return element.checkVisibility({ opacityProperty: true }) && rect.bottom > 0 && rect.top < innerHeight && rect.right > 0 && rect.left < innerWidth;
-    });
-}
 try {
     for (const width of [1440, 390] as const) {
         const context = await browser.newContext({ viewport: { width, height: width === 390 ? 844 : 960 }, reducedMotion: 'reduce', colorScheme: 'light' });

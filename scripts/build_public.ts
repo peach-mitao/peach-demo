@@ -18,7 +18,7 @@ export async function buildPublic(site = path.join(root, 'site'), out = path.joi
     await mkdir(out, { recursive: true });
     const { images, variants, videos } = await buildStatic(site);
     const replay = await buildReplay(site, images);
-    await cp(site, out, { recursive: true, filter: file => !file.endsWith('.mp4') && !file.endsWith('.map') && !/[/\\]dist[/\\]demo-/.test(file) && ![/[/\\](?:_fixtures|_media)(?:[/\\]|$)/, /[/\\]_demo[/\\]data(?:[/\\]|$)/, /[/\\]_demo[/\\]images(?:[/\\]|$)/, /[/\\]_demo[/\\](?:interactions|tour|media-runtime|copy-editor|copy-editor-core)\.js$/].some(pattern => pattern.test(file)) });
+    await cp(site, out, { recursive: true, filter: file => !file.endsWith('.mp4') && !file.endsWith('.map') && !/[/\\]dist[/\\]demo-/.test(file) && ![/[/\\](?:_fixtures|_media)(?:[/\\]|$)/, /[/\\]_demo[/\\]data(?:[/\\]|$)/, /[/\\]_demo[/\\]images(?:[/\\]|$)/, /[/\\]_demo[/\\](?:interactions|tour|media-runtime|copy-editor|copy-editor-core|behavior(?:-(?:core|contract|rules|version))?)\.js$/, /[/\\]_demo[/\\]assets[/\\]behavior-(?:core|contract)\.js$/].some(pattern => pattern.test(file)) });
     const generated = new Set([...Object.values(replay.files), ...Object.values(images), ...Object.values(variants).flatMap(value => Object.values(value))]);
     for (const url of generated) {
         await mkdir(path.dirname(path.join(out, url)), { recursive: true });
@@ -37,6 +37,8 @@ export async function buildPublic(site = path.join(root, 'site'), out = path.joi
     const tour = await assets('tour', await readFile(path.join(site, '_demo/tour.js')), 'js');
     const editorCore = await assets('copy-editor-core', await readFile(path.join(site, '_demo/copy-editor-core.js')), 'js');
     const editor = await assets('copy-editor', await readFile(path.join(site, '_demo/copy-editor.js')), 'js');
+    const behaviorBuild=await build({entryPoints:[path.join(root,'browser/behavior.ts')],bundle:true,write:false,platform:'browser',format:'iife',target:'es2022',minify:true});
+    const behavior=await assets('behavior',behaviorBuild.outputFiles[0].contents,'js');
     const tourGate = `<script>if(new URLSearchParams(location.search).has('tour'))document.write('<script src="${tour}"><'+ '/script>')</script>`;
     const editorGate = `<script>if(new URLSearchParams(location.search).has('edit')){document.body.dataset.peachCopyMode='local';document.write('<script defer src="${editorCore}"><'+ '/script><script defer src="${editor}"><'+ '/script>')}</script>`;
     const player = await bundlePlayer(await readFile(path.join(site, 'dist/peach-app.js'), 'utf8'), site, out);
@@ -45,7 +47,7 @@ export async function buildPublic(site = path.join(root, 'site'), out = path.joi
     if (!appOutput)
         throw Error('应用入口构建未取得');
     const appURL = '/' + path.relative(out, path.resolve(appOutput)).split(path.sep).join('/');
-    const decorate = (html:string) => html.replace('</head>', DEMO_SETTINGS + FOLLOW_IMAGES + `<script src="${runtime}"></script><script src="${interaction}"></script>` + tourGate + '</head>').replace('src="/dist/peach-app.js"', `src="${appURL}"`).replace('</body>', NOTICE + editorGate + '</body>');
+    const decorate = (html:string) => html.replace('</head>', DEMO_SETTINGS + FOLLOW_IMAGES + `<script src="${runtime}"></script><script src="${interaction}"></script>` + tourGate + '</head>').replace('src="/dist/peach-app.js"', `src="${appURL}"`).replace('</body>', NOTICE + editorGate + `<script defer src="${behavior}"></script></body>`);
     await writeFile(path.join(out, 'index.html'), decorate(await readFile(path.join(site, 'index.html'), 'utf8')));
     const entry = JSON.parse(await readFile(path.join(site, '_fixtures/entry-pages.json'), 'utf8'));
     for (const route of ['login', 'setup'] as const) {
@@ -55,7 +57,7 @@ export async function buildPublic(site = path.join(root, 'site'), out = path.joi
     await mkdir(path.join(out, 'integrations/peach-userscript-bridge'), { recursive: true });
     await writeFile(path.join(out, 'integrations/peach-userscript-bridge/index.html'), entry.userscript_bridge.html);
     const bridgeHeaders = Object.entries(entry.userscript_bridge.headers).filter(([key]) => !['content-type', 'content-length'].includes(key.toLowerCase())).map(([key, value]) => `  ${key}: ${value}`).join('\n');
-    const immutable = ['/_demo/images/*', '/_demo/data/*', '/_demo/runtime-*', '/_demo/interactions-*', '/_demo/tour-*', '/_demo/copy-editor-*', '/dist/demo-*'].map(rule => `${rule}\n  Cache-Control: public, max-age=31536000, immutable`).join('\n');
+    const immutable = ['/_demo/images/*', '/_demo/data/*', '/_demo/runtime-*', '/_demo/interactions-*', '/_demo/tour-*', '/_demo/copy-editor-*', '/_demo/behavior-*', '/dist/demo-*'].map(rule => `${rule}\n  Cache-Control: public, max-age=31536000, immutable`).join('\n');
     await writeFile(path.join(out, '_headers'), `/*\n  X-Robots-Tag: noindex, nofollow\n/\n  Cache-Control: no-cache\n/_demo/replay-files.json\n  Cache-Control: no-cache\n${immutable}\n/vendor/*\n  Cache-Control: public, max-age=86400\n/integrations/peach-userscript-bridge*\n${bridgeHeaders}\n`);
     const routes = [...new Set(pageRoutes.map(route => route.split('?')[0]))].filter(route => !['/', '/login', '/setup'].includes(route));
     await writeFile(path.join(out, '_redirects'), [...routes, ...['performers', 'creators', 'studios', 'agencies', 'tags', 'series', 'assets', 'works', 'posts'].map(prefix => '/' + prefix + '/:id')].map(route => `${route} / 200`).join('\n') + '\n');
