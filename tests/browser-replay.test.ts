@@ -49,9 +49,9 @@ test('图片按用途选择缩略图并保留版本帮助函数的查询分隔�
     assert.equal(new URL(later, 'https://demo.example').pathname, '/small.webp');
     assert.equal(mediaURL('/_demo/follow/one.jpg', { '/_demo/follow/one.jpg': '/_demo/images/one.webp' }), '/_demo/images/one.webp?');
 });
-test('批准的视频地址只包含身份与内容指纹，省略播放会话', () => {
+test('批准的视频地址使用媒体域名与内容指纹，省略播放会话', () => {
     const videos = { '1': { key: 'demo/videos/' + 'a'.repeat(64) + '.mp4' } };
-    assert.equal(mediaURL('/stream?id=1', {}, 'http://127.0.0.1:8791', {}, videos), '/stream?id=1&v=' + 'a'.repeat(64));
+    assert.equal(mediaURL('/stream?id=1', {}, 'http://127.0.0.1:8791', {}, videos), 'https://media.peach.video/demo/videos/' + 'a'.repeat(64)+'.mp4');
     assert.equal(mediaURL('/stream?id=999', {}, 'https://demo.example', {}, videos), '/stream?id=999');
-    assert.deepEqual(mediaJSON({ src: '/stream?id=1&session=changing' }, {}, 'https://demo.example', {}, videos), {src:'/stream?id=1&v=' + 'a'.repeat(64)});
+    assert.deepEqual(mediaJSON({ src: '/stream?id=1&session=changing' }, {}, 'https://demo.example', {}, videos), {src:'https://media.peach.video/demo/videos/' + 'a'.repeat(64)+'.mp4'});
 });

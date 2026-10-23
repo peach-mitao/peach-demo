@@ -4,7 +4,7 @@ import { webcrypto } from 'node:crypto';
 import { fixtureHash, fixtureKey } from '../src/key.ts';
 import worker from '../src/worker.ts';
 import { discoveryPage } from '../src/discovery.ts';
-import { media, videoKey } from './media.ts';
+import { videoKey } from './media.ts';
 const origin = 'https://example.test';
 const portraitHash = await fixtureHash('GET /entity-image?id=102&kind=performer');
 const followHash = await fixtureHash('GET /api/follow?limit=100&offset=0');
@@ -33,7 +33,7 @@ const files = new Map<string,string|Uint8Array<ArrayBuffer>>([
     ['/_media/index.json', JSON.stringify({ version: 1, videos: { '1': { key: videoKey, size: 8 } } })],
     ['/favicon.ico', new Uint8Array([1, 2, 3])]
 ]);
-const env = { MEDIA: media().env.MEDIA, ASSETS: { async fetch(input: string|URL) {
+const env = { ASSETS: { async fetch(input: string|URL) {
             const name = new URL(input instanceof Request ? input.url : input).pathname;
             if (name === '/_demo/replay-files.json')
                 return Response.json(Object.fromEntries([...files.keys()].map(name => [name, name])));
@@ -170,14 +170,11 @@ test('私有录制文件不通过公开路径返回', async () => {
     for (const path of ['/_fixtures/manifest.json', '/_media/1.mp4'] as const)
         assert.equal((await call(path)).status, 404);
 });
-test('视频提供有效的分段、尾部和越界响应', async () => {
+test('编号视频入口交给公开媒体域名处理范围请求', async () => {
     const range = await call('/stream?id=1', { headers: { Range: 'bytes=2-4' } });
-    assert.equal(range.status, 206);
-    assert.equal(range.headers.get('content-range'), 'bytes 2-4/8');
-    assert.deepEqual([...new Uint8Array(await range.arrayBuffer())], [2, 3, 4]);
-    const suffix = await call('/stream?id=1', { headers: { Range: 'bytes=-2' } });
-    assert.deepEqual([...new Uint8Array(await suffix.arrayBuffer())], [6, 7]);
-    assert.equal((await call('/stream?id=1', { headers: { Range: 'bytes=99-100' } })).status, 416);
+    assert.equal(range.status, 308);
+    assert.equal(range.headers.get('location'),'https://media.peach.video/'+videoKey);
+    assert.equal(await range.text(),'');
     assert.equal((await call('/stream?id=invalid')).status, 404);
 });
 test('排序升降序均保留馆藏数据', async () => {

@@ -8,6 +8,7 @@ export default defineConfig(({ mode }) => ({
 		entrypoint: "src/worker.ts",
 		observability: {
 			enabled: true,
+			issues: {enabled: true},
 		},
 		assets: {
 			notFoundHandling: "none",
@@ -22,7 +23,6 @@ export default defineConfig(({ mode }) => ({
 		domains: mode === "preview" ? [] : ["demo.peach.video"],
 		env: {
 			ASSETS: bindings.assets(),
-			MEDIA: bindings.r2({ name: "peach-public-media" }),
 		},
 	},
 }));

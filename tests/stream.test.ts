@@ -1,80 +1,36 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { stream } from '../src/stream.ts';
-import { media } from './media.ts';
-import type { R2Bucket } from '@cloudflare/workers-types';
-import type { Assets } from '../src/types.ts';
-const url = new URL('https://demo.example/stream?id=1');
-const call = (env: Parameters<typeof stream>[1], init?: RequestInit) => stream(new Request(url, init), env, url);
-test('大对象尾段仅向 R2 读取目标字节，HEAD 只读元数据', async () => {
-    const { env, stats } = media(1024 ** 3);
-    const response = await call(env, { headers: { range: 'bytes=-2' } });
-    assert.equal(response.status, 206);
-    assert.deepEqual(stats.gets[0].range, { offset: 1024 ** 3 - 2, length: 2 });
-    assert.deepEqual(stats.gets[0].onlyIf, { etagMatches: 'video' });
-    assert.equal(stats.bytes, 0);
-    assert.deepEqual([...new Uint8Array(await response.arrayBuffer())], [254, 255]);
-    assert.equal(stats.bytes, 2);
-    const head = await call(env, { method: 'HEAD', headers: { range: 'bytes=0-1' } });
-    assert.equal(head.status, 200);
-    assert.equal(head.headers.get('content-length'), String(1024 ** 3));
-    assert.equal(await head.text(), '');
-    assert.equal(stats.gets.length, 1);
-    assert.equal(stats.indexes, 1);
-    assert.equal(stats.heads, 1);
+import {stream} from '../src/stream.ts';
+import {videoURL,VIDEO_CACHE} from '../src/video.ts';
+import {mediaURL,mediaJSON,mediaHTML} from '../src/media.ts';
+import {media,videoKey} from './media.ts';
+const call=(env:Parameters<typeof stream>[1],path='/stream?id=1',init?:RequestInit)=>{const url=new URL(path,'https://demo.example');return stream(new Request(url,init),env,url)};
+
+test('视频地址在文本、JSON 与 HTML 中直接指向公开内容对象',()=>{
+ const videos={'1':{key:videoKey}},expected=videoURL(videoKey)!;
+ assert.equal(mediaURL('/stream?id=1&session=private',{},undefined,{},videos),expected);
+ assert.deepEqual(mediaJSON({url:'/stream?id=1'}, {},undefined,{},videos),{url:expected});
+ assert.equal(mediaHTML('<video src="/stream?id=1&amp;session=private"></video>',{},undefined,{},videos),'<video src="'+expected+'"></video>');
+ for(const bad of ['../private.mp4','https://other.example/x.mp4','demo/videos/no.mp4'])assert.equal(videoURL(bad),null);
 });
-test('内容指纹版本提供长期缓存并拒绝陈旧的版本参数', async () => {
-    const { env, stats } = media(), versioned = new URL(url);
-    versioned.searchParams.set('v', 'a'.repeat(64));
-    const first = await stream(new Request(versioned, { headers: { range: 'bytes=0-1' } }), env, versioned);
-    assert.equal(first.status, 206);
-    assert.match(first.headers.get('cache-control')!, /31536000, immutable/);
-    await first.body!.cancel();
-    const same = await stream(new Request(versioned, { headers: { 'if-none-match': '"video"' } }), env, versioned);
-    assert.equal(same.status, 304);
-    assert.equal(stats.heads, 1);
-    assert.equal(stats.gets.length, 1);
-    versioned.searchParams.set('v', 'b'.repeat(64));
-    assert.equal((await stream(new Request(versioned), env, versioned)).status, 404);
-    assert.doesNotMatch((await call(env, { method: 'HEAD' })).headers.get('cache-control')!, /immutable/);
+test('GET 与 HEAD 的编号入口只返回无正文的受限媒体域名跳转',async()=>{
+ const {env,stats}=media();
+ for(const method of ['GET','HEAD']){
+  const response=await call(env,'/stream?id=1&session=ignored',{method,headers:{range:'bytes=0-1'}});
+  assert.equal(response.status,308);assert.equal(response.headers.get('location'),videoURL(videoKey));
+  assert.equal(response.headers.get('cache-control'),'no-cache');assert.equal(await response.text(),'');
+ }
+ const response=await call(env,'/stream?id=1&v='+'a'.repeat(64));
+ assert.equal(response.headers.get('cache-control'),VIDEO_CACHE);assert.equal(stats.indexes,1);
 });
-test('单范围、后缀、越界和 If-Range 保持 HTTP 字节语义', async () => {
-    for (const [range, expected] of [['bytes=0-1', [0, 1]], ['bytes=2-4', [2, 3, 4]], ['bytes=6-', [6, 7]], ['bytes=-2', [6, 7]], ['bytes=-100', [0, 1, 2, 3, 4, 5, 6, 7]]] as const) {
-        const { env } = media();
-        const response = await call(env, { headers: { range } });
-        assert.equal(response.status, 206);
-        assert.deepEqual([...new Uint8Array(await response.arrayBuffer())], expected);
-    }
-    for (const range of ['bytes=99-', 'bytes=4-2', 'bytes=-0', 'bytes=9007199254740992-'] as const) {
-        const { env, stats } = media();
-        const response = await call(env, { headers: { range } });
-        assert.equal(response.status, 416);
-        assert.equal(response.headers.get('content-range'), 'bytes */8');
-        assert.equal(stats.gets.length, 0);
-    }
-    for (const [condition, status] of [['"different"', 200], ['W/"video"', 200], ['"video"', 206], ['Mon, 19 Oct 2026 00:00:00 GMT', 206], ['Sun, 18 Oct 2026 00:00:00 GMT', 200]] as const) {
-        const { env } = media();
-        const response = await call(env, { headers: { range: 'bytes=0-1', 'if-range': condition } });
-        assert.equal(response.status, status);
-        assert.equal((await response.arrayBuffer()).byteLength, status === 206 ? 2 : 8);
-    }
+test('不支持的方法、编号与过期内容指纹不被缓存',async()=>{
+ for(const path of ['/stream?id=missing','/stream?id=2','/stream?id=1&v='+'b'.repeat(64)]){
+  const response=await call(media().env,path);assert.equal(response.status,404);assert.equal(response.headers.get('cache-control'),'no-store');
+ }
+ const response=await call(media().env,'/stream?id=1',{method:'POST'});assert.equal(response.status,405);assert.equal(response.headers.get('allow'),'GET, HEAD');
 });
-test('取消直接传递 R2 正文，缺失或不一致的素材明确拒绝', async () => {
-    const { env, stats, metadata } = media();
-    const response = await call(env, { headers: { range: 'bytes=0-3' } });
-    await response.body!.cancel();
-    assert.equal(stats.bytes, 0);
-    assert.equal(stats.cancels, 1);
-    metadata.size = 9;
-    assert.equal((await call(env)).status, 503);
-    env.MEDIA.head = async () => null;
-    assert.equal((await call(env)).status, 404);
-    const missing = media().env;
-    missing.ASSETS.fetch = async () => new Response('<html>SPA</html>');
-    assert.equal((await call(missing)).status, 503);
-});
-test('对象变更条件失败不回传无正文的成功响应', async () => {
-    const { env, metadata } = media();
-    env.MEDIA.get = (async () => metadata) as unknown as typeof env.MEDIA.get;
-    assert.equal((await call(env)).status, 503);
+test('损坏清单不产生外域或路径穿越跳转',async()=>{
+ for(const value of [{}, {version:1,videos:{'1':{key:'../private.mp4',size:8}}},{version:1,videos:{'1':{key:videoKey,size:0}}}]){
+  const env={ASSETS:{fetch:async()=>Response.json(value)}};assert.equal((await call(env)).status,503);
+ }
 });

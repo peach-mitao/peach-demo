@@ -62,7 +62,7 @@ npm run check:deploy
 
 `npm run assets:build` 从 `site/` 生成 `public/`：静态页面、内容指纹图片、384／960 像素 WebP、公开快照、回放运行时和前端包。播放器模块按应用 AST 声明预打包为按需加载的单个 ESM。原始视频、录制目录与内部清单不进入 `public/`；公开快照只按已支持的读取契约导出，凭据、来源 URI 和私人路径被清除。Worker 与浏览器共用 `src/replay.ts`，不能分别修改查询算法。
 
-构建生成私有视频清单 `_media/index.json`，记录编号、长度和 `demo/videos/<SHA-256>.mp4` 对象键，相同内容复用对象。公开视频映射只包含已批准内容的编号、对象键与长度。浏览器视频请求为 `/stream?id=<编号>&v=<内容指纹>`，省略播放会话；匹配当前对象时允许一年不可变缓存，陈旧指纹返回 404。无版本参数的兼容路径逐次校验；Worker 复用对象元数据并对范围读取附带 ETag 条件，内容不一致时拒绝返回成功。公网使用 R2 绑定，本地使用本地 R2。`npm run build` 先生成素材，再执行 `cf build`。前端同步来源与版本由维护者随同步更新记录，不从录制响应的历史服务版本推断当前代码。
+构建生成私有视频清单 `_media/index.json`，记录编号、长度和 `demo/videos/<SHA-256>.mp4` 对象键，相同内容复用对象。公开视频映射只包含已批准内容的编号、对象键与长度。浏览器直接请求 `https://media.peach.video/demo/videos/<SHA-256>.mp4`，不携带播放会话；对象具有一年不可变缓存。已缓存页面的 `/stream?id=<编号>&v=<内容指纹>` 返回 308 到受控清单中的对象，陈旧指纹返回 404；无版本参数的跳转使用 no-cache。Worker 不绑定或读取媒体桶正文。`npm run build` 先生成素材，再执行 `cf build`。前端同步来源与版本由维护者随同步更新记录，不从录制响应的历史服务版本推断当前代码。
 
 ## 预览与发布
 
@@ -84,13 +84,13 @@ npm run media:plan
 npm run media:local
 ```
 
-用 `npm run dev` 启动 `http://127.0.0.1:8791/`。本地 R2 状态位于 `.wrangler/state`，与 cf 的 Wrangler 构建器共用，不访问远程桶。`?edit` 提供浏览器本地改字草稿，普通页面不应用草稿；`?tour=` 选择教程。搜索记录、收藏、扫描控制与演示写操作均不产生服务器持久写入。普通 HTML 与深链直接走 Assets；API、探活、登录表单、媒体兼容路径和私有目录拦截由明确的 `runWorkerFirst` 路径处理。
+用 `npm run dev` 启动 `http://127.0.0.1:8791/`。视频播放读取已发布的公开媒体域名，需要网络；`media:local` 只用于本地对象上传验证，不参与播放器请求。`?edit` 提供浏览器本地改字草稿，普通页面不应用草稿；`?tour=` 选择教程。搜索记录、收藏、扫描控制与演示写操作均不产生服务器持久写入。普通 HTML 与深链直接走 Assets；API、探活、登录表单、媒体编号跳转和私有目录拦截由明确的 `runWorkerFirst` 路径处理。
 
 预览运行时，`npm run test:browser` 检查桌面、手机、图片、播放记录撤销和扫描控制；`npm run test:search` 检查搜索推荐、作者头像与视口变化。这些检查需要录制包和本机 Chrome。
 
 `npm run test:replay` 验证桌面与手机的首页、搜索和关注页没有动态 API 网络请求，首页静置 60 秒不新增请求。快照按场景首次需要时加载；同一内容的并发读取只产生一次网络请求。图片、快照和构建脚本均使用内容指纹与长期缓存，HTML 保持更新校验。新增读取契约时扩展 `scripts/build_replay.ts` 的公开清单，缺失数据明确返回未取得，不回退到来源服务。同步样式仍走既有前端同步入口，不在 `public/` 手工编辑。
 
-`npm run test:stream` 验证视频首段、中段、末段、后缀、HEAD、越界、播放跳转、卡片悬停预览及进度条缩略图。`/stream` 使用 `MEDIA` R2 绑定原生读取单个范围；HEAD 只读取对象元数据。If-Range 按 ETag 或修改时间判断，元数据与正文用 ETag 条件保持一致。图片、时间轴和九宫格由原有图片回放路径提供。
+`npm run test:stream` 验证媒体域名的视频首段、中段、末段、后缀、HEAD、越界、播放跳转、卡片悬停预览及进度条缩略图，并检查正常播放没有 `/stream` 请求。Range、HEAD 与条件请求由 R2/CDN 提供。图片、时间轴和九宫格由原有图片回放路径提供。
 
 远程视频使用既有 `peach-public-media` 桶。以下上传会产生 R2 写入和回读请求，只处理清单中的内容指纹对象，不删除桶中内容。上传前应取得该环境的发布授权，并使用已登录的 Cloudflare 账号：
 
@@ -98,7 +98,7 @@ npm run media:local
 npm run media:upload
 ```
 
-仅回读远程对象并核对长度和 SHA-256：
+回读远程对象核对长度与 SHA-256，并检查媒体域名返回的长度与一年缓存元数据：
 
 ```powershell
 npm run media:verify
@@ -108,6 +108,6 @@ npm run media:verify
 
 ## Cloudflare 配置与依赖更新
 
-本项目使用固定版本的 `cf` 与 [`cloudflare.config.ts`](https://developers.cloudflare.com/cf/projects/cloudflare-config/)，Worker 名称、域名、绑定、静态路由和可观测性在此维护。`wrangler.config.ts` 仅维护打包器设置、素材目录和本地监听地址；Wrangler 是 cf 调用的打包依赖。`.cloudflare/` 保存生成类型和 Build Output，不进 Git。配置由官方 `cf migrate` 转换；这套配置仍为公开测试版，升级须核对构建和本地行为。
+本项目使用固定版本的 `cf` 与 [`cloudflare.config.ts`](https://developers.cloudflare.com/cf/projects/cloudflare-config/)，Worker 名称、域名、绑定、静态路由和可观测性在此维护。日志和 Issues 错误聚合随配置发布。`wrangler.config.ts` 维护打包器设置、素材目录和本地监听地址；Wrangler 也提供对象上传的缓存元数据参数，其他管理和部署沿用 cf。`.cloudflare/` 保存生成类型和 Build Output，不进 Git。配置由官方 `cf migrate` 转换；这套配置仍为公开测试版，升级须核对构建和本地行为。
 
 Dependabot 分别对普通小版本更新与安全更新分组，大版本单独审阅；`@types/node` 保持 Node 24 运行基线，只自动更新同一大版本。CI 在 Windows 和 Linux 执行安装、类型与语法检查、行为测试及 cf 构建检查；没有需要随 npm 更新重算并提交的 vendored 产物。涉及 Playwright 的更新还应运行依赖真实素材的浏览器检查，涉及打包的更新应核对预览。源码和素材的许可范围见 [NOTICE](../NOTICE.md)。

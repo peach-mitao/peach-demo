@@ -1,6 +1,7 @@
 import {sha1} from '@noble/hashes/legacy.js';
 import {fixtureKey} from './key.ts';
 import type {ImageMap, JSONValue} from './types.ts';
+import {videoURL} from './video.ts';
 
 export const IMAGE_PATHS = new Set(['/thumb','/poster','/cover','/timeline','/avatar','/entity-image','/logo',
   '/link-mark','/site-mark','/source-icon','/work-icon','/follow-avatar','/follow-cover','/photo','/photo-thumb',
@@ -15,8 +16,7 @@ export function mediaURL(value: string, images: ImageMap, origin = 'https://demo
   if(url.origin!==new URL(origin).origin)return value;
   if(images[url.pathname])return images[url.pathname]+'?';
   if(url.pathname==='/stream'&&videos[url.searchParams.get('id')||'']){
-    const id=url.searchParams.get('id')||'',video=videos[id];
-    return '/stream?'+new URLSearchParams({id,v:video.key.split('/').at(-1)!.replace('.mp4','')});
+    return videoURL(videos[url.searchParams.get('id')!].key) || value;
   }
   if(!IMAGE_PATHS.has(url.pathname))return value;
   // 应用的图片版本帮助函数会追加 &v=；保留查询串，确保后续参数属于查询而非文件名。

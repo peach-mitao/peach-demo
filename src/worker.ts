@@ -1,7 +1,6 @@
 import { browserReplay } from './browser-replay.ts';
 import { stream } from './stream.ts';
 import type {Assets,ReplayEnv} from './types.ts';
-interface WorkerEnv extends ReplayEnv {MEDIA?: Parameters<typeof stream>[1]['MEDIA']}
 type ReplayContext={assets: Assets;replay:ReturnType<typeof browserReplay>};
 const contexts = new WeakMap<Assets,Promise<ReplayContext>>();
 async function context(env: ReplayEnv, origin: string) {
@@ -20,13 +19,12 @@ async function context(env: ReplayEnv, origin: string) {
     return pending;
 }
 export default {
-    async fetch(request: Request, env: WorkerEnv): Promise<Response> {
+    async fetch(request: Request, env: ReplayEnv): Promise<Response> {
         const url = new URL(request.url);
         if (/^\/(?:_fixtures|_media)(?:\/|$)/.test(url.pathname))
             return Response.json({ error: 'not found' }, { status: 404 });
         if (url.pathname === '/stream') {
-            if(!env.MEDIA)return Response.json({error:'unavailable'},{status:404});
-            return stream(request, { MEDIA:env.MEDIA, ASSETS: (await context(env, url.origin)).assets }, url);
+            return stream(request, { ASSETS: (await context(env, url.origin)).assets }, url);
         }
         if (['/login', '/setup'].includes(url.pathname) && request.method === 'POST')
             return Response.redirect(new URL('/', url), 303);

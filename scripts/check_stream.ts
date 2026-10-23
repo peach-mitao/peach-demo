@@ -53,8 +53,8 @@ try {
                                 } });
                         });
                     const errors: string[] = [];
-                    const modules: string[] = [];
-                    page.on('request', request => { const path = new URL(request.url()).pathname; if (path.endsWith('.js'))
+                    const modules: string[] = [],streams:string[]=[];
+                    page.on('request', request => { const path = new URL(request.url()).pathname;if(path==='/stream')streams.push(request.url()); if (path.endsWith('.js'))
                         modules.push(path); });
                     page.on('pageerror', error => errors.push((error instanceof Error ? error.message : String(error))));
                     await page.goto(base + '/assets/1', { waitUntil: 'networkidle' });
@@ -65,7 +65,10 @@ try {
                         const node = (document.querySelector('#stage video') as HTMLElement);
                         return (node as HTMLVideoElement)?.duration > 0 && (node as HTMLVideoElement).videoWidth > 0 && (node as HTMLVideoElement).currentTime > .1;
                     });
-                    assert.match(new URL(await video.evaluate(node => (node as HTMLImageElement).currentSrc)).searchParams.get('v') || '', /^[a-f0-9]{64}$/);
+                    const videoURL=new URL(await video.evaluate(node=>(node as HTMLVideoElement).currentSrc));
+                    assert.equal(videoURL.origin,'https://media.peach.video');
+                    assert.match(videoURL.pathname,/^\/demo\/videos\/[a-f0-9]{64}\.mp4$/);
+                    assert.deepEqual(streams,[],'正常播放直接请求媒体域名');
                     assert.equal(modules.filter(path => path.startsWith('/vendor/videojs/')).length, 0);
                     assert.equal(modules.filter(path => /^\/dist\/demo-video-/.test(path)).length, 1);
                     await video.evaluate(node => { (node as HTMLVideoElement).pause(); (node as HTMLVideoElement).currentTime = (node as HTMLVideoElement).duration * .65; });
