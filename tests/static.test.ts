@@ -10,6 +10,11 @@ import { buildStatic, staticImageExpressions } from '../scripts/build_static.ts'
 import { createHash } from 'node:crypto';
 import { mediaFiles } from '../scripts/media_storage.ts';
 import sharp from 'sharp';
+test('视频元素在设置媒体地址前启用匿名跨域，其他元素保持原样',()=>{
+    const created:{tag:string;crossOrigin?:string;src?:string}[]=[],context:Record<string,any>={document:{createElement:(tag:string)=>{const element={tag};created.push(element);return element}}};
+    vm.runInNewContext(staticImageExpressions('const video=document.createElement("video");globalThis.before=video.crossOrigin;video.src="https://media.peach.video/demo.mp4";document.createElement("img");').source,context);
+    assert.equal(context.before,'anonymous');assert.deepEqual(created,[{tag:'video',crossOrigin:'anonymous',src:'https://media.peach.video/demo.mp4'},{tag:'img'}]);
+});
 test('静态图片解析与录制键、版本参数、别名及原路径兜底一致', async () => {
     const images: Record<string,string> = {};
     images[await fixtureHash('GET /cover?code=DEMO-001&thumb=1')] = '/_demo/images/one.jpg';

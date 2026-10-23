@@ -35,6 +35,10 @@ export function staticImageExpressions(source: string) {
     function visit(node: AnyNode) {
         if (!node || typeof node !== 'object')
             return;
+        if(node.type==='CallExpression'&&node.callee.type==='MemberExpression'&&!node.callee.computed&&node.callee.object.type==='Identifier'&&node.callee.object.name==='document'&&node.callee.property.type==='Identifier'&&node.callee.property.name==='createElement'&&node.arguments.length===1&&node.arguments[0]?.type==='Literal'&&node.arguments[0].value==='video'){
+            ranges.push([node.start,node.end,'video']);
+            return;
+        }
         if (node.type === 'CallExpression' && node.callee.type === 'Identifier' && versionHelpers.has(node.callee.name) && MEDIA_EXPRESSIONS.has(prefix(node.arguments[0]).split('?')[0])) {
             ranges.push([node.start, node.end, 'peachDemoMedia']);
             return;
@@ -53,7 +57,7 @@ export function staticImageExpressions(source: string) {
     }
     visit(tree);
     for (const [start, end, helper] of ranges.sort((a, b) => b[0] - a[0]))
-        source = source.slice(0, start) + `globalThis.${helper}(` + source.slice(start, end) + ')' + source.slice(end);
+        source = source.slice(0, start) + (helper==='video'?`Object.assign(${source.slice(start,end)},{crossOrigin:"anonymous"})`:`globalThis.${helper}(${source.slice(start,end)})`) + source.slice(end);
     return { source, count: ranges.length };
 }
 export async function buildStatic(site = path.join(root, 'site')) {

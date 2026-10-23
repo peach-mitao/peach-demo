@@ -68,6 +68,7 @@ try {
                     const videoURL=new URL(await video.evaluate(node=>(node as HTMLVideoElement).currentSrc));
                     assert.equal(videoURL.origin,'https://media.peach.video');
                     assert.match(videoURL.pathname,/^\/demo\/videos\/[a-f0-9]{64}\.mp4$/);
+                    await video.evaluate(node=>{const video=node as HTMLVideoElement,canvas=document.createElement('canvas');canvas.width=8;canvas.height=8;const context=canvas.getContext('2d')!;context.drawImage(video,0,0,8,8);context.getImageData(0,0,8,8);if(video.crossOrigin!=='anonymous')throw Error('视频缺少匿名跨域属性')});
                     assert.deepEqual(streams,[],'正常播放直接请求媒体域名');
                     assert.equal(modules.filter(path => path.startsWith('/vendor/videojs/')).length, 0);
                     assert.equal(modules.filter(path => /^\/dist\/demo-video-/.test(path)).length, 1);
