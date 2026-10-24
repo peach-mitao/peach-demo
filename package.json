@@ -13,7 +13,9 @@
   "scripts": {
     "sync": "node scripts/sync_frontend.ts",
     "edit:sync": "node scripts/sync_copy_editor.ts",
+    "edit:ui:sync": "node scripts/sync_editor_ui.ts",
     "assets:import": "node scripts/import_assets.ts",
+    "assets:movies": "node scripts/prepare_public_movies.ts",
     "browser:build": "node scripts/build_browser.ts",
     "behavior:check": "node scripts/check_behavior.ts",
     "behavior:capture": "node scripts/capture_behavior.ts",
@@ -35,10 +37,11 @@
     "verify:region": "node scripts/check_region.ts",
     "test:tags": "node scripts/check_tag_management.ts",
     "test:stream": "node scripts/check_stream.ts",
+    "test:public-movies": "node scripts/check_public_movies_browser.ts",
     "test:replay": "node scripts/check_replay.ts",
     "dev": "cf dev",
     "predev": "npm run assets:build",
-    "predeploy": "node scripts/check_package.ts --assets && npm run build && npm run behavior:check && npm run media:verify",
+    "predeploy": "node scripts/check_package.ts --assets && npm run build && npm run behavior:check",
     "deploy": "cf deploy --prebuilt"
   },
   "devDependencies": {

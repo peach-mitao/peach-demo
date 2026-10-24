@@ -24,7 +24,7 @@ export function publicValue(value: unknown, key = ''): unknown {
 export async function buildReplay(site: string, images: ImageMap) {
     const fixtures = path.join(site, '_fixtures'), load = async (name:string) => JSON.parse(await readFile(path.join(fixtures, name), 'utf8'));
     const manifest = await load('manifest.json'), catalog = await load('catalog.json'), indexes = await load('indexes.json');
-    const routes = new Set(['/healthz', ...READS.map(name => '/api/' + name)]);
+    const routes = new Set(['/healthz', '/api/network-status', '/api/background-issues', '/api/feeds/schedule', ...READS.map(name => '/api/' + name)]);
     for (const name of ['custom-metadata', 'follow/resolve', 'follow/schedule', 'links/prune', 'review', 'scraping/cover', 'taste/refresh', 'thumbnail-jobs', 'resource-sync/apply'] as const)
         routes.add('/api/' + name);
     const add = (name: string, query: object) => routes.add(name + '?' + new URLSearchParams(query as Record<string,string>));

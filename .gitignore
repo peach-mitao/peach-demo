@@ -2,6 +2,8 @@
 !/.gitignore
 !/.gitattributes
 !/copy-editor-source.json
+!/AGENTS.md
+!/editor-ui-source.json
 !/behavior-source.json
 !/support-source.json
 !/.github/
@@ -27,12 +29,16 @@
 !/scripts/browser_state.ts
 !/scripts/record_entry_pages.py
 !/scripts/sync_copy_editor.ts
+!/scripts/sync_editor_ui.ts
 !/scripts/import_assets.ts
 !/scripts/check_package.ts
 !/scripts/check.ts
 !/scripts/check_stream.ts
 !/scripts/build_static.ts
 !/scripts/build_public.ts
+!/scripts/public_copy.ts
+!/scripts/prepare_public_movies.ts
+!/scripts/check_public_movies_browser.ts
 !/scripts/build_browser.ts
 !/scripts/behavior_version.ts
 !/scripts/capture_behavior.ts
@@ -69,3 +75,4 @@
 !/site/_demo/
 /site/_demo/*
 !/site/_demo/copy-editor-core.js
+!/site/_demo/edit-toolbar.js

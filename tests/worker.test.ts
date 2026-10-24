@@ -170,12 +170,14 @@ test('私有录制文件不通过公开路径返回', async () => {
     for (const path of ['/_fixtures/manifest.json', '/_media/1.mp4'] as const)
         assert.equal((await call(path)).status, 404);
 });
-test('编号视频入口交给公开媒体域名处理范围请求', async () => {
-    const range = await call('/stream?id=1', { headers: { Range: 'bytes=2-4' } });
-    assert.equal(range.status, 308);
-    assert.equal(range.headers.get('location'),'https://media.peach.video/'+videoKey);
-    assert.equal(await range.text(),'');
-    assert.equal((await call('/stream?id=invalid')).status, 404);
+test('播放入口仅返回演示提示且不跳转媒体', async () => {
+    for (const id of ['1', 'invalid']) {
+        const response = await call('/stream?id=' + id, { headers: { Range: 'bytes=2-4' } });
+        assert.equal(response.status, 403);
+        assert.equal(response.headers.get('location'), null);
+        assert.equal(response.headers.get('cache-control'), 'no-store');
+        assert.deepEqual(await response.json(), { demo: true, message: '仅提供演示' });
+    }
 });
 test('排序升降序均保留馆藏数据', async () => {
     const desc = await (await call('/api/items?sort=o&dir=desc')).json();

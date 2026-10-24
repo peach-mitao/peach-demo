@@ -18,6 +18,7 @@ const NOTICE = `<style>
 #toasts [data-sonner-toaster][data-y-position=bottom]{bottom:max(var(--offset-bottom,24px),calc(var(--demo-notice-height,34px) + 24px))}
 #searchMenu{max-height:min(60vh,520px,var(--demo-search-space,100vh))!important}
 #searchMenu [data-search-group]:not(:has([data-search-value])){display:none}
+[data-demo-notice] a{display:inline}
 [data-demo-copy="compact"]{display:none}
 @media(max-width:560px){
  [data-demo-copy="full"]{display:none}
@@ -25,9 +26,9 @@ const NOTICE = `<style>
  [data-demo-notice]{white-space:nowrap}
  #searchMenu{max-height:min(70vh,var(--demo-search-space,100vh))!important}
 }
-</style><div role="note" data-demo-notice style="position:fixed;left:50%;transform:translateX(-50%);bottom:max(12px,env(safe-area-inset-bottom));z-index:2147483000;pointer-events:none;
+</style><div role="note" data-demo-notice style="position:fixed;left:50%;transform:translateX(-50%);bottom:max(12px,env(safe-area-inset-bottom));z-index:2147483000;pointer-events:auto;user-select:text;
 padding:6px 10px;border-radius:12px;width:max-content;box-sizing:border-box;text-align:center;max-width:calc(100vw - 24px);font:12px/1.4 system-ui,sans-serif;
 background:var(--color-background-primary-default,#fff);color:var(--color-text-secondary,#555);
 border:1px solid var(--color-separator-border,#0002);box-shadow:0 2px 8px #0001">
-<span data-demo-copy="full">Peach 演示站：数据是录制回放，操作不会保存 · </span><span data-demo-copy="compact">演示站 · 操作不保存 · </span><a href="https://peach.video/copyright/" target="_blank" rel="noopener" style="display:inline;line-height:inherit;pointer-events:auto;color:inherit;text-decoration:underline"><span data-demo-copy="full">版权投诉 / DMCA</span><span data-demo-copy="compact">版权投诉</span></a> · <a href="https://peach.video/privacy/analytics" target="_blank" rel="noopener" style="pointer-events:auto;color:inherit;text-decoration:underline"><span data-demo-copy="full">统计偏好</span><span data-demo-copy="compact">统计</span></a></div>`;
+<span data-demo-copy="full">Peach 演示站：电影资料与操作示例，不提供视频 · </span><span data-demo-copy="compact">仅供演示 · 操作不保存 · </span><a href="/film-sources/" style="display:inline;line-height:inherit;pointer-events:auto;color:inherit;text-decoration:underline">素材来源</a> · <a href="https://peach.video/copyright/" target="_blank" rel="noopener" style="display:inline;line-height:inherit;pointer-events:auto;color:inherit;text-decoration:underline"><span data-demo-copy="full">版权投诉 / DMCA</span><span data-demo-copy="compact">版权投诉</span></a> · <a href="https://peach.video/privacy/analytics" target="_blank" rel="noopener" style="display:inline;line-height:inherit;pointer-events:auto;color:inherit;text-decoration:underline"><span data-demo-copy="full">统计偏好</span><span data-demo-copy="compact">统计</span></a></div>`;
 export { DEMO_SETTINGS, FOLLOW_IMAGES, NOTICE };

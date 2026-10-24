@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { chromium, type Page } from 'playwright';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
+import { publicMovies } from '../src/public-movies.ts';
 const base = process.env.BASE || 'http://127.0.0.1:8791';
 const out = new URL('../evidence/v043/', import.meta.url);
 await mkdir(out, { recursive: true });
@@ -27,7 +28,8 @@ async function visibleImages(page: Page) {
         return images.map(img => ({ src: img.currentSrc, naturalWidth: img.naturalWidth, width: img.getBoundingClientRect().width, height: img.getBoundingClientRect().height }));
     });
 }
-const routes = [['home', '/'], ['people', '/performers'], ['profile', '/performers/' + encodeURIComponent('凉森玲梦')],
+const movies = publicMovies(), performer = movies.indexes.performers.items[0]!;
+const routes = [['home', '/'], ['people', '/performers'], ['profile', '/performers/' + performer.entity_id],
     ['follow', '/follow?media=images'], ['stats', '/stats'], ['feeds', '/subscriptions?tab=feeds'],
     ['follow-table', '/subscriptions?tab=list'], ['data', '/data-cleanup'], ['player', '/assets/1']];
 try {
@@ -52,6 +54,10 @@ try {
                 assert.equal(state.overflow, false, `${name} ${width}/${dpr} 横向溢出`);
                 assert.ok(state.text?.length > 10, `${name} 内容未取得`);
                 assert.ok(state.images!.every((img: { naturalWidth: number; }) => img.naturalWidth > 0), `${name} 可见图片加载失败`);
+                if (name === 'home') {
+                    const visible = await page.evaluate(async () => (await (await fetch('/api/items?loc=local%2C115&limit=1000')).json()).total);
+                    assert.equal(visible, movies.catalog.items.length, '默认来源包含完整电影馆藏');
+                }
                 if (name === 'data') {
                     assert.ok(await page.getByRole('button', { name: '同步媒体库', exact: true }).count());
                     const links = page.locator('#link-manager');
@@ -61,11 +67,11 @@ try {
                     }
                 }
                 if (name === 'feeds')
-                    assert.match(state.text, /凉森玲梦/);
+                    assert.ok(state.text.includes(performer.k), '订阅列表包含普通电影演员样本');
                 if (name === 'follow-table')
-                    assert.match(state.text, /Billyhhyb/);
+                    assert.ok(state.text.includes(movies.indexes.onlineAuthors.items[0]!.k), '关注列表包含真实导演');
                 if (name === 'player') {
-                    const button = page.getByRole('button', { name: /记一次高潮/ });
+                    const button = page.getByRole('button', { name: /^标记精彩片段\s+\d+$/ });
                     const initial = await page.evaluate(async () => await (await fetch('/api/item?id=1')).json());
                     await button.click();
                     await page.waitForFunction(count => (document.querySelector('#oCount') as HTMLElement)?.textContent === String(count), initial.o_count + 1);
@@ -110,8 +116,8 @@ try {
     for (const path of ['/_fixtures/manifest.json', '/_media/1.mp4'] as const)
         assert.equal((await context.request.get(base + path)).status(), 404);
     const range = await context.request.get(base + '/stream?id=1', { headers: { Range: 'bytes=0-99' } });
-    assert.equal(range.status(), 206);
-    assert.equal((await range.body()).length, 100);
+    assert.equal(range.status(), 403);
+    assert.deepEqual(await range.json(), { demo: true, message: '仅提供演示' });
     await context.close();
 }
 finally {

@@ -7,7 +7,7 @@ export function folderIndex(items: readonly FolderItem[]): FolderIndex {
     for (const item of items) {
         const location = item.location || 'local';
         const parts = [location === 'local' ? '本地演示库' : `${location} 演示库`,
-            item.is_jav ? '番号影片' : '创作者作品',
+            item.is_jav ? '编号影片' : '创作者作品',
             item.is_jav ? item.studio || '其他厂牌' : item.creator || '其他视频'];
         let parent: string|null = null, root: string|null = null;
         const chain = [];

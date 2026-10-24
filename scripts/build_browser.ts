@@ -5,10 +5,11 @@ import {transform,build} from 'esbuild';
 import {behaviorVersion} from './behavior_version.ts';
 import {verifyBehavior} from './sync_behavior.ts';
 import {verifySupport} from './verify_support.ts';
+import {verifyEditorUI} from './sync_editor_ui.ts';
 
 const root=fileURLToPath(new URL('../',import.meta.url));
 export async function buildBrowser(){
-  await verifyBehavior();await verifySupport();await behaviorVersion();
+  await verifyBehavior();await verifySupport();await verifyEditorUI();await behaviorVersion();
   const source=path.join(root,'browser'),out=path.join(root,'site/_demo');
   await mkdir(out,{recursive:true});
   await mkdir(path.join(root,'site/assets'),{recursive:true});

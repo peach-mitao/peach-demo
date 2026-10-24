@@ -1,5 +1,4 @@
 import { browserReplay } from './browser-replay.ts';
-import { stream } from './stream.ts';
 import type {Assets,ReplayEnv} from './types.ts';
 import {regionResponse} from './region.ts';
 type ReplayContext={assets: Assets;replay:ReturnType<typeof browserReplay>};
@@ -27,7 +26,7 @@ export default {
         if (/^\/(?:_fixtures|_media)(?:\/|$)/.test(url.pathname))
             return Response.json({ error: 'not found' }, { status: 404 });
         if (url.pathname === '/stream') {
-            return stream(request, { ASSETS: (await context(env, url.origin)).assets }, url);
+            return Response.json({ demo: true, message: '仅提供演示' }, { status: 403, headers: { 'cache-control': 'no-store' } });
         }
         if (['/login', '/setup'].includes(url.pathname) && request.method === 'POST')
             return Response.redirect(new URL('/', url), 303);

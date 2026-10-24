@@ -1,4 +1,5 @@
 interface CopyEditor {busy:boolean;editing:boolean;commit(cancel?:boolean):Promise<unknown>|void;hideHighlight():void}
+declare var PeachCopyToolbar:{create():{host:HTMLElement;bar:HTMLElement;status:HTMLElement;button(label:string,action:()=>unknown):HTMLButtonElement;say(message:string|null,tone?:string):void;setActive(active:boolean):void}};
 interface CopyEditorOptions {highlight:HTMLElement;isActive():boolean;onStatus(message:string):void;onBusy?(busy:boolean):void;resolve(node:Text):object|null;save(edit:{node:Text;original:string},text:string):object|Promise<object>}
 declare var PeachCopyEditorCore:{create(options:CopyEditorOptions):CopyEditor;applyDrafts(root:Node,edits:Record<string,string>,originals:WeakMap<Text,string>):void};
 declare var peachDemoReplay:((request:Request)=>Promise<Response>)|undefined;

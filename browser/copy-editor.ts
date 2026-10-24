@@ -15,27 +15,14 @@
     [data-copy-highlight]{pointer-events:none;z-index:2147483646;outline:1.5px dashed var(--tungsten);outline-offset:3px;border-radius:var(--badge-radius);display:none}
     [data-copy-inline]{outline:2px solid var(--tungsten);outline-offset:3px;border-radius:var(--badge-radius);background:var(--hover);user-select:text;cursor:text}
     [data-copy-input]{z-index:2147483647;padding:2px 6px;border:0;border-radius:var(--badge-radius);outline:2px solid var(--tungsten);background:var(--ground);color:var(--ink)}
-    [data-copy-bar]{position:fixed;bottom:calc(16px + var(--demo-notice-height,0px));left:50%;transform:translateX(-50%);z-index:2147483647;padding:8px 14px;border-radius:var(--floating-radius);display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--ground,#fff);color:var(--ink,#111);box-shadow:0 2px 18px #0003;font:13px/1.4 system-ui;max-width:calc(100vw - 32px);width:max-content;box-sizing:border-box}
-    [data-copy-bar] button{font:inherit;cursor:pointer}[data-copy-bar] [role=status]{flex-basis:100%;overflow-wrap:anywhere}
   `;
     document.head.append(css);
     const highlight = document.createElement('div');
     highlight.dataset.copyEditor = '';
     highlight.dataset.copyHighlight = '';
-    const bar = document.createElement('div');
-    bar.dataset.copyEditor = '';
-    bar.dataset.copyBar = '';
-    const title = document.createElement('b');
-    title.textContent = '改字模式';
-    const hint = document.createElement('span');
-    hint.textContent = '点文字编辑，切换照常；Alt+点击改控件文字；回车保存，Esc 取消';
-    const status = document.createElement('span');
-    status.setAttribute('role', 'status');
-    bar.append(title, hint);
-    const say = (message: string|null) => { status.textContent = message; };
-    const button = (label: string|null, action: ((this: GlobalEventHandlers,ev: PointerEvent) => any)|null) => { const element = document.createElement('button'); element.type = 'button'; element.textContent = label; element.onclick = action; bar.append(element); return element; };
+    const toolbar = globalThis.PeachCopyToolbar.create(), {bar, say, button} = toolbar;
     const toggle = button('暂停编辑', () => { if (editor.busy)
-        return; editor.commit(); active = !active; editor.hideHighlight(); toggle.textContent = active ? '暂停编辑' : '继续编辑'; });
+        return; editor.commit(); active = !active; editor.hideHighlight(); toggle.textContent = active ? '暂停编辑' : '继续编辑'; toolbar.setActive(active); });
     button('导出修改', () => {
         const url = URL.createObjectURL(new Blob([JSON.stringify(edits, null, 2)], { type: 'application/json' }));
         const link = document.createElement('a');
@@ -45,9 +32,10 @@
         setTimeout(() => URL.revokeObjectURL(url), 1000);
     });
     button('退出', () => { if (editor.busy)
-        return; editor.commit(true); const url = new URL(location.href); url.searchParams.delete('edit'); location.href = url.href; });
-    bar.append(status);
-    document.body.append(highlight, bar);
+        return; editor.commit(true); const url = new URL(location.href); url.searchParams.delete('edit'); location.href = url.href; }).setAttribute('aria-label','退出编辑');
+    document.body.append(highlight, toolbar.host);
+    const placeToolbar = () => {const host=document.querySelector('dialog[open]')||document.body;host.append(highlight,toolbar.host)};
+    new MutationObserver(placeToolbar).observe(document.body,{subtree:true,attributes:true,attributeFilter:['open']});
     const apply = () => { if (editor?.editing || editor?.busy)
         return; Core.applyDrafts(document.body, edits, originals); };
     editor = Core.create({ highlight, isActive: () => active, onStatus: say,

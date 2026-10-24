@@ -1,9 +1,11 @@
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
 import { mkdir, writeFile } from 'node:fs/promises';
+import { publicMovies } from '../src/public-movies.ts';
 const base = process.env.BASE || 'http://127.0.0.1:8791', out = new URL('../evidence/search-recommendations/', import.meta.url);
 await mkdir(out, { recursive: true });
 const browser = await chromium.launch({ channel: 'chrome' }), report = [];
+const recommendedCreator = publicMovies().indexes.onlineAuthors.items[0]!.k;
 try {
     for (const width of [1440, 390, 320] as const) {
         const height = width === 1440 ? 960 : 844;
@@ -19,10 +21,10 @@ try {
         await page.locator('#q').focus();
         const menu = page.locator('#searchMenu');
         await menu.waitFor({ state: 'visible' });
-        const avatar = menu.locator('[data-search-value="Billyhhyb"] img.favatar');
+        const avatar = menu.locator(`[data-search-value="${recommendedCreator}"] img.favatar`);
         await avatar.waitFor();
         await avatar.scrollIntoViewIfNeeded();
-        await page.waitForFunction(() => { const img = (document.querySelector('#searchMenu [data-search-value="Billyhhyb"] img.favatar') as HTMLElement); return (img as HTMLImageElement)?.complete && (img as HTMLImageElement).naturalWidth > 0; });
+        await page.waitForFunction(name => { const img = document.querySelector(`#searchMenu [data-search-value="${name}"] img.favatar`) as HTMLImageElement; return img?.complete && img.naturalWidth > 0; }, recommendedCreator);
         const phases = [];
         const phaseSizes:[string,number,number?][]=[['open',height],...(width<761?[['keyboard-sized',440],['restored',height],['visual-keyboard-sized',height,440],['visual-restored',height]] as [string,number,number?][]:[])];
         for (const [phase, nextHeight, visibleHeight] of phaseSizes) {
@@ -41,21 +43,23 @@ try {
                 const bottom = (visualViewport?.height || innerHeight) + (visualViewport?.offsetTop || 0);
                 return mr?.height > 0 && mr.bottom <= nr.top - 8 && Math.abs(nr.bottom - (bottom - 12)) < 1;
             });
-            const state = await page.evaluate(() => {
+            const state = await page.evaluate(recommendedCreator => {
                 const menu = (document.querySelector('#searchMenu') as HTMLElement), notice = (document.querySelector('[data-demo-notice]') as HTMLElement), font = getComputedStyle(notice);
                 return { menu: menu.getBoundingClientRect().toJSON(), notice: notice.getBoundingClientRect().toJSON(), noticeText: notice.innerText, layoutHeight: innerHeight, visualHeight: visualViewport!.height,
                     noticeLineHeight: parseFloat(font.lineHeight), noticePadding: parseFloat(font.paddingTop) + parseFloat(font.paddingBottom) + parseFloat(font.borderTopWidth) + parseFloat(font.borderBottomWidth),
                     sections: [...(menu.querySelectorAll('[data-search-group]') as NodeListOf<HTMLElement>)].filter(group => group.checkVisibility()).map(group => ({ title: (group.querySelector('h3') as HTMLElement)?.innerText, rows: (group.querySelectorAll('[data-search-value]') as NodeListOf<HTMLElement>).length })),
-                    overflow: document.documentElement.scrollWidth > innerWidth, copyright: (notice.querySelector('a') as HTMLAnchorElement)?.href,
-                    avatar: { src: ((menu.querySelector('[data-search-value="Billyhhyb"] img') as HTMLElement) as HTMLImageElement)?.currentSrc, width: ((menu.querySelector('[data-search-value="Billyhhyb"] img') as HTMLElement) as HTMLImageElement)?.naturalWidth } };
-            });
+                    overflow: document.documentElement.scrollWidth > innerWidth, copyright: (notice.querySelector('a[href="https://peach.video/copyright/"]') as HTMLAnchorElement)?.href,
+                    sources: (notice.querySelector('a[href="/film-sources/"]') as HTMLAnchorElement)?.href,
+                    avatar: { src: (menu.querySelector(`[data-search-value="${recommendedCreator}"] img`) as HTMLImageElement)?.currentSrc, width: (menu.querySelector(`[data-search-value="${recommendedCreator}"] img`) as HTMLImageElement)?.naturalWidth } };
+            }, recommendedCreator);
             assert.ok(state.sections.every(section => section.rows > 0));
             assert.ok(state.sections.some(section => section.title?.includes('关注图片')));
             assert.ok(state.sections.some(section => section.title?.includes('订阅新作')));
             assert.equal(state.overflow, false);
             assert.equal(state.copyright, 'https://peach.video/copyright/');
+            assert.equal(state.sources, base + '/film-sources/');
             if (width < 761) {
-                assert.equal(state.noticeText, '演示站 · 操作不保存 · 版权投诉');
+                assert.equal(state.noticeText.replace(/\s+/g, ' '), '仅供演示 · 操作不保存 · 素材来源 · 版权投诉 · 统计');
                 assert.ok(state.notice.height <= state.noticeLineHeight + state.noticePadding + 1);
             }
             phases.push({ phase, height: nextHeight, ...state });

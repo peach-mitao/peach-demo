@@ -9,8 +9,13 @@ import { DEMO_SETTINGS, FOLLOW_IMAGES, NOTICE } from '../src/page-shell.ts';
 import sharp from 'sharp';
 import { bundlePlayer } from './bundle_player.ts';
 import { pageRoutes } from './demo_pages.ts';
+import { movieHTML, movieScript } from './public_copy.ts';
+import { verifyPublicMovies } from './prepare_public_movies.ts';
+import { FILMS, PEOPLE, DEMO_DATA_NOTICE } from '../src/public-movies.ts';
+import { MOVIE_RIGHTS } from '../src/movie-rights.ts';
 const root = fileURLToPath(new URL('../', import.meta.url));
 export async function buildPublic(site = path.join(root, 'site'), out = path.join(root, 'public')) {
+    await verifyPublicMovies(site);
     const resolved = path.resolve(out);
     if (resolved !== path.join(root, 'public'))
         throw Error('公开构建输出目录无效');
@@ -25,30 +30,38 @@ export async function buildPublic(site = path.join(root, 'site'), out = path.joi
         await cp(path.join(site, url), path.join(out, url));
     }
     await sharp(await readFile(path.join(site, 'peach-logo.png'))).resize({ width: 256, withoutEnlargement: true }).png().toFile(path.join(out, 'peach-logo.png'));
+    await sharp(await readFile(path.join(site, 'peach-logo.png'))).resize({ width: 64, withoutEnlargement: true }).png().toFile(path.join(out, 'peach-logo-64.png'));
+    await sharp(await readFile(path.join(site, 'peach-logo.png'))).resize({ width: 128, withoutEnlargement: true }).png().toFile(path.join(out, 'peach-logo-128.png'));
     const assets = async (name:string, body:string|Uint8Array, extension:string) => {
         const hash = createHash('sha256').update(body).digest('hex');
         const url = `/_demo/${name}-${hash}.${extension}`;
         await writeFile(path.join(out, url), body);
         return url;
     };
-    const boot = await build({ stdin: { contents: `import {browserReplay} from './src/browser-replay.ts';import {mediaURL,mediaJSON,mediaHTML} from './src/media.ts';import * as tags from './src/tag-management.ts';const images=${JSON.stringify(images)},variants=${JSON.stringify(variants)},videos=${JSON.stringify(videos)};globalThis.peachDemoTags=tags;globalThis.peachDemoMedia=v=>mediaURL(v,images,location.origin,variants,videos);globalThis.peachDemoMediaJSON=v=>mediaJSON(v,images,location.origin,variants,videos);globalThis.peachDemoHTML=v=>mediaHTML(v,images,location.origin,variants,videos);globalThis.peachDemoReplay=browserReplay(${JSON.stringify(replay.files)},window.fetch.bind(window),location.origin);`, resolveDir: root }, bundle: true, write: false, platform: 'browser', format: 'iife', target: 'es2022', minify: true });
+    const boot = await build({ stdin: { contents: `import {installDemoPlayback} from './src/demo-playback.ts';import {browserReplay} from './src/browser-replay.ts';import {mediaURL,mediaJSON,mediaHTML} from './src/media.ts';import * as tags from './src/tag-management.ts';installDemoPlayback(window);const images=${JSON.stringify(images)},variants=${JSON.stringify(variants)},videos=${JSON.stringify(videos)};globalThis.peachDemoTags=tags;globalThis.peachDemoMedia=v=>mediaURL(v,images,location.origin,variants,videos);globalThis.peachDemoMediaJSON=v=>mediaJSON(v,images,location.origin,variants,videos);globalThis.peachDemoHTML=v=>mediaHTML(v,images,location.origin,variants,videos);globalThis.peachDemoReplay=browserReplay(${JSON.stringify(replay.files)},window.fetch.bind(window),location.origin);`, resolveDir: root }, bundle: true, write: false, platform: 'browser', format: 'iife', target: 'es2022', minify: true });
     const runtime = await assets('runtime', boot.outputFiles[0].contents, 'js');
     const interaction = await assets('interactions', await readFile(path.join(site, '_demo/interactions.js')), 'js');
     const tour = await assets('tour', await readFile(path.join(site, '_demo/tour.js')), 'js');
     const editorCore = await assets('copy-editor-core', await readFile(path.join(site, '_demo/copy-editor-core.js')), 'js');
     const editor = await assets('copy-editor', await readFile(path.join(site, '_demo/copy-editor.js')), 'js');
+    const editorUI = await assets('edit-toolbar', await readFile(path.join(site, '_demo/edit-toolbar.js')), 'js');
     const behaviorBuild=await build({entryPoints:[path.join(root,'browser/behavior.ts')],bundle:true,write:false,platform:'browser',format:'iife',target:'es2022',minify:true});
     const behavior=await assets('behavior',behaviorBuild.outputFiles[0].contents,'js');
     const tourGate = `<script>if(new URLSearchParams(location.search).has('tour'))document.write('<script src="${tour}"><'+ '/script>')</script>`;
-    const editorGate = `<script>if(new URLSearchParams(location.search).has('edit')){document.body.dataset.peachCopyMode='local';document.write('<script defer src="${editorCore}"><'+ '/script><script defer src="${editor}"><'+ '/script>')}</script>`;
+    const editorGate = `<script>if(new URLSearchParams(location.search).has('edit')){document.body.dataset.peachCopyMode='local';document.write('<script defer src="${editorCore}"><'+ '/script><script defer src="${editorUI}"><'+ '/script><script defer src="${editor}"><'+ '/script>')}</script>`;
     await writeFile(path.join(out,'404.html'),(await readFile(path.join(site,'404.html'),'utf8')).replace('</body>',editorGate+'</body>'));
     const player = await bundlePlayer(await readFile(path.join(site, 'dist/peach-app.js'), 'utf8'), site, out);
-    const app = await build({ entryPoints: [path.join(site, 'dist/peach-app.js')], outdir: path.join(out, 'dist'), bundle: true, splitting: true, format: 'esm', platform: 'browser', target: 'es2022', minify: true, entryNames: 'demo-[name]-[hash]', chunkNames: 'demo-chunk-[hash]', external: ['/dist/demo-video-*'], metafile: true, plugins: [{ name: 'demo-media', setup(builder) { builder.onLoad({ filter: /\.js$/ }, async (args) => ({ contents: player.rewrite(staticImageExpressions(await readFile(args.path, 'utf8')).source), loader: 'js' })); } }] });
+    const app = await build({ entryPoints: [path.join(site, 'dist/peach-app.js')], outdir: path.join(out, 'dist'), bundle: true, splitting: true, format: 'esm', platform: 'browser', target: 'es2022', minify: true, entryNames: 'demo-[name]-[hash]', chunkNames: 'demo-chunk-[hash]', external: ['/dist/demo-video-*'], metafile: true, plugins: [{ name: 'demo-media', setup(builder) { builder.onLoad({ filter: /\.js$/ }, async (args) => ({ contents: movieScript(player.rewrite(staticImageExpressions(await readFile(args.path, 'utf8')).source)), loader: 'js' })); } }] });
     const appOutput = Object.entries(app.metafile.outputs).find(([, info]) => info.entryPoint && path.resolve(info.entryPoint) === path.join(site, 'dist/peach-app.js'))?.[0];
     if (!appOutput)
         throw Error('应用入口构建未取得');
     const appURL = '/' + path.relative(out, path.resolve(appOutput)).split(path.sep).join('/');
-    const decorate = (html:string) => html.replace('</head>', DEMO_SETTINGS + FOLLOW_IMAGES + `<script src="${runtime}"></script><script src="${interaction}"></script>` + tourGate + '</head>').replace('src="/dist/peach-app.js"', `src="${appURL}"`).replace('</body>', NOTICE + editorGate + `<script defer src="${behavior}"></script></body>`);
+    const decorate = (html:string) => movieHTML(html).replace('<head>', '<head><meta http-equiv="Content-Security-Policy" content="media-src \'none\'">').replace('</head>', DEMO_SETTINGS + FOLLOW_IMAGES + `<script src="${runtime}"></script><script src="${interaction}"></script>` + tourGate + '</head>').replace('src="/dist/peach-app.js"', `src="${appURL}"`).replace('</body>', NOTICE + editorGate + `<script defer src="${behavior}"></script></body>`);
+    const rights = [...FILMS.map(film => ({ ...film.poster, ...MOVIE_RIGHTS[film.slug], title: film.title, kind: '电影图片' })), ...PEOPLE.map(person => ({ ...person.portrait, title: person.name, kind: '人物肖像' }))];
+    const escape = (value: unknown) => String(value || '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]!);
+    await mkdir(path.join(out, 'film-sources'), { recursive: true });
+    await writeFile(path.join(out, 'film-sources.json'), JSON.stringify({ notice: DEMO_DATA_NOTICE, images: '官方电影代表图；按容器缩放或裁切显示。', films: rights }, null, 2));
+    await writeFile(path.join(out, 'film-sources/index.html'), `<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>素材来源与许可 · Peach</title><link rel="stylesheet" href="/app.css"><style>body{margin:0;padding:clamp(20px,5vw,64px);font:16px/1.7 system-ui;background:var(--ground,#fff);color:var(--ink,#222)}main{max-width:760px;margin:auto}article{padding:24px 0;border-bottom:1px solid var(--border-15,#8884)}h1{font-size:28px}h2{font-size:20px}a{color:inherit;text-decoration:underline}p{overflow-wrap:anywhere}</style></head><body><main><a href="/">返回演示站</a><h1>素材来源与许可</h1><p>${escape(DEMO_DATA_NOTICE)}</p><p>图片来自 Blender 与 Wikimedia Commons，按容器缩放或裁切。播放入口仅提供演示，不加载视频。Public domain 的具体依据见各图片的原始文件页。</p>${rights.map(item => `<article><h2>${escape(item.title)}</h2><p>${escape(item.kind)} · ${escape(item.attribution || item.artist)}</p><p><a href="${escape(item.source)}">原始来源</a> · <a href="${escape(item.license_url)}">${escape(item.license)}</a> · <a href="${escape(item.license_source || item.source)}">许可依据</a></p><p>${escape(item.changes)}</p></article>`).join('')}</main>${editorGate}</body></html>`);
     await writeFile(path.join(out, 'index.html'), decorate(await readFile(path.join(site, 'index.html'), 'utf8')));
     const entry = JSON.parse(await readFile(path.join(site, '_fixtures/entry-pages.json'), 'utf8'));
     for (const route of ['login', 'setup'] as const) {
