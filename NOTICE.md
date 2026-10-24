@@ -1,5 +1,7 @@
 # 许可与数据
 
+地区访问判断使用 [ipaddr.js](https://github.com/whitequark/ipaddr.js) 2.5.0（MIT）。`src/region-data.ts` 是 [DB-IP Country Lite](https://db-ip.com/db/lite.php) 与 [IPLocate Country](https://github.com/iplocate/ip-address-databases) 的 `CN` 网段并集，派生数据按 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) 分发；DB-IP 原始数据按 CC BY 4.0 分发。版本、来源地址及原始归档 SHA-256 保留在生成文件的 `sources` 中，页面保留两家数据提供者链接。此数据许可不改变项目自有代码许可。
+
 本项目自有代码及从 Peach 派生的前端交互按 AGPL-3.0-only 发布，见 `LICENSE`。Peach 前端源码在 `https://github.com/peach-mitao/peach`。同步前端时一并保留 `web/vendor/` 中的第三方许可证。
 
 录制响应、数据库、媒体、照片、封面和关注图不随 Git 仓库发布。部署需要独立提供本地录制包；源码许可不授予其中第三方素材的权利。投诉入口为 `https://peach.video/copyright/`。
