@@ -1,6 +1,7 @@
 import { browserReplay } from './browser-replay.ts';
 import { stream } from './stream.ts';
 import type {Assets,ReplayEnv} from './types.ts';
+import {regionResponse} from './region.ts';
 type ReplayContext={assets: Assets;replay:ReturnType<typeof browserReplay>};
 const contexts = new WeakMap<Assets,Promise<ReplayContext>>();
 async function context(env: ReplayEnv, origin: string) {
@@ -20,6 +21,8 @@ async function context(env: ReplayEnv, origin: string) {
 }
 export default {
     async fetch(request: Request, env: ReplayEnv): Promise<Response> {
+        const restricted = await regionResponse(request, env.ASSETS);
+        if (restricted) return restricted;
         const url = new URL(request.url);
         if (/^\/(?:_fixtures|_media)(?:\/|$)/.test(url.pathname))
             return Response.json({ error: 'not found' }, { status: 404 });

@@ -12,13 +12,8 @@ export default defineConfig(({ mode }) => ({
 		},
 		assets: {
 			notFoundHandling: "none",
-			runWorkerFirst: [
-				"/api/*", "/healthz", "/stream", "/login", "/setup",
-				"/_fixtures", "/_fixtures/*", "/_media", "/_media/*",
-				"/thumb", "/poster", "/cover", "/timeline", "/avatar", "/entity-image", "/logo",
-				"/link-mark", "/site-mark", "/source-icon", "/work-icon", "/follow-avatar", "/follow-stream", "/follow-cover",
-				"/follow-qualities", "/photo", "/photo-thumb", "/sample-thumb", "/sample-image", "/endcard-frame", "/avatar-choice",
-			],
+			// 页面、回放快照、图片和视频统一执行连接 IP 的地区限制。
+			runWorkerFirst: true,
 		},
 		domains: mode === "preview" ? [] : ["demo.peach.video"],
 		env: {

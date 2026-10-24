@@ -32,6 +32,7 @@
     "test:search": "node scripts/check_search_recommendations.ts",
     "test:folders": "node scripts/check_folders.ts",
     "test:routes": "node scripts/check_routes.ts",
+    "verify:region": "node scripts/check_region.ts",
     "test:tags": "node scripts/check_tag_management.ts",
     "test:stream": "node scripts/check_stream.ts",
     "test:replay": "node scripts/check_replay.ts",

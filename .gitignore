@@ -54,12 +54,14 @@
 !/scripts/check_folders.ts
 !/scripts/check_edit.ts
 !/scripts/check_routes.ts
+!/scripts/check_region.ts
 !/scripts/check_tag_management.ts
 !/tests/
 !/site/
 /site/*
 !/site/.assetsignore
 !/site/404.html
+!/site/unavailable.html
 !/site/assets/
 /site/assets/*
 !/site/assets/support-ui/

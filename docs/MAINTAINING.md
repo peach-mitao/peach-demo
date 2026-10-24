@@ -2,6 +2,8 @@
 
 本仓库维护 Cloudflare Worker、回放协议和演示交互。应用前端的源码在 [Peach 主仓库](https://github.com/peach-mitao/peach)，构建产物通过同步入口取得。录制包由维护者单独管理，合成数据测试不需要录制包。
 
+所有请求先由 Worker 使用 Cloudflare 的 `request.cf.country` 判断连接 IP。`CN` 跳转到 `/unavailable`，提示页返回 403 并复用 404 的样式；`HK`、`MO`、`TW` 和其他地区正常访问。页面、回放快照、图片、同源视频入口和接口都执行同一判断，仅提示页的样式、字体和标识放行。跳转与提示页禁止缓存，不读取客户端地区请求头，也不调用外部 IP 查询服务。静态资源经过 Worker，资源请求均会产生 Worker 调用；独立媒体域名不在两站的地区判断范围内。
+
 工具选型与复用边界见[复用说明](REUSE.md)。
 
 ## 独立 404 页
@@ -92,7 +94,7 @@ npm run media:plan
 npm run media:local
 ```
 
-用 `npm run dev` 启动 `http://127.0.0.1:8791/`。视频播放读取已发布的公开媒体域名，需要网络；`media:local` 只用于本地对象上传验证，不参与播放器请求。`?edit` 提供浏览器本地改字草稿，普通页面不应用草稿；`?tour=` 选择教程。搜索记录、收藏、扫描控制与演示写操作均不产生服务器持久写入。普通 HTML 与深链直接走 Assets；API、探活、登录表单、媒体编号跳转和私有目录拦截由明确的 `runWorkerFirst` 路径处理。
+用 `npm run dev` 启动 `http://127.0.0.1:8791/`。视频播放读取已发布的公开媒体域名，需要网络；`media:local` 只用于本地对象上传验证，不参与播放器请求。`?edit` 提供浏览器本地改字草稿，普通页面不应用草稿；`?tour=` 选择教程。搜索记录、收藏、扫描控制与演示写操作均不产生服务器持久写入。`runWorkerFirst: true` 使所有请求先通过 Worker 地区判断，再读取 Assets 或执行回放接口。
 
 预览运行时，`npm run test:browser` 检查桌面、手机、图片、播放记录撤销和扫描控制；`npm run test:search` 检查搜索推荐、作者头像与视口变化。这些检查需要录制包和本机 Chrome。
 

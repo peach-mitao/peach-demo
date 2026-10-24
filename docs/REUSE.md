@@ -4,6 +4,7 @@
 
 | 能力 | 实现与许可 | 验证与边界 |
 | --- | --- | --- |
+| IP 服务地区 | Cloudflare 原生 `request.cf.country` 与 Workers Assets，无新增依赖 | 仅 `CN` 跳转，港澳台及其他地区放行；复用现有 404 样式，跳转与提示页不缓存。Cloudflare 每周多次更新地区数据，不能保证零误判；未引入额外 IP 库或逐请求外部查询。原生 IP 地区数据文档见 [Cloudflare 说明](https://developers.cloudflare.com/network/ip-geolocation/) |
 | TS 类型检查 | TypeScript 7.0.2，Apache-2.0 | 严格检查回放、浏览器、维护脚本、测试与 Cloudflare 配置；Node 24.12 起直接运行可擦除类型，esbuild 生成浏览器 JS，无需额外运行器 |
 | Cloudflare 配置与发布 | cf 1.0.0-beta.18，MIT OR Apache-2.0；Wrangler 4.151.2，MIT OR Apache-2.0 | 使用官方 `cf migrate`；构建结果核对名称、域名、Assets 绑定及静态路由，本地验证回放与媒体；固定 beta 版本，由 Dependabot 跟踪更新 |
 | 静态资源转换 | 既有 Acorn、esbuild 与 `@noble/hashes` | 保留录制键与内容指纹差异；合成夹具验证图片映射、前端包和私有视频对象清单 |
