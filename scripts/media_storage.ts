@@ -45,6 +45,13 @@ function run(cli:string,args: string[]): Promise<Buffer> {
 }
 
 const cf=(args:string[])=>run('node_modules/cf/bin/cf',args);
+// 复用官网发布核验的临时错误判据和 2/4/6/8 秒退避。
+export async function retryTransient<T>(operation:()=>Promise<T>,sleep:(ms:number)=>Promise<void>=ms=>new Promise(resolve=>setTimeout(resolve,ms))):Promise<T>{
+  for(let attempt=0;;attempt++)try{return await operation()}catch(error){
+    if(attempt>=4||!/fetch failed|ECONNRESET|ETIMEDOUT|EAI_AGAIN|TimeoutError|\b429\b|\b50[0234]\b|internal error/i.test(String(error)))throw error;
+    console.error(`发布核验临时请求失败，${(attempt+1)*2} 秒后重试 ${attempt+1}/4`);await sleep((attempt+1)*2000);
+  }
+}
 export async function main(args = process.argv.slice(2)): Promise<void> {
   const [operation = 'plan', scope, ...extra] = args;
   if (!['plan', 'upload', 'verify'].includes(operation) || extra.length || (operation === 'plan' ? scope !== undefined : !['--local', '--remote'].includes(scope ?? ''))) throw Error('用法：media_storage.ts plan | upload --local/--remote | verify --local/--remote');
@@ -59,10 +66,14 @@ export async function main(args = process.argv.slice(2)): Promise<void> {
       // cf 对象上传入口未提供 HTTP 缓存元数据选项，复用已固定的 Wrangler R2 CLI。
       await run('node_modules/wrangler/bin/wrangler.js',['r2','object','put',bucket+'/'+file.key,'--file',file.file,'--content-type','video/mp4','--cache-control',VIDEO_CACHE,'--force',...(scope==='--local'?local:['--remote'])]);
     }
-    const body = await cf(['r2', 'objects', 'get', file.key, '--bucket-name', bucket, ...local]);
+    const body = await retryTransient(()=>cf(['r2', 'objects', 'get', file.key, '--bucket-name', bucket, ...local]));
     if (body.length !== file.size || createHash('sha256').update(body).digest('hex') !== file.hash) throw Error(`R2 内容校验失败：${file.key}`);
     if(scope==='--remote'){
-      const response=await fetch(videoURL(file.key)!,{method:'HEAD'});
+      const response=await retryTransient(async()=>{
+        const response=await fetch(videoURL(file.key)!,{method:'HEAD',signal:AbortSignal.timeout(30000)});
+        if([429,500,502,503,504].includes(response.status))throw Error(`HTTP ${response.status}`);
+        return response;
+      });
       if(!response.ok||response.headers.get('cache-control')!==VIDEO_CACHE||Number(response.headers.get('content-length'))!==file.size)throw Error(`媒体域名元数据校验失败：${file.key}`);
     }
     completed++;

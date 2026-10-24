@@ -120,6 +120,8 @@ npm run media:verify
 
 `npm run deploy` 会检查素材完整性、前端来源指纹、入口页提交，构建并核验远程视频，再用 `cf deploy --prebuilt` 发布同一份产物；缺失或内容不符会拒绝发布。本机发布直接使用 Cloudflare 认证，不依赖 GitHub Actions 或仓库推送。发布后对线上地址运行 `test:routes`，并核对私有目录返回 404、视频 Range 返回 206、图片使用 `/_demo/images/`，活动和播放上报不产生网络请求。R2 读取、静态缓存命中率与 Worker 调用数分别判断。
 
+远程视频回读的临时网络错误按 2／4／6／8 秒退避，最多重试四次；权限、内容哈希及元数据不符直接拒绝。媒体域名 HEAD 请求在三十秒后取消；重试不会跳过任何对象或降低完整性门槛。
+
 ## Cloudflare 配置与依赖更新
 
 本项目使用固定版本的 `cf` 与 [`cloudflare.config.ts`](https://developers.cloudflare.com/cf/projects/cloudflare-config/)，Worker 名称、域名、绑定、静态路由和可观测性在此维护。日志和 Issues 错误聚合随配置发布。`wrangler.config.ts` 维护打包器设置、素材目录和本地监听地址；Wrangler 也提供对象上传的缓存元数据参数，其他管理和部署沿用 cf。`.cloudflare/` 保存生成类型和 Build Output，不进 Git。配置由官方 `cf migrate` 转换；这套配置仍为公开测试版，升级须核对构建和本地行为。
