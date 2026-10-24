@@ -32,6 +32,11 @@ export default {
             return (await context(env, url.origin)).replay(request);
         const response = await env.ASSETS.fetch(request);
         if (response.status === 404) {
+            const documentRequest=['GET','HEAD'].includes(request.method)&&(request.headers.get('sec-fetch-dest')==='document'||request.headers.get('accept')?.includes('text/html'));
+            if(documentRequest){
+                const page=await env.ASSETS.fetch(new URL('/404.html',url));
+                if(page.ok){const headers=new Headers(page.headers);headers.set('cache-control','no-store');headers.set('x-robots-tag','noindex, nofollow');return new Response(request.method==='HEAD'?null:page.body,{status:404,headers})}
+            }
             const headers = new Headers(response.headers);
             headers.set('cache-control', 'no-store');
             return new Response(response.body, { status: 404, headers });

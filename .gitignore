@@ -3,6 +3,7 @@
 !/.gitattributes
 !/copy-editor-source.json
 !/behavior-source.json
+!/support-source.json
 !/.github/
 !/.gitlab-ci.yml
 !/README.md
@@ -38,6 +39,8 @@
 !/scripts/behavior_artifacts.ts
 !/scripts/check_behavior.ts
 !/scripts/sync_behavior.ts
+!/scripts/sync_support_pages.ts
+!/scripts/verify_support.ts
 /browser/behavior-version.ts
 !/scripts/ast.ts
 !/scripts/build_replay.ts
@@ -56,6 +59,11 @@
 !/site/
 /site/*
 !/site/.assetsignore
+!/site/404.html
+!/site/assets/
+/site/assets/*
+!/site/assets/support-ui/
+/site/assets/support-ui/page-support.js
 !/site/_demo/
 /site/_demo/*
 !/site/_demo/copy-editor-core.js

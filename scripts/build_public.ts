@@ -41,6 +41,7 @@ export async function buildPublic(site = path.join(root, 'site'), out = path.joi
     const behavior=await assets('behavior',behaviorBuild.outputFiles[0].contents,'js');
     const tourGate = `<script>if(new URLSearchParams(location.search).has('tour'))document.write('<script src="${tour}"><'+ '/script>')</script>`;
     const editorGate = `<script>if(new URLSearchParams(location.search).has('edit')){document.body.dataset.peachCopyMode='local';document.write('<script defer src="${editorCore}"><'+ '/script><script defer src="${editor}"><'+ '/script>')}</script>`;
+    await writeFile(path.join(out,'404.html'),(await readFile(path.join(site,'404.html'),'utf8')).replace('</body>',editorGate+'</body>'));
     const player = await bundlePlayer(await readFile(path.join(site, 'dist/peach-app.js'), 'utf8'), site, out);
     const app = await build({ entryPoints: [path.join(site, 'dist/peach-app.js')], outdir: path.join(out, 'dist'), bundle: true, splitting: true, format: 'esm', platform: 'browser', target: 'es2022', minify: true, entryNames: 'demo-[name]-[hash]', chunkNames: 'demo-chunk-[hash]', external: ['/dist/demo-video-*'], metafile: true, plugins: [{ name: 'demo-media', setup(builder) { builder.onLoad({ filter: /\.js$/ }, async (args) => ({ contents: player.rewrite(staticImageExpressions(await readFile(args.path, 'utf8')).source), loader: 'js' })); } }] });
     const appOutput = Object.entries(app.metafile.outputs).find(([, info]) => info.entryPoint && path.resolve(info.entryPoint) === path.join(site, 'dist/peach-app.js'))?.[0];

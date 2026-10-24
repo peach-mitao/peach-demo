@@ -2,8 +2,10 @@ import { readFile, stat } from 'node:fs/promises';
 import assert from 'node:assert/strict';
 import { fixtureHash, fixtureKey } from '../src/key.ts';
 import { createHash } from 'node:crypto';
+import {verifySupport} from './verify_support.ts';
 const root = new URL('../', import.meta.url);
 const config = JSON.parse(await readFile(new URL('package.json', root), 'utf8'));
+await verifySupport(process.argv.includes('--assets'));
 assert.equal(config.repository.url, 'https://github.com/peach-mitao/peach-demo.git');
 for (const file of ['src/worker.ts', 'src/key.ts', 'src/directory.ts', 'src/discovery.ts', 'src/follow.ts', 'site/_demo/interactions.js', 'site/_demo/tour.js', 'site/_demo/copy-editor.js'] as const)
     assert.ok((await stat(new URL(file, root))).size > 0, file);
