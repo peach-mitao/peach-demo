@@ -1,6 +1,6 @@
 {
   "repository": "https://github.com/peach-mitao/peach-site",
-  "commit": "37e4b994199f41381242dd841508a9a8d971db1a",
+  "commit": "dd41e177a336cade3a1892126544fb580135cc04",
   "draft": false,
   "files": {
     "browser/assets/page-support.ts": "145ed794494a6cc6d84fa5ba9295b233d9d7c92f83d96c08116b7697fe4c3032",
@@ -18,7 +18,7 @@
     "site/assets/support-ui/inter/ORIGIN.md": "2d5439ca05301eb59314508e904884b372f9f505bc15b4385b5fd90d86e83389",
     "site/assets/support-ui/logo.png": "f5fb62bc4161b682541c317778800aeaa38ef4f8da70ae24fcbd6225cf676228",
     "site/assets/support-ui/peach-pages.css": "2cecc0e4764487fcb9a648a68ef6dfbd4da51b543848cc02bcdf291fa8538246",
-    "site/assets/support-ui/support.css": "2b5d801a5e35c27f644c47556c43b115594c7c8ba3a073862a801eaca9c089d7",
+    "site/assets/support-ui/support.css": "8942621cafb4fb1c8fb8fc0313cccb7c68eab018d4d1ab5b89b8f32e0147586d",
     "site/404.html": "fed77cc1d5daf51ab6eff7c05487f04374fe2b4921f5afd9674e5deb5789fdbc"
   }
 }

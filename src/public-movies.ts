@@ -38,6 +38,8 @@ export function publicMovies(films: readonly PublicMovie[] = FILMS, people: read
   put('/api/network-status', { state: 'online', checked_at: null, demo: true });
   put('/api/background-issues', { issues: [], demo: true });
   put('/api/feeds/schedule', { available: true, enabled: false, interval_minutes: 360, running: false, last_error: null, next_run_at: null, demo: true });
+  put('/api/scraping/amane-bridge', { repository: 'https://github.com/sqzw-x/amane', license: '见项目仓库', bundled: false,
+    problem: '仅提供演示，不连接来源。', revision: '', version: '', installed: false, installed_version: '', python: '', sites: [], job: { status: 'idle' }, demo: true });
   const query = (route: string, value: Record<string, string | number>) => route + '?' + new URLSearchParams(Object.fromEntries(Object.entries(value).map(([k, v]) => [k, String(v)])));
   const image = (route: string, slug: string) => imageRoutes.set(route, slug);
   const now = '2026-10-01T12:00:00Z';

@@ -2,6 +2,15 @@ import type {Rule} from './assets/behavior-contract.ts';
 const rule=(id:string,label:string,selector:string,region=false):Rule=>({id,label,selector,region});
 const pages=['unseen','watch-later','flagged','jav','performers','creators','studios','agencies','tags','follow','playlists','wall','immerse','stats','taste','review','data-cleanup','duplicates','quality-goals','sources','tasks','subscriptions','junk-files','trash','settings'];
 export const demoRules:Rule[]=[
+ rule('source.credits','素材来源','a[href="/film-sources/"]'),
+ rule('setup.data-folder','选择数据目录','button[aria-label="选择数据目录"]'),
+ {...rule('history.import','导入历史文件','button'),text:'导入历史文件'},
+ rule('pagination.page','跳页','button[aria-label^="第 "][aria-label$=" 页"]'),
+ rule('library.icon','选择媒体库图标','button[aria-label$=" 图标"]'),
+ ...[
+  ['pagination.previous','上一页'],['pagination.next','下一页'],['task.copy','复制磁力'],
+  ['task.retry','重新提交'],['action.cancel','取消'],['title.expand','展开标题'],['title.collapse','收起标题'],
+ ].map(([id,label])=>({...rule(id!,label!,'button'),text:label})),
  rule('external.source','打开来源','a[href^="https://"],a[href^="http://"]'),
  rule('userscript.install','安装 Peach 用户脚本','a[href="/integrations/peach-jav.user.js"]'),
  rule('region.header','顶栏','header.top',true),rule('region.sidebar','侧栏','[data-sidebar-scroll]',true),rule('region.content','内容','main',true),rule('region.grid','卡片网格','#grid',true),rule('region.search','搜索菜单','#searchMenu',true),rule('region.drawer','抽屉','#drawer',true),rule('region.player','播放器','.video-js',true),

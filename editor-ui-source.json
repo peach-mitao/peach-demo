@@ -1,13 +1,13 @@
 {
   "repository": "https://github.com/peach-mitao/peach-site",
-  "commit": "5e00541b9a4901ce3d3516a8f025b4d19cb9a620",
-  "draft": true,
+  "commit": "dd41e177a336cade3a1892126544fb580135cc04",
+  "draft": false,
   "path": "site/assets/edit-toolbar.js",
   "target": "site/_demo/edit-toolbar.js",
-  "sha256": "690b22a76576b7ddf641b4cb6fe3c0591f6f55e169bd8049563a51bd074baf85",
+  "sha256": "9f5d8e1bd3e4321e16997db73be49b6c4e0463e96d7f68530fd0b73c724194f0",
   "sources": {
     "browser/assets/boardui.ts": "ea902011928d4698dbd60b90f5c97fcf11da221ada71eef38b214f191c7eea68",
-    "browser/assets/edit-toolbar.ts": "8e03b3476a436d77dead7c06d4486e34b314b70c1913c77956fe7a8272de39ee",
+    "browser/assets/edit-toolbar.ts": "47616f1e856994a4d74adc9847667225668dc37cbe0f14783e7468913fc82ba9",
     "browser/vendor/boardui/components/base/buttons/button.tsx": "a49800d5cc58a9f8a98c07a7251e5923904b483b2f3e6e63e4fa0797acff101d",
     "browser/vendor/boardui/components/base/buttons/link-button.tsx": "f56415d9b83cfb4af68d9f359ccb8925f885bce60e6d29d38d73b14966499aaf",
     "browser/vendor/boardui/components/base/divider/divider.tsx": "ed2abe1e2e29e925c63c6d1ea0971e19f4549fe6fea0daca3373d47a87500338",
