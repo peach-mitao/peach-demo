@@ -18,6 +18,7 @@ export default defineConfig(({ mode }) => ({
 		domains: mode === "preview" ? [] : ["demo.peach.video"],
 		env: {
 			ASSETS: bindings.assets(),
+			REGION_DATA: bindings.r2({name: "peach-region-data"}),
 		},
 	},
 }));

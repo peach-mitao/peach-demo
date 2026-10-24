@@ -2,7 +2,11 @@
 
 本仓库维护 Cloudflare Worker、回放协议和演示交互。应用前端的源码在 [Peach 主仓库](https://github.com/peach-mitao/peach)，构建产物通过同步入口取得。公开数据使用固定的普通电影片目，操作状态明确标为演示，不读取真实账本。自动化测试使用隔离夹具。
 
-所有请求先由 Worker 使用 Cloudflare 的 `request.cf.country` 判断连接 IP。`CN` 跳转到 `/unavailable`，提示页返回 403 并复用 404 的样式；`HK`、`MO`、`TW` 和其他地区正常访问。页面、回放快照、图片、同源视频入口和接口都执行同一判断，仅提示页的样式、字体和标识放行。跳转与提示页禁止缓存，不读取客户端地区请求头，也不调用外部 IP 查询服务。静态资源经过 Worker，资源请求均会产生 Worker 调用；独立媒体域名不在两站的地区判断范围内。
+所有请求先使用 Cloudflare 的 `request.cf.country` 和边缘设置的 `CF-Connecting-IP` 判断地区。Cloudflare 为 `CN`，或 DB-IP Country Lite、IPLocate Country 任一库命中大陆网段，即跳转到 `/unavailable`，提示页返回 403 并复用 404 样式。`HK`、`MO`、`TW` 不按国家码拦截，库间冲突仍以任一来源命中即拦截。页面、回放快照、图片、同源视频入口和接口执行同一判断，仅提示页的样式、字体和标识放行。跳转和提示页为 `private, no-store`，静态资源经过 Worker，资源请求均产生 Worker 调用；独立媒体域名不在两站判断范围内。浏览器已保存且没有重新请求的内容无法远程撤回。
+
+两个辅助库仅导出 `CN` 网段，IPv4、IPv6 及 IPv4 映射 IPv6 均在 Worker 内查询，不外发访问者 IP，不使用语言、时区、`X-Forwarded-For` 或客户端地区声明。官网 Cloudflare Cron 每天 06:30 UTC（Asia/Taipei 14:30）检查数据，原子更新两站共用的 R2 `peach-region-data` 生效表；无大陆网段变化不替换，更新失败保留有效表。演示站通过 `REGION_DATA` 绑定读取，每个实例最多约五分钟重新读取，合并并发请求；读取失败保留实例中的有效表，冷启动使用 `src/region-data.ts` 的内置快照。整个流程不依赖本机或 Codex，也不需要每天重新发布网站。
+
+内置快照保存官方归档版本、地址、SHA-256 与来源计数。手工生成可使用 Python 标准库脚本 `scripts/build_region_data.py`，提供 `--dbip`、`--dbip-month`、`--iplocate` 和 `--iplocate-revision` 参数；构建和 Worker 运行不需要 Python。文案统一按官网维护。
 
 工具选型与复用边界见[复用说明](REUSE.md)。
 
@@ -103,6 +107,8 @@ npm run test:public-movies
 `npm run test:stream` 与 `test:public-movies` 验证桌面和手机的封面、播放器控件、演示提示及无视频请求；用 `BASE` 指定现有预览地址。Worker 对播放与 Range 请求的 403 行为由单元测试覆盖。
 
 公开演示不需要视频上传、媒体桶绑定或视频存储。现有桶中的历史对象不会由构建或预览删除。`npm run deploy` 检查素材来源、前端指纹、入口页提交和行为产物，再用 `cf deploy --prebuilt` 发布；发布需要维护者明确授权。发布后运行 `test:routes` 与 `test:stream`，核对私有目录 404、视频入口 403、图片内容指纹及浏览器操作不外发写入。
+
+远程视频回读的临时网络错误按 2／4／6／8 秒退避，最多重试四次；权限、内容哈希及元数据不符直接拒绝。媒体域名 HEAD 请求在三十秒后取消；重试不会跳过任何对象或降低完整性门槛。
 
 ## Cloudflare 配置与依赖更新
 
