@@ -60,6 +60,18 @@ test('名册、搜索、推荐、关注和业务状态共享普通电影身份',
   assert.ok(data.routes.get('/api/taste').analysis.headline.includes('演示'));
 });
 
+test('公开头像候选为空时仍提供完整身份与图库状态', () => {
+  const data=publicMovies();
+  for(const row of data.indexes.performers.items){
+    const choices=data.routes.get(`/api/avatar-choices?kind=performer&id=${row.entity_id}`);
+    assert.equal(choices.entity_id,row.entity_id);
+    assert.deepEqual(choices.names,[row.k]);
+    assert.deepEqual(choices.matched_names,[]);
+    assert.deepEqual(choices.choices,[]);
+    assert.equal(choices.index_stale,false);
+  }
+});
+
 test('缺失导演和厂牌不产生虚构身份或人物封面替身', () => {
   const film = { ...FILMS[0]!, slug: 'unknown-credit', studio: '', directors: [], cast: [], credit: 'https://www.wikidata.org/wiki/Q1', tags: ['剧情片'] };
   const data = publicMovies([film], []);

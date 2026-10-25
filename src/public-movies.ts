@@ -132,7 +132,7 @@ export function publicMovies(films: readonly PublicMovie[] = FILMS, people: read
     const addresses: Record<string, string | number>[] = [{ kind: row.kind, id: row.id }, { kind: row.kind, name: row.name }];
     for (const address of addresses) {
       put(query('/api/entity', address), row); put(query('/api/photos', address), photos);
-      put(query('/api/avatar-choices', address), { ok: true, items: [], total: 0 });
+      put(query('/api/avatar-choices', address), { kind: row.kind, entity_id: row.id, names: [row.name], matched_names: [], choices: [], index_age_hours: null, index_stale: false, index_refreshing: false });
     }
     put(query('/api/feeds/discoveries', { limit: 12, entity: row.id }), { ok: true, items: [], more: false });
   }

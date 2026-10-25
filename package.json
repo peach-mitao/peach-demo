@@ -32,6 +32,7 @@
     "test": "node --test tests/*.test.ts",
     "test:browser": "node scripts/check_browser.ts && node scripts/check_filters.ts && node scripts/check_edit.ts",
     "test:search": "node scripts/check_search_recommendations.ts",
+    "test:tour": "node scripts/check_tour.ts",
     "test:folders": "node scripts/check_folders.ts",
     "test:routes": "node scripts/check_routes.ts",
     "verify:region": "node scripts/check_region.ts",

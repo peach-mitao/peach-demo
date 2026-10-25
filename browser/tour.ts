@@ -1,20 +1,24 @@
 "use strict";
-// 演示站的自动演示：地址带 ?tour=<场景> 时，在真实页面上用一枚假光标逐字输入、点击，播完回到起点循环。
+// 演示站自动演示：地址带 ?tour=<场景> 时，用假光标逐字输入与点击；loop=1 显式启用循环。
 // 输出全是 Peach 前端对录制回放的真实反应，脚本只负责「手」：移动、聚焦、派发输入与按键、点击。
 // 访客按一下鼠标、键盘或滚轮就停下，把页面交还给人。
 // Worker 只在地址带 tour 时把本文件同步插进 <head>，所以它先于 app.js 运行，能改外观设置。
 (() => {
     const SCENES = {
         search: '/',
-        feed: '/performers/' + encodeURIComponent('凉森玲梦'),
+        feed: '/performers/135',
         review: '/review',
-        avatar: '/performers/' + encodeURIComponent('桥本有菜'),
+        avatar: '/performers/163',
     };
     const params = new URLSearchParams(location.search);
     const scene = params.get('tour') as keyof typeof SCENES;
     if (!Object.hasOwn(SCENES, scene!))
         return;
-    const looping = params.has('loop');
+    const looping = params.get('loop')==='1';
+    const destination=new URL(SCENES[scene],location.href);
+    destination.searchParams.set('tour',scene);if(looping)destination.searchParams.set('loop','1');
+    if(location.pathname!==destination.pathname){location.replace(destination.href);return}
+    document.documentElement.dataset.demoTourState='loading';
     // 音效一律关掉，免得访客一打开就响。
     try {
         const key = 'peach.settings.v1';
@@ -51,6 +55,7 @@
         if (stopped)
             return;
         stopped = true;
+        document.documentElement.dataset.demoTourState='stopped';
         document.documentElement.classList.remove('peach-tour-veil');
         cursor?.remove();
         const url = new URL(location.href);
@@ -62,6 +67,7 @@
         window.addEventListener(type, (event) => { if (event.isTrusted)
             stop(); }, { capture: true, passive: true });
     }
+    document.addEventListener('visibilitychange',()=>{if(document.hidden)stop()});
     // 停下只在步骤之间生效：一步里的光标滑行照常走完，不会停在半路。
     const gate = () => {
         if (stopped)
@@ -132,6 +138,7 @@
         await moveTo(el, where);
         await sleep(160);
         await press();
+        gate();
         el.click();
     };
     const keycap = (label: string|null) => {
@@ -160,6 +167,8 @@
     const buttonNamed = (name: string, root:Document|HTMLElement = document) => [...(root.querySelectorAll('button') as NodeListOf<HTMLButtonElement>)].find((b) => b.textContent!.trim() === name && visible(b));
     const SCRIPTS = {
         async search(ready: () => void) {
+            const searchButton=await waitFor(()=>document.querySelector<HTMLButtonElement>('#searchBtn')||document.querySelector<HTMLInputElement>('#q'));
+            if(searchButton.id==='searchBtn'&&visible(searchButton)&&innerWidth<761)searchButton.click();
             const input = await waitFor(() => (document.querySelector('#q') as HTMLInputElement));
             // 作品网格是 React 画的 <article>；顶上那排订阅新作（#feedNew）也是，搜索结果在它下面。
             const works = () => [...(document.querySelectorAll('article:has(img.poster)') as NodeListOf<HTMLElement>)]
@@ -169,7 +178,7 @@
             await sleep(900);
             await click(input, { fx: 0.06 });
             input.focus();
-            await type(input, '三上');
+            await type(input, '卓别林');
             const menu = await waitFor(() => { const m = (document.querySelector('#searchMenu') as HTMLElement); return visible(m) && (m.querySelector('img') as HTMLImageElement) ? m : null; });
             await sleep(1500);
             await moveTo(menu, { fx: 0.3, fy: 0.35 });
@@ -177,7 +186,7 @@
             await moveTo(input, { fx: 0.12 });
             await sleep(250);
             await key(input, 'Enter', '↵ 回车');
-            await waitFor(() => new URLSearchParams(location.search).get('q') === '三上');
+            await waitFor(() => new URLSearchParams(location.search).get('q') === '卓别林');
             await sleep(1400);
             const cards = await waitFor(() => { const found = works(); return found.length ? found : null; });
             await scrollTo(cards[0], 'center');
@@ -188,8 +197,15 @@
             await sleep(1800);
         },
         async feed(ready: () => void) {
-            const row = await waitFor(() => ((document.querySelector('[data-feed-new] [data-feed-id] img') as HTMLElement)?.closest('[data-feed-new]') as HTMLElement));
+            const subscribed=()=>document.querySelector<HTMLInputElement>('[role="switch"][aria-label="订阅新作"]');
+            const target=await waitFor(()=>document.querySelector<HTMLElement>('[data-feed-new]:has([data-feed-id] img)')||subscribed());
             ready();
+            if(target instanceof HTMLInputElement){
+                const control=target.closest<HTMLElement>('[data-entry-feed]')||target;
+                await sleep(700);await click(control);await sleep(900);
+                const restore=await waitFor(subscribed);await click(restore.closest<HTMLElement>('[data-entry-feed]')||restore);await sleep(900);return;
+            }
+            const row=target;
             await sleep(700);
             await scrollTo(row, 'center');
             await sleep(500);
@@ -210,8 +226,9 @@
             await sleep(1800);
         },
         async review(ready: () => void) {
-            await waitFor(() => buttonNamed('通过'));
+            await waitFor(()=>document.querySelector('main')?.textContent?.match(/复核|审核|候选|暂无|没有/));
             ready();
+            if(!buttonNamed('通过')){await sleep(1800);return}
             await sleep(1000);
             for (const name of ['通过', '通过', '拒绝'] as const) {
                 const button = await waitFor(() => buttonNamed(name));
@@ -236,15 +253,17 @@
             ready();
             await sleep(1000);
             await click(open);
-            const dialog = await waitFor(() => [...(document.querySelectorAll('[role=dialog]') as NodeListOf<HTMLElement>)]
-                .find((d) => d.textContent.includes('更换头像') && (d.querySelectorAll('button img') as NodeListOf<HTMLButtonElement>).length > 3));
+            const dialog = await waitFor(() => [...(document.querySelectorAll('[role=dialog],dialog[open]') as NodeListOf<HTMLElement>)]
+                .find((d) => d.textContent.includes('更换头像')));
+            await waitFor(()=>!dialog.querySelector('[data-skeleton],[aria-busy="true"]'));
             await sleep(900);
             const choices = [...(dialog.querySelectorAll('button') as NodeListOf<HTMLButtonElement>)].filter((b) => (b.querySelector('img') as HTMLImageElement));
+            if(!choices.length){await sleep(1200);return}
             for (const choice of choices.slice(0, 3)) {
                 await moveTo(choice, { fy: 0.45 });
                 await sleep(380);
             }
-            await click(choices[3], { fy: 0.45 });
+            await click(choices[Math.min(3,choices.length-1)], { fy: 0.45 });
             // 第二步「框出头像那一块」：Peach 已经把方框放在脸上，左下角圆形预览就是换上后的样子。
             const crop = await waitFor(() => [...(document.querySelectorAll('[role=dialog]') as NodeListOf<HTMLElement>)]
                 .find((d) => d.textContent.includes('框出头像') && buttonNamed('用这一块', d)));
@@ -285,16 +304,19 @@
             if (announced)
                 return;
             announced = true;
+            document.documentElement.dataset.demoTourState='running';
             document.documentElement.classList.remove('peach-tour-veil');
         };
         try {
             showCursor();
             await SCRIPTS[scene](ready);
             ready();
+            document.documentElement.dataset.demoTourState='complete';
             await sleep(300);
+            if(!looping||stopped){cursor?.remove();return}
             document.documentElement.classList.add('peach-tour-veil');
             await new Promise((resolve) => setTimeout(resolve, 480));
-            if (!stopped)
+            if (!stopped&&!document.hidden)
                 location.replace(`${SCENES[scene]}?tour=${scene}&loop=1`);
         }
         catch (error) {
@@ -303,6 +325,7 @@
             // 页面没按预期长出来（多半是重录后控件变了）：停在当前画面，把页面交还给人。
             console.error('[peach-tour]', error);
             ready();
+            document.documentElement.dataset.demoTourState='error';
             cursor?.remove();
         }
     };

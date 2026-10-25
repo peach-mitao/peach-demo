@@ -57,6 +57,7 @@
 !/scripts/check_browser.ts
 !/scripts/check_filters.ts
 !/scripts/check_search_recommendations.ts
+!/scripts/check_tour.ts
 !/scripts/check_folders.ts
 !/scripts/check_edit.ts
 !/scripts/check_routes.ts

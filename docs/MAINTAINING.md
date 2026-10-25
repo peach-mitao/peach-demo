@@ -102,6 +102,8 @@ npm run test:public-movies
 
 预览运行时，`npm run test:browser` 检查桌面、手机、图片、播放记录撤销和扫描控制；`npm run test:search` 检查搜索推荐、作者头像与视口变化。这些检查需要录制包和本机 Chrome。
 
+`?tour=search|feed|review|avatar` 使用公开电影资料运行单次自动导览，完成后保留页面；只有显式添加 `loop=1` 才循环。真实输入或切到后台会停止导览。无审核候选或头像候选时展示空状态，不等待不存在的项目。自动导览不记录行为事件，不保存演示写操作。`npm run test:tour` 检查桌面与手机四种场景、完成后的页面及输入停止。
+
 `npm run test:replay` 验证桌面与手机的首页、搜索和关注页没有动态 API 网络请求，首页静置 60 秒不新增请求。快照按场景首次需要时加载；同一内容的并发读取只产生一次网络请求。图片、快照和构建脚本均使用内容指纹与长期缓存，HTML 保持更新校验。新增读取契约时扩展 `scripts/build_replay.ts` 的公开清单，缺失数据明确返回未取得，不回退到来源服务。同步样式仍走既有前端同步入口，不在 `public/` 手工编辑。
 
 `npm run test:stream` 与 `test:public-movies` 验证桌面和手机的封面、播放器控件、演示提示及无视频请求；用 `BASE` 指定现有预览地址。Worker 对播放与 Range 请求的 403 行为由单元测试覆盖。
