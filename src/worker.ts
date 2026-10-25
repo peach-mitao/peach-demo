@@ -1,27 +1,23 @@
 import { browserReplay } from './browser-replay.ts';
 import type {Assets,ReplayEnv} from './types.ts';
 import {regionResponse} from './region.ts';
-import type {RegionEnv} from './region-store.ts';
 type ReplayContext={assets: Assets;replay:ReturnType<typeof browserReplay>};
-const contexts = new WeakMap<Assets,Promise<ReplayContext>>();
+const contexts = new WeakMap<Assets,ReplayContext>();
 async function context(env: ReplayEnv, origin: string) {
-    let pending = contexts.get(env.ASSETS);
-    if (!pending) {
-        pending = (async () => {
+    const cached = contexts.get(env.ASSETS);
+    if (cached) return cached;
             const response = await env.ASSETS.fetch(new URL('/_demo/replay-files.json', origin));
             if (!response.ok)
                 throw Error('公开回放清单未取得');
             const files = await response.json() as Record<string,string>;
             const assets:Assets = { fetch: (input) => { const url = files[new URL(input instanceof Request ? input.url : input, origin).pathname]; return url ? env.ASSETS.fetch(new URL(url, origin)) : new Response('not found', { status: 404 }); } };
-            return { assets, replay: browserReplay(files, url => env.ASSETS.fetch(url), origin) };
-        })().catch(error => { contexts.delete(env.ASSETS); throw error; });
-        contexts.set(env.ASSETS, pending);
-    }
-    return pending;
+            const result = { assets, replay: browserReplay(files, url => env.ASSETS.fetch(url), origin, {sharePending: false}) };
+            contexts.set(env.ASSETS, result);
+            return result;
 }
 export default {
-    async fetch(request: Request, env: ReplayEnv & RegionEnv): Promise<Response> {
-        const restricted = await regionResponse(request, env.ASSETS, env.REGION_DATA);
+    async fetch(request: Request, env: ReplayEnv): Promise<Response> {
+        const restricted = await regionResponse(request, env.ASSETS);
         if (restricted) return restricted;
         const url = new URL(request.url);
         if (/^\/(?:_fixtures|_media)(?:\/|$)/.test(url.pathname))

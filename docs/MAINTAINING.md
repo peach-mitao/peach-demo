@@ -2,11 +2,11 @@
 
 本仓库维护 Cloudflare Worker、回放协议和演示交互。应用前端的源码在 [Peach 主仓库](https://github.com/peach-mitao/peach)，构建产物通过同步入口取得。公开数据使用固定的普通电影片目，操作状态明确标为演示，不读取真实账本。自动化测试使用隔离夹具。
 
-所有请求先使用 Cloudflare 的 `request.cf.country` 和边缘设置的 `CF-Connecting-IP` 判断地区。Cloudflare 为 `CN`，或 DB-IP Country Lite、IPLocate Country 任一库命中大陆网段，即跳转到 `/unavailable`，提示页返回 403 并复用 404 样式。`HK`、`MO`、`TW` 不按国家码拦截，库间冲突仍以任一来源命中即拦截。页面、回放快照、图片、同源视频入口和接口执行同一判断，仅提示页的样式、字体和标识放行。跳转和提示页为 `private, no-store`，静态资源经过 Worker，资源请求均产生 Worker 调用；独立媒体域名不在两站判断范围内。浏览器已保存且没有重新请求的内容无法远程撤回。
+官网与演示站在 Cloudflare Single Redirects 阶段按 `ip.src.country` 限制服务地区。`CN` 的 GET／HEAD 请求以 302 跳转到同源 `/unavailable`，其他方法使用 303；提示页、样式、字体和标识放行。`HK`、`MO`、`TW` 与未知地区不按国家码拦截。动态接口另外检查可信的 `request.cf.country`，不使用客户端地区请求头。提示页返回 403、`private, no-store`；独立媒体和下载域名不在本规则范围内。
 
-两个辅助库仅导出 `CN` 网段，IPv4、IPv6 及 IPv4 映射 IPv6 均在 Worker 内查询，不外发访问者 IP，不使用语言、时区、`X-Forwarded-For` 或客户端地区声明。官网 Cloudflare Cron 每天 06:30 UTC（Asia/Taipei 14:30）检查数据，原子更新两站共用的 R2 `peach-region-data` 生效表；无大陆网段变化不替换，更新失败保留有效表。演示站通过 `REGION_DATA` 绑定读取，每个实例最多约五分钟重新读取，合并并发请求；读取失败保留实例中的有效表，冷启动使用 `src/region-data.ts` 的内置快照。整个流程不依赖本机或 Codex，也不需要每天重新发布网站。
+地区规则须在选择性 Worker 路由生效前完成配置和验证。生产请求不读取第三方地区数据库，不绑定地区 R2 桶。地区依据为 Cloudflare 原生连接元数据，与第三方网段并集的结果可能不同；地区判断没有零误判保证。已在浏览器保存且没有重新请求的内容无法远程撤回。
 
-内置快照保存官方归档版本、地址、SHA-256 与来源计数。手工生成可使用 Python 标准库脚本 `scripts/build_region_data.py`，提供 `--dbip`、`--dbip-month`、`--iplocate` 和 `--iplocate-revision` 参数；构建和 Worker 运行不需要 Python。文案统一按官网维护。
+Workers Issues 保持启用，错误日志完整保留，逐请求调用日志关闭。Worker 的回放缓存只复用完成后的数据；进行中的 I/O 不跨请求共享。原生地区规则与扫描拦截使用 Request Trace 验证，实际资源和 HTTPS 另行验收。
 
 工具选型与复用边界见[复用说明](REUSE.md)。
 
@@ -98,7 +98,7 @@ npm run media:plan
 npm run test:public-movies
 ```
 
-用 `npm run dev` 启动 [本地预览](http://127.0.0.1:8791/)。`?edit` 提供浏览器本地改字草稿，普通页面不应用草稿；`?tour=` 选择教程。搜索记录、收藏、扫描控制与演示写操作均不产生服务器持久写入。`runWorkerFirst: true` 使所有请求先通过 Worker 地区判断，再读取 Assets 或执行回放接口。
+用 `npm run dev` 启动 [本地预览](http://127.0.0.1:8791/)。`?edit` 提供浏览器本地改字草稿，普通页面不应用草稿；`?tour=` 选择教程。搜索记录、收藏、扫描控制与演示写操作均不产生服务器持久写入。`runWorkerFirst` 只匹配回放 API、媒体适配、入口提交与专用页面；静态页面、公开快照、图片和前端包由 Assets 直接提供。生产 `workers.dev` 入口关闭，开发默认使用本地模拟绑定。
 
 预览运行时，`npm run test:browser` 检查桌面、手机、图片、播放记录撤销和扫描控制；`npm run test:search` 检查搜索推荐、作者头像与视口变化。这些检查需要录制包和本机 Chrome。
 

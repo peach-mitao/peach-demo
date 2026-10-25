@@ -38,6 +38,19 @@ test('快照读取失败明确报错且允许重试', async () => {
     assert.equal((await replay(new Request('https://demo.example/api/unknown'))).status, 404);
     assert.equal(calls, 2);
 });
+
+test('Worker 回放不等待其他请求未完成的快照且复用已完成的正文', {timeout:1000}, async () => {
+    let calls=0;
+    const replay=browserReplay({'/_fixtures/manifest.json':'/manifest'},async()=>{
+        calls++;
+        if(calls===1)return await new Promise<never>(()=>{});
+        return Response.json({fixtures:{},paths:[]});
+    },'https://demo.example',{sharePending:false});
+    void replay(new Request('https://demo.example/api/unknown'));
+    assert.equal((await replay(new Request('https://demo.example/api/unknown'))).status,404);
+    assert.equal((await replay(new Request('https://demo.example/api/unknown'))).status,404);
+    assert.equal(calls,2);
+});
 test('公开快照删除凭据与私人路径并保留已保存标记', () => {
     assert.deepEqual(publicValue({ password: 'private', cookie: 'secret', token: 'secret', password_set: true, path: 'C:\\Users\\private\\media', image: '/cover?id=1' }), { password: '', cookie: '', token: '', password_set: true, path: 'R:\\Media\\演示', image: '/cover?id=1' });
 });

@@ -6,11 +6,11 @@
 
 | 能力 | 实现与许可 | 验证与边界 |
 | --- | --- | --- |
-| IP 服务地区 | Cloudflare 原生地区、ipaddr.js 2.5.0（MIT）、DB-IP Country Lite（CC BY 4.0）与 IPLocate Country（CC BY-SA 4.0） | 任一来源判断为大陆即跳转；IPv4／IPv6 并集离线查询，原始归档哈希及版本保存在生成文件，页面保留两库署名。CSV、压缩包与区间导出复用 Python 标准库，不增加运行时 Python 依赖；不外发访问者 IP。GeoLite 与 IPinfo 需要账号凭据，本任务使用可公开下载的官方独立库。IP 地区判断不能保证零误判 |
+| IP 服务地区 | Cloudflare Single Redirects、连接地区元数据与 Workers Assets | 两站共用原生边缘规则，按 `ip.src.country` 判断；动态接口检查 `request.cf.country`。页面、图片、公开快照与脚本由 Assets 提供，生产请求不读取 R2 地区表。地区识别没有零误判保证；入口规则和验证见[维护说明](MAINTAINING.md) |
 | TS 类型检查 | TypeScript 7.0.2，Apache-2.0 | 严格检查回放、浏览器、维护脚本、测试与 Cloudflare 配置；Node 24.12 起直接运行可擦除类型，esbuild 生成浏览器 JS，无需额外运行器 |
 | Cloudflare 配置与发布 | cf 1.0.0-beta.18，MIT OR Apache-2.0；Wrangler 4.151.2，MIT OR Apache-2.0 | 使用官方 `cf migrate`；构建结果核对名称、域名、Assets 绑定及静态路由，本地验证回放与媒体；固定 beta 版本，由 Dependabot 跟踪更新 |
 | 静态资源转换 | 既有 Acorn、esbuild 与 `@noble/hashes` | 保留录制键与内容指纹差异；合成夹具验证图片映射、前端包和私有视频对象清单 |
-| 浏览器回放 | 既有回放算法、原生 fetch、Response 和 Map | `createReplay` 同时供浏览器与 Worker 使用；构建器按读取契约导出公开快照，按内容指纹加载并合并并发，不引入 Service Worker 或持久数据库 |
+| 浏览器回放 | 既有回放算法、原生 fetch、Response 和 Map | `createReplay` 同时供浏览器与 Worker 使用；构建器按读取契约导出公开快照。浏览器合并并发读取，Worker 只复用完成后的快照正文，不跨请求保存 I/O Promise。不引入 Service Worker 或持久数据库 |
 | 图片缩略图 | Sharp 0.35.5，Apache-2.0 | 仅在构建阶段按内容生成 384、960 像素 WebP，保留动画与较小原图；复用项目既有图片处理技术，不使用在线付费图片转换；浏览器与 Linux/Windows 构建验证兼容性 |
 | 播放器预打包 | 既有 esbuild 与同步的 Video.js | 从应用 AST 取得按需模块组，构建单个内容指纹 ESM；保持按需加载与模块顺序，不手改 vendored 产物 |
 | 原位文字编辑 | Peach 主仓库 `frontend/src/copy-editor-core.js`，AGPL-3.0-only | 与应用、官网共享点击、输入、删除、草稿串联和错误处理；演示适配器只保存浏览器草稿。固定来源提交与 SHA-256，检查入口拒绝单独修改副本 |
