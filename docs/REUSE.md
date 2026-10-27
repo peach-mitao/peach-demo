@@ -1,5 +1,7 @@
 # 复用与实现边界
 
+开发工具依赖中的 undici 7.x 通过 `package.json` 的 `overrides` 固定修复版，处理恶意多层 Content-Encoding 响应造成的未捕获异常；依据为[上游安全公告](https://github.com/nodejs/undici/security/advisories/GHSA-xjj6-f33q-929c)。本次安全项不包含 cf、Wrangler 升级，版本由原清单维护。
+
 文案工具条由官网 `browser/assets/edit-toolbar.ts` 维护，使用真实 BoardUI 按钮与应用 SelectionDock 的浮动栏几何；两站加载同一份构建产物。`npm run edit:ui:sync -- <官网检出目录>` 同步该产物并记录 `editor-ui-source.json`，浏览器构建校验字节摘要。演示站的 `browser/copy-editor.ts` 只适配浏览器草稿、导出和退出。工具条样式隔离在 Shadow DOM 内，帮助提示支持悬停、焦点和点击。底部说明允许点击编辑与选择文字；控件文字可用 Alt + 点击。
 
 依赖版本以 `package.json` 和 `package-lock.json` 为准；新增工具均为开发依赖，不作为浏览器全局运行库。
