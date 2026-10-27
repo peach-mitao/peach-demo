@@ -1,0 +1,24 @@
+{
+  "repository": "https://github.com/peach-mitao/peach-site",
+  "commit": "dd41e177a336cade3a1892126544fb580135cc04",
+  "draft": false,
+  "files": {
+    "browser/assets/page-support.ts": "145ed794494a6cc6d84fa5ba9295b233d9d7c92f83d96c08116b7697fe4c3032",
+    "browser/assets/site-language.ts": "2515892239c04bc301594831e3f4412dc88673af8a9cb8267d871fa11d0ce479",
+    "site/assets/support-ui/boardui-LICENSE.txt": "7a28c78354f8f88d8773f72bf37fb9c037817f8abd2fa5a63694d6c946a5ce80",
+    "site/assets/support-ui/inter/files/inter-cyrillic-ext-wght-normal.woff2": "ca157063339ac4ad418f214f3abfed119b0798ab4d377386ce5c9e5a7a435ebd",
+    "site/assets/support-ui/inter/files/inter-cyrillic-wght-normal.woff2": "71d5ee93cc1e9f1d520a3a8b66456de18c7879d8df09d57fcd2eaff75fef0075",
+    "site/assets/support-ui/inter/files/inter-greek-ext-wght-normal.woff2": "6e9e020a25f9b56d418f2c085b1d3c09725a4da23fe693a5b463064606732190",
+    "site/assets/support-ui/inter/files/inter-greek-wght-normal.woff2": "1be3448e292fbf05ffe176fe1e43f135013d50b1e7d324ad1a558f623d3bb6f6",
+    "site/assets/support-ui/inter/files/inter-latin-ext-wght-normal.woff2": "34b9c504cab7a73e37b746343a449132e56cf7b5481af2cb81dc74dcff25c956",
+    "site/assets/support-ui/inter/files/inter-latin-wght-normal.woff2": "3100e775e8616cd2611beecfa23a4263d7037586789b43f035236a2e6fbd4c62",
+    "site/assets/support-ui/inter/files/inter-vietnamese-wght-normal.woff2": "5c66f9e07e90c6d4ac4922cc68d60de26c17b1858e677fb5e603fce3952b3ff2",
+    "site/assets/support-ui/inter/index.css": "78d97e4cbc385b8d0f86f21f650073c149eda98423bbdc49b13a13836d81e571",
+    "site/assets/support-ui/inter/LICENSE": "3b0a5fca3d17942cde889069889dedbbbd075e9b599968c82a95f4d944e9b345",
+    "site/assets/support-ui/inter/ORIGIN.md": "2d5439ca05301eb59314508e904884b372f9f505bc15b4385b5fd90d86e83389",
+    "site/assets/support-ui/logo.png": "f5fb62bc4161b682541c317778800aeaa38ef4f8da70ae24fcbd6225cf676228",
+    "site/assets/support-ui/peach-pages.css": "2cecc0e4764487fcb9a648a68ef6dfbd4da51b543848cc02bcdf291fa8538246",
+    "site/assets/support-ui/support.css": "8942621cafb4fb1c8fb8fc0313cccb7c68eab018d4d1ab5b89b8f32e0147586d",
+    "site/404.html": "fed77cc1d5daf51ab6eff7c05487f04374fe2b4921f5afd9674e5deb5789fdbc"
+  }
+}

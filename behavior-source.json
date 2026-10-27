@@ -1,0 +1,10 @@
+{
+  "repository": "https://github.com/peach-mitao/peach-site",
+  "commit": "771fd879b93c3330bb6d03432eeb988882c0fce2",
+  "draft": false,
+  "files": {
+    "browser/assets/behavior-contract.ts": "9787b4523e079e90b048293ab7050cf3a6f7f392c1790bade794b7c6d06522f6",
+    "browser/assets/behavior-core.ts": "016ca6860238f3eef6005fb0bccba1053c3240070d9ff93aa0ea03aa0fa19c92",
+    "scripts/behavior_artifacts.ts": "94f82903dc8f0278b80f977d969e1a3f8c0983ffd70bd2ed98792506d4fd3c3a"
+  }
+}
