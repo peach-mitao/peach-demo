@@ -1,17 +1,33 @@
-# Peach 演示站
+<p align="center"><img src="https://peach.video/assets/peach-logo-192.webp" alt="Peach" width="88"></p>
 
-Peach 的在线体验入口，复用应用前端，通过录制数据展示馆藏浏览、搜索、资料页和播放等功能。演示操作只在当前页面生效，刷新后恢复；不连接真实账本。
+# Peach Live Demo
 
-[打开演示站](https://demo.peach.video/) · [访问官网](https://peach.video/)
+Try Peach's interface with movie demo data in your browser.
 
-## 关联项目
+[Live demo](https://demo.peach.video/) · [Website](https://peach.video/) · [Download Peach](https://github.com/peach-mitao/peach/releases) · [简体中文](README.zh-CN.md)
 
-| 仓库 | 用途 |
-| --- | --- |
-| [peach](https://github.com/peach-mitao/peach) | 主仓库：自托管应用、安装包与使用文档 |
-| [peach-site](https://github.com/peach-mitao/peach-site) | 官网：产品介绍、功能导览与下载入口 |
-| [peach-demo](https://github.com/peach-mitao/peach-demo) | 本仓库：演示回放、交互与部署配置 |
+[![CI](https://img.shields.io/github/actions/workflow/status/peach-mitao/peach-demo/check.yml?branch=main&label=CI&logo=githubactions&logoColor=white)](https://github.com/peach-mitao/peach-demo/actions/workflows/check.yml)
+[![License](https://img.shields.io/badge/license-AGPL--3.0--only-blue?logo=gnu&logoColor=white)](LICENSE)
 
-使用 Peach 请前往[主仓库](https://github.com/peach-mitao/peach)；维护演示站请参阅[维护说明](docs/MAINTAINING.md)。录制响应与媒体不随源码分发。
+## Features
 
-自有代码采用 [AGPL-3.0-only](LICENSE)。素材及第三方内容的许可范围见 [NOTICE](NOTICE.md)。
+- **Library browsing**: explore search, filters, people and title details.
+- **Interface previews**: try settings, cloud-drive and download-task examples with sample data.
+- **Player controls**: preview the player interface; playback shows a demo notice and loads no video.
+- **Local demo state**: changes stay in the current page and reset on refresh; the demo does not connect to your Peach library.
+
+Film and portrait sources are listed in [asset credits](https://demo.peach.video/film-sources/).
+
+## Development
+
+[Maintenance](docs/MAINTAINING.md) · [Reuse and shared components](docs/REUSE.md)
+
+The application frontend comes from the Peach repository. This repository maintains demo data replay, interaction adapters and deployment configuration. Source recordings and media are managed separately.
+
+## Related projects
+
+[Peach application](https://github.com/peach-mitao/peach) · [Website source](https://github.com/peach-mitao/peach-site) · [Roadmap](https://github.com/peach-mitao/peach-roadmap)
+
+## License
+
+[AGPL-3.0-only](LICENSE). Artwork and third-party components retain their own licenses; see [NOTICE](NOTICE.md).
