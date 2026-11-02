@@ -76,7 +76,7 @@ npm run check:deploy
 
 索引标题栏的回归还检查标题、收藏、管理与版式按钮、搜索栏是否同排，以及搜索栏是否保留可输入宽度；这类换行不一定造成页面横向溢出，因此需要单独检查几何。
 
-普通电影数据由 `npm run assets:movies -- <夹具结构目录> <官方电影图片目录>` 生成。结构目录只贡献响应字段，数组、字符串与旧业务记录不被继承。片目与演示状态在 `src/public-movies.ts`；图片来自 Blender 官方页面，逐片来源与许可在 `/film-sources/`。导演、演员照片与厂牌标识由 `NODE_USE_ENV_PROXY=1 node scripts/fetch_public_credits.ts <图片目录>` 从 Wikidata 与 Commons 取得：按影片条目的导演、演员与出品公司匹配，只收公有领域、CC0、CC BY 与 CC BY-SA 且无删除或侵权模板的图片，逐图写入许可依据。竖幅人像从顶部裁成正方形，标识放入方形白底画布，开放电影的出品方沿用 Blender 基金会标识；合影、剧照、建筑与邮票等人工复核结论记在脚本的复核表中。取不到的人物继续显示姓名字母。生成器记录夹具、图片和别名的来源证明，`verifyPublicMovies` 同时检查固定片目、确定性配置派生和全部图片摘要；构建及发布拒绝未经核验的包。`assets:import` 只负责文件导入，不能替代这项门槛。录制响应、媒体、数据库与凭据不进 Git。
+普通电影数据由 `npm run assets:movies -- <夹具结构目录> <官方电影图片目录>` 生成。结构目录只贡献响应字段，数组、字符串与旧业务记录不被继承。片目与演示状态在 `src/public-movies.ts`；图片来自 Blender 官方页面，逐片来源与许可在 `/film-sources/`。导演、演员照片与厂牌标识由 `PEACH_APP=<Peach 检出目录> NODE_USE_ENV_PROXY=1 node scripts/fetch_public_credits.ts <图片目录>` 从 Wikidata 与 Commons 取得：按影片条目的导演、演员与出品公司匹配，只收公有领域、CC0、CC BY 与 CC BY-SA 且无删除或侵权模板的图片，逐图写入许可依据。竖幅人像从顶部裁成正方形，标识直接调用应用的 `peach.images.bake_square` 烤成不透明方图，与生产厂牌图标同一规则，开放电影的出品方沿用 Blender 基金会标识；合影、剧照、建筑与邮票等人工复核结论记在脚本的复核表中。取不到的人物继续显示姓名字母。生成器记录夹具、图片和别名的来源证明，`verifyPublicMovies` 同时检查固定片目、确定性配置派生和全部图片摘要；构建及发布拒绝未经核验的包。`assets:import` 只负责文件导入，不能替代这项门槛。录制响应、媒体、数据库与凭据不进 Git。
 
 `npm run assets:build` 从 `site/` 生成 `public/`：静态页面、内容指纹图片、384／960 像素 WebP、公开快照、回放运行时和前端包。播放器模块按应用 AST 声明预打包为按需加载的单个 ESM。原始视频、录制目录与内部清单不进入 `public/`；公开快照只按已支持的读取契约导出，凭据、来源 URI 和私人路径被清除。Worker 与浏览器共用 `src/replay.ts`，不能分别修改查询算法。
 

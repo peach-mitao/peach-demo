@@ -3,6 +3,7 @@ import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { execFileSync } from 'node:child_process';
 import sharp from 'sharp';
 import type { PublicCatalog, PublicImage, PublicPerson, PublicStudio } from '../src/public-movies.ts';
 
@@ -113,21 +114,28 @@ export const CREDITED: Record<string, string> = { 'Derek de Lint': 'Q1200141', '
 // 开放电影的出品方：Blender Institute 与 Blender Studio 隶属基金会、没有独立标识条目，沿用基金会标识。
 export const CREDITED_STUDIOS: Record<string, string> = { 'Blender Foundation': 'Q883799', 'Blender Institute': 'Q883799', 'Blender Studio': 'Q883799' };
 
-// 竖幅人像从顶部取正方形，圆形头像才会落在脸上而不是躯干；
-// 标识等比放进方形白底画布的内切区，小位的圆形图标也能完整显示宽幅字标；
-// 白底与应用里厂牌图标的常见底色一致，头像圆框的灰色底不会透出来。
+// 厂牌标识复用应用入库时的 `peach.images.bake_square`：裁透明边、按内容明暗选底色、烤成不透明方图，
+// 与生产馆藏的厂牌图标同一套规则。需要应用检出及其 Python 环境（同 record_entry_pages.py）。
+const BAKE = 'import os,sys;sys.path.insert(0,os.path.join(os.environ["PEACH_APP"],"src"));from peach.images import bake_square;'
+  + 'out=bake_square(sys.stdin.buffer.read());sys.stdout.buffer.write(out or b"")';
+export function bakeSquare(payload: Buffer, app = process.env.PEACH_APP): Buffer {
+  if (!app) throw Error('厂牌标识需要应用检出：设置 PEACH_APP=<Peach 检出目录>');
+  const python = path.join(app, process.platform === 'win32' ? '.venv/Scripts/python.exe' : '.venv/bin/python');
+  const baked = execFileSync(python, ['-c', BAKE], { input: payload, env: { ...process.env, PEACH_APP: app }, maxBuffer: 64 << 20 });
+  if (!baked.length) throw Error('应用未能把标识烤成方图');
+  return baked;
+}
+
+// 竖幅人像从顶部取正方形，圆形头像才会落在脸上而不是躯干。
 async function image(file: CommonsFile, name: string, width: number, changes: string, directory: string, shape: 'portrait' | 'logo'): Promise<PublicImage & Record<string, unknown> | null> {
   const granted = licence(file);
   if (!granted) return null;
-  let picture = sharp(await bytes(file.thumb));
+  const raw = await bytes(file.thumb);
+  let picture = sharp(shape === 'logo' ? bakeSquare(raw) : raw);
   const { width: w = 0, height: h = 0 } = await picture.metadata();
   if (shape === 'portrait' && h > w * 1.15) {
     picture = sharp(await picture.extract({ left: 0, top: Math.round(Math.min(h - w, h * 0.02)), width: w, height: w }).toBuffer());
     changes = changes.replace('缩放至', '从顶部裁成正方形后缩放至');
-  }
-  if (shape === 'logo') {
-    const inner = Math.round(width * 0.7), mark = await picture.resize(inner, inner, { fit: 'inside' }).toBuffer();
-    picture = sharp({ create: { width, height: width, channels: 3, background: '#ffffff' } }).composite([{ input: mark, gravity: 'center' }]);
   }
   const body = await sharp(await picture.png().toBuffer()).resize({ width, withoutEnlargement: true }).webp({ quality: 82, alphaQuality: 90 }).toBuffer();
   await writeFile(path.join(directory, name), body);
@@ -183,7 +191,7 @@ export async function fetchPublicCredits(catalogFile: string, directory: string)
   for (const [name, entity] of studios) {
     if (REVIEWED_OUT[entity.id]) { skipped.push(`${name}（${REVIEWED_OUT[entity.id]}）`); continue; }
     const file = logos.get(values(entity, 'P154')[0]);
-    const logo = file && await image(file, `studio-${entity.id.toLowerCase()}.webp`, LOGO_WIDTH, `等比缩放后居中放入${LOGO_WIDTH}像素方形白底画布并转换为WebP；按容器缩放显示。`, directory, 'logo');
+    const logo = file && await image(file, `studio-${entity.id.toLowerCase()}.webp`, LOGO_WIDTH, `按 Peach 应用的厂牌图标规则烤成不透明方图，缩放至${LOGO_WIDTH}像素宽并转换为WebP；按容器缩放显示。`, directory, 'logo');
     if (logo) marks.push({ id: entity.id, name, original_name: englishName(entity), source: `https://www.wikidata.org/wiki/${entity.id}`, logo });
     else skipped.push(name);
   }
@@ -196,6 +204,6 @@ export async function fetchPublicCredits(catalogFile: string, directory: string)
 
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
   const [directory, catalogFile = fileURLToPath(new URL('../src/public-film-catalog.json', import.meta.url))] = process.argv.slice(2);
-  if (!directory) throw Error('用法：NODE_USE_ENV_PROXY=1 node scripts/fetch_public_credits.ts <图片输出目录> [片目文件]');
+  if (!directory) throw Error('用法：PEACH_APP=<Peach 检出目录> NODE_USE_ENV_PROXY=1 node scripts/fetch_public_credits.ts <图片输出目录> [片目文件]');
   await fetchPublicCredits(catalogFile, path.resolve(directory));
 }
