@@ -11,7 +11,8 @@ export function publicValue(value: unknown, key = ''): unknown {
     if (typeof value === 'string') {
         if (/magnet:\?|(?:https?:\/\/)[^/\s]+:[^/@\s]+@/i.test(value))
             return '';
-        if (/^(?:[A-Z]:[\\/]|\/Users\/|\/home\/)/i.test(value))
+        // 演示自己的占位路径（媒体库、网盘挂载、演示数据根）原样保留，其余本机路径一律收成同一个占位值。
+        if (/^(?:[A-Z]:[\\/]|\/Users\/|\/home\/)/i.test(value) && !/^(?:R:\\Media|A:\\115|B:\\PikPak|C:\\Users\\peach\\peach-data)(?:\\|$)/.test(value))
             return 'R:\\Media\\演示';
         return value;
     }

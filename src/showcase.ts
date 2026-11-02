@@ -55,7 +55,7 @@ export function taskRuns(recorded: { finished?: { id: number; status?: string; m
     finished.push({ id, task_key: 'media-repair', task_label: constants?.task_labels['media-repair'] || '媒体修复', trigger: 'manual', status: 'succeeded',
         mutex_key: 'media-repair', pid: 4242, host: 'demo', started_at: new Date(started * 1000).toISOString(), finished_at: new Date((started + 42) * 1000).toISOString(),
         heartbeat_at: new Date((started + 42) * 1000).toISOString(), elapsed_seconds: 42, progress_current: 12, progress_total: 12, progress_label: '完成',
-        result_summary: { status: 'complete', run_id: id, started_at: started, library: 'demo-movies', stage: '完成', total: 0, checked: 0, found: 0, repaired: 0,
+        result_summary: { status: 'complete', run_id: id, started_at: started, library: 'demo-movies', stage: '完成', total: 12, checked: 12, found: 0, repaired: 0,
             failed: 0, missing_tool: 0, skipped: 0, survey_checked: 12, survey_cache_version: 2, completed_at: started + 42 },
         error: '', parent_run_id: null, root_run_id: null, followup_key: '', followup_depth: 0 });
     return withBackend('/api/tasks', { ...recorded, available: true, running: [], skipped: [], finished }, ['followup_counts', 'result_versions', 'working_parents']);

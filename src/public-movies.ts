@@ -179,10 +179,11 @@ export function publicMovies(films: readonly PublicMovie[] = FILMS, people: read
     { location: 'online', declared: null, resolved: null, mapped: true, online: true, state: 'ok', message: '' },
   ], offline: [] });
   // 诊断以应用的空闲实例为底；演示馆藏有本地来源，挂载一项按应用「来源可读取」的写法给出。
+  // 刮削来源与 /api/scraping 一致保持为空，不在公开站列出资料站。
   put('/api/diagnostics', { checks: { media_mounts: { label: '媒体挂载', status: 'ok', reason: '来源可读取', action: '', target: '/settings/library',
-    details: { state: 'ok', sources: [], warnings: [] } } }, library: { issue_at: now } });
-  // 媒体修复停在任务中心那一轮的结束快照：全部检查过，没有需要修复的文件。
-  put('/api/media-repair', { ok: true, status: 'complete', job_id: 'demo-media-repair', library: 'demo-movies', stage: '完成', checked: 0, total: 0, found: 0,
+    details: { state: 'ok', sources: [], warnings: [] } } }, library: { issue_at: now }, sources: [] });
+  // 媒体修复停在任务中心那一轮的结束快照：12 个文件都检查过，没有需要修复的。
+  put('/api/media-repair', { ok: true, status: 'complete', job_id: 'demo-media-repair', library: 'demo-movies', stage: '完成', checked: 12, total: 12, found: 0,
     repaired: 0, failed: 0, missing_tool: 0, skipped: 0, message: '' });
   put('/api/libraries', { libraries: [{ id: 'demo-movies', name: '电影演示馆藏', icon: 'local', folders: 1, color: '', policy: 'auto',
     stages: ['probe', 'metadata', 'cover', 'people', 'preview'], roots: [{ root_id: 'demo-root-local', location: 'local' }], metered: false }] });
