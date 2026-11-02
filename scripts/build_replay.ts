@@ -31,7 +31,6 @@ export async function buildReplay(site: string, images: ImageMap) {
     for (const item of catalog.items) {
         for (const name of ['/api/item', '/api/timeline', '/api/playback-plan', '/api/stream-plan'] as const)
             add(name, { id: String(item.id) });
-        add('/api/subtitles/memory', { video: `item:${item.id}` });
         routes.add(`/api/assets/${item.id}/subtitles`);
         for (const limit of ['20', '28'] as const)
             add('/api/related', { id: String(item.id), limit });

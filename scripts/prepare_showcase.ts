@@ -39,8 +39,6 @@ export async function prepareShowcase(site = fileURLToPath(new URL('../site/', i
     await write('/healthz', { ...health, version: info.version, build_commit: info.commit });
     await write('/api/tag-management', tagInventory(indexes));
     await write('/api/tag-management?scope=online', tagInventory(indexes, 'online'));
-    for (const item of catalog.items)
-        await write('/api/subtitles/memory?video=' + encodeURIComponent(`item:${item.id}`), { selected: null, tracks: [] });
     for (const row of indexes.tags.items) {
         const photos = { kind: 'tag', name: row.k, entity_id: row.entity_id, sets: [], total: 0, items: [], seed: 0, sample_total: 0, has_more: false };
         await writeMissing('/api/photos?' + new URLSearchParams({ kind: 'tag', name: row.k }), photos);

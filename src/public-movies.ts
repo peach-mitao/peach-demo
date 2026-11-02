@@ -111,7 +111,6 @@ export function publicMovies(films: readonly PublicMovie[] = FILMS, people: read
     put(query('/api/timeline', { id }), {});
     put(query('/api/playback-plan', { id }), { ok: false, available: false, message: '仅提供演示', segments: [] });
     put(query('/api/stream-plan', { id }), { ok: false, available: false, message: '仅提供演示', segments: [] });
-    put(query('/api/subtitles/memory', { video: `item:${id}` }), { selected: null, tracks: [] });
     put(`/api/assets/${id}/subtitles`, { tracks: [], selected: null });
     for (const endpoint of ['/thumb', '/poster', '/cover']) {
       image(query(endpoint, { id }), film.slug); image(query(endpoint, { code }), film.slug);
