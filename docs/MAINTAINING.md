@@ -72,11 +72,11 @@ npm run check:deploy
 
 `scripts/demo_pages.ts` 统一登记 59 个场景，包含浏览页、全部配置分区、登录与首次设置、各类详情，以及本地和在线标签管理模式。`node scripts/record_pages.ts` 录制桌面与 390×844 手机画面、可见分区、标签隐藏状态与改名弹层和实际请求，报告写入本地 `evidence/coverage/`；`npm run test:routes` 对同一清单执行验收，拒绝运行错误、接口或图片缺失、未结束的等待态和横向溢出。采样等待布局触发的懒加载请求结束。两者需要已导入的演示录制包，默认使用端口 8791，可用 `BASE` 指定预览地址。
 
-`?edit` 与应用、官网共用唯一的 `frontend/src/copy-editor-core.js`；`site/_demo/copy-editor.js` 只提供浏览器草稿和工具条。普通点击切换页面控件，Alt+点击编辑控件文字；清空文字可删除，刷新后保留本浏览器的编辑草稿。核心由 `edit:sync` 从应用固定提交同步，`copy-editor-source.json` 记录完整提交及 SHA-256，`npm run check` 拒绝副本漂移。不要单独修改同步副本。
+`?edit` 与应用、官网共用唯一的 `frontend/src/copy-editor-core.js`；`site/_demo/copy-editor.js` 只提供草稿保存和工具条。普通点击切换页面控件，Alt+点击编辑控件文字；清空文字可删除，刷新后保留编辑草稿。本机预览时先运行 `npm run dev:edit`，草稿会合并写入 `evidence/copy-edits.json`，打开编辑页时也会补交本浏览器已有的草稿；维护者据此改回各自的维护源。公网演示只保存在本浏览器。核心由 `edit:sync` 从应用固定提交同步，`copy-editor-source.json` 记录完整提交及 SHA-256，`npm run check` 拒绝副本漂移。不要单独修改同步副本。
 
 索引标题栏的回归还检查标题、收藏、管理与版式按钮、搜索栏是否同排，以及搜索栏是否保留可输入宽度；这类换行不一定造成页面横向溢出，因此需要单独检查几何。
 
-普通电影数据由 `npm run assets:movies -- <夹具结构目录> <官方电影图片目录>` 生成。结构目录只贡献响应字段，数组、字符串与旧业务记录不被继承。片目与演示状态在 `src/public-movies.ts`；图片来自 Blender 官方页面，逐片来源与许可在 `/film-sources/`。生成器记录夹具、图片和别名的来源证明，`verifyPublicMovies` 同时检查固定片目、确定性配置派生和全部图片摘要；构建及发布拒绝未经核验的包。`assets:import` 只负责文件导入，不能替代这项门槛。录制响应、媒体、数据库与凭据不进 Git。
+普通电影数据由 `npm run assets:movies -- <夹具结构目录> <官方电影图片目录>` 生成。结构目录只贡献响应字段，数组、字符串与旧业务记录不被继承。片目与演示状态在 `src/public-movies.ts`；图片来自 Blender 官方页面，逐片来源与许可在 `/film-sources/`。导演、演员照片与厂牌标识由 `NODE_USE_ENV_PROXY=1 node scripts/fetch_public_credits.ts <图片目录>` 从 Wikidata 与 Commons 取得：按影片条目的导演、演员与出品公司匹配，只收公有领域、CC0、CC BY 与 CC BY-SA 且无删除或侵权模板的图片，逐图写入许可依据。竖幅人像从顶部裁成正方形，标识放入方形透明画布；合影、剧照、建筑与邮票等人工复核结论记在脚本的复核表中。取不到的人物继续显示姓名字母。生成器记录夹具、图片和别名的来源证明，`verifyPublicMovies` 同时检查固定片目、确定性配置派生和全部图片摘要；构建及发布拒绝未经核验的包。`assets:import` 只负责文件导入，不能替代这项门槛。录制响应、媒体、数据库与凭据不进 Git。
 
 `npm run assets:build` 从 `site/` 生成 `public/`：静态页面、内容指纹图片、384／960 像素 WebP、公开快照、回放运行时和前端包。播放器模块按应用 AST 声明预打包为按需加载的单个 ESM。原始视频、录制目录与内部清单不进入 `public/`；公开快照只按已支持的读取契约导出，凭据、来源 URI 和私人路径被清除。Worker 与浏览器共用 `src/replay.ts`，不能分别修改查询算法。
 

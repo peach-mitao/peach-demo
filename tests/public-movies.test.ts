@@ -17,7 +17,11 @@ test('普通电影数据集只使用可核实的影片身份并标明演示行�
   assert.ok(data.catalog.items.every(item => ['local', '115'].includes(item.location)), '全部影片属于应用默认可浏览来源');
   assert.deepEqual(data.catalog.items.map(item => item.catalog_title), FILMS.map(film => film.title));
   const cast = data.indexes.performers.items.map(row => row.k);
-  assert.ok(cast.includes('Derek de Lint') && cast.includes('Sergio Hasselbaink'));
+  // 有人物条目的演员按条目显示名列出，片目原署名记作别名。
+  for (const credited of ['Derek de Lint', 'Sergio Hasselbaink']) {
+    const person = PEOPLE.find(row => row.original_name === credited || row.credited_as?.includes(credited));
+    assert.ok(cast.includes(person?.name ?? credited));
+  }
   assert.ok(cast.includes(PEOPLE[0]!.name));
   for (const row of data.indexes.performers.items) {
     const person = PEOPLE.find(person => person.name === row.k || person.original_name === row.k);
@@ -125,4 +129,17 @@ test('普通电影发布门槛验证派生配置并拒绝混入旧响应和图�
     await writeFile(path.join(site, '_demo/follow/unapproved.webp'), image);
     await assert.rejects(verifyPublicMovies(site, fixtureData), /关注图片包含未批准素材/);
   } finally { await rm(directory, { recursive: true, force: true }); }
+});
+test('有标识的厂牌提供 /logo 地址与版本，统计页给出各卷容量', () => {
+    const film = FILMS.find(row => row.studio && !row.studio.includes('、'))!, logo = { ...PEOPLE[0]!.portrait, file: 'studio-q1.webp', sha256: 'f'.repeat(64) };
+    const data = publicMovies([film], [], [{ id: 'Q1', name: film.studio, original_name: film.studio, source: 'https://www.wikidata.org/wiki/Q1', logo }]);
+    const studio = data.indexes.studios.items[0]!;
+    assert.deepEqual([studio.has_logo, studio.logo_version], [true, 'f'.repeat(64)]);
+    for (const variant of ['icon', 'large'])
+        assert.equal(data.imageRoutes.get('/logo?' + new URLSearchParams({ studio: film.studio, variant })), 'Q1');
+    const detail = data.routes.get('/api/item?id=1');
+    assert.deepEqual([detail.has_studio_logo, detail.entity_refs.studio[0].has_logo], [true, true]);
+    const stats = data.routes.get('/api/stats');
+    assert.equal(stats.storage_summary.measured, stats.storage_volumes.length);
+    assert.ok(stats.storage_volumes.every((row: { total: number; used: number; free: number }) => row.total === row.used + row.free));
 });

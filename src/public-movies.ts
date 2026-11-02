@@ -9,11 +9,15 @@ export interface PublicMovie {
   slug: string; title: string; year: number; studio: string; directors: string[]; cast: string[];
   seconds: number; tags: string[]; credit: string; original_title?: string; wikidata?: string; poster: PublicImage;
 }
-export interface PublicPerson { id: string; name: string; original_name: string; source: string; films: string[]; portrait: PublicImage }
+// credited_as 记录片目里与显示名不同的署名写法，生成实体时按它匹配同一人物。
+export interface PublicPerson { id: string; name: string; original_name: string; source: string; films: string[]; credited_as?: string[]; portrait: PublicImage }
+// 厂牌标识按片目中的厂牌文字匹配；多家联合出品时取第一家的标识。
+export interface PublicStudio { id: string; name: string; original_name: string; source: string; logo: PublicImage }
 export const FILMS: PublicMovie[] = catalog.films;
 export const PEOPLE: PublicPerson[] = catalog.people;
-export interface PublicCatalog { films: PublicMovie[]; people: PublicPerson[] }
-export const PUBLIC_CATALOG: PublicCatalog = { films: FILMS, people: PEOPLE };
+export const STUDIOS: PublicStudio[] = (catalog as { studios?: PublicStudio[] }).studios || [];
+export interface PublicCatalog { films: PublicMovie[]; people: PublicPerson[]; studios?: PublicStudio[] }
+export const PUBLIC_CATALOG: PublicCatalog = { films: FILMS, people: PEOPLE, studios: STUDIOS };
 export const MOVIE_READS = `ads avatar-choices configuration configuration/automatic-updates configuration/cloud-proxies configuration/downloads configuration/downloads/check configuration/downloads/pikpak/browser-login configuration/entry-links configuration/indexers configuration/jav-browser configuration/library-sharing configuration/library-sharing/preview configuration/peach-proxy configuration/push-discovery configuration/remote-reporting configuration/startup configuration/tunnel configuration/update-status configuration/updates diagnostics downloads duplicates entity/shapes feeds follow follow/activity follow/check follow/credentials follow/image-dims follow/status follow/suggest items facets index jav/discoveries libraries library-processing library-shortcuts links media-processing media-repair organize orphan-records playlists post-setup-tutorial quality-goals resource-sync scraping scraping/amane-bridge scraping/amane-bridge/job scraping/cache scraping/sources settings sources stats subscriptions taste tasks timeline trash wants custom-metadata follow/resolve follow/schedule links/prune review scraping/cover taste/refresh thumbnail-jobs resource-sync/apply`.split(' ');
 
 // 旧快照只贡献固定字段结构；数组及全部字符串均不进入新数据。
@@ -30,7 +34,7 @@ export function responseShape(value: unknown): any {
 }
 
 type Row = Record<string, any>;
-export function publicMovies(films: readonly PublicMovie[] = FILMS, people: readonly PublicPerson[] = PEOPLE) {
+export function publicMovies(films: readonly PublicMovie[] = FILMS, people: readonly PublicPerson[] = PEOPLE, studios: readonly PublicStudio[] = STUDIOS) {
   if (!films.length) throw Error('普通电影片目不能为空');
   const routes = new Map<string, any>();
   const imageRoutes = new Map<string, string>();
@@ -38,8 +42,9 @@ export function publicMovies(films: readonly PublicMovie[] = FILMS, people: read
   put('/api/network-status', { state: 'online', checked_at: null, demo: true });
   put('/api/background-issues', { issues: [], demo: true });
   put('/api/feeds/schedule', { available: true, enabled: false, interval_minutes: 360, running: false, last_error: null, next_run_at: null, demo: true });
-  put('/api/scraping/amane-bridge', { repository: 'https://github.com/sqzw-x/amane', license: '见项目仓库', bundled: false,
-    problem: '仅提供演示，不连接来源。', revision: '', version: '', installed: false, installed_version: '', python: '', sites: [], job: { status: 'idle' }, demo: true });
+  // 采集桥按随包状态展示（应用 0.53 沿用 amane 0.22.1）；演示不开放任何刮削站点。
+  put('/api/scraping/amane-bridge', { repository: 'https://github.com/sqzw-x/amane', license: '见项目仓库', bundled: true,
+    problem: '', revision: '', version: '0.22.1', installed: true, installed_version: '0.22.1', python: '3.13', sites: [], job: { status: 'idle' }, demo: true });
   const query = (route: string, value: Record<string, string | number>) => route + '?' + new URLSearchParams(Object.fromEntries(Object.entries(value).map(([k, v]) => [k, String(v)])));
   const image = (route: string, slug: string) => imageRoutes.set(route, slug);
   const now = '2026-10-01T12:00:00Z';
@@ -48,7 +53,8 @@ export function publicMovies(films: readonly PublicMovie[] = FILMS, people: read
   let nextEntity = 101;
   const entities: Row[] = [];
   const entity = (kind: string, name: string, film: PublicMovie) => {
-    const person = ['creator', 'performer'].includes(kind) ? people.find(row => row.name === name || row.original_name === name) : undefined;
+    const person = ['creator', 'performer'].includes(kind) ? people.find(row => row.name === name || row.original_name === name || row.credited_as?.includes(name)) : undefined;
+    const company = kind === 'studio' ? studios.find(row => row.name === name) : undefined;
     name = person?.name || name;
     const existing = entities.find(row => row.kind === kind && row.canonical_name === name);
     if (existing) return existing;
@@ -60,7 +66,7 @@ export function publicMovies(films: readonly PublicMovie[] = FILMS, people: read
       links: [{ link_id: nextEntity + 1000, link_kind: 'official', label: '官方资料', url: film.credit, hostname: new URL(film.credit).hostname, metadata: {}, gone: false, clickable: true }],
       name_groups: { reading: '', shown: [name], total: 1, groups: [{ label: '名称', names: [{ name, reading: '' }] }] },
       related_performers: [], tags: [], member_count: 0, agency: null, maker: null, labels: [],
-      has_image: !!person, has_avatar: !!person, has_logo: false, image_version: person?.portrait.sha256 || '', avatar_focus: null,
+      has_image: !!person, has_avatar: !!person, has_logo: !!company, image_version: person?.portrait.sha256 || '', logo_version: company?.logo.sha256 || '', avatar_focus: null,
       created_at: now, updated_at: now, demo: true };
     entities.push(row);
     if (person) {
@@ -68,9 +74,11 @@ export function publicMovies(films: readonly PublicMovie[] = FILMS, people: read
       for (const thumb of ['', '1']) image(query('/entity-image', { kind, id: row.id, ...(thumb ? { thumb } : {}) }), person.id);
       image(query('/avatar', { kind, name }), person.id);
     }
+    if (company) for (const variant of ['icon', 'large', '']) image(query('/logo', { studio: name, ...(variant ? { variant } : {}) }), company.id);
     return row;
   };
-  const refs = (rows: Row[]) => rows.map(row => ({ id: row.id, name: row.canonical_name, has_image: row.has_image, has_avatar: row.has_avatar, image_version: row.image_version, avatar_focus: null }));
+  const refs = (rows: Row[]) => rows.map(row => ({ id: row.id, name: row.canonical_name, has_image: row.has_image, has_avatar: row.has_avatar, image_version: row.image_version,
+    ...(row.has_logo ? { has_logo: true, logo_version: row.logo_version } : {}), avatar_focus: null }));
   const items = films.map((film, index) => {
     const studio = film.studio;
     const series = isBlender(film) ? 'Blender Open Movies' : '';
@@ -96,10 +104,12 @@ export function publicMovies(films: readonly PublicMovie[] = FILMS, people: read
       entities: { creator: creators.map(row => row.name), performer: performers.map(row => row.name), studio: studio ? [studio] : [], series: series ? [series] : [] },
       entity_refs: { creator: refs(creators), performer: refs(performers), studio: refs(entities.filter(e => e.kind === 'studio' && e.name === studio)), series: refs(entities.filter(e => e.kind === 'series' && e.name === series)) },
       field_owners: {}, mutation_revision: 1, sample_images: [], liked: index === 0 ? 1 : 0, like_reason: '', better_version: 0,
-      better_version_reason: '', edition_badges: [], display_code: code, display_title: film.title };
+      better_version_reason: '', edition_badges: [], display_code: code, display_title: film.title,
+      ...(studios.some(row => row.name === studio) ? { has_studio_logo: true, studio_logo_version: studios.find(row => row.name === studio)!.logo.sha256 } : {}) };
     put(query('/api/item', { id }), detail);
-    const work = { ok: true, state: 'ready', message: DEMO_DATA_NOTICE, code, title: film.title, release_date: row.release_date,
-      studio, publisher: studio, director: film.directors.join('、'), duration: film.seconds / 60, score: null, summary: '',
+    // message 在应用里表示资料只取到一部分并附重试；演示说明已在页脚，这里不再占用该字段。
+    const work = { ok: true, state: 'ready', code, title: film.title, release_date: row.release_date,
+      studio, publisher: studio, director: creators.map(row => row.name).join('、'), duration: film.seconds / 60, score: null, summary: '',
       tags: row.tags, tag_refs: row.tags.map((name: string) => ({ name, category: 'general', source_name: name })),
       performers: film.cast.join('、'), performer_refs: refs(performers), studio_refs: refs(entities.filter(e => e.kind === 'studio' && e.name === studio)),
       series_refs: refs(entities.filter(e => e.kind === 'series' && e.name === series)), comments_count: 0, preview_count: 0, preview_video_url: '',
@@ -135,9 +145,10 @@ export function publicMovies(films: readonly PublicMovie[] = FILMS, people: read
     }
     put(query('/api/feeds/discoveries', { limit: 12, entity: row.id }), { ok: true, items: [], more: false });
   }
-  const directory = (kind: string) => ({ kind, items: entities.filter(row => row.kind === kind).sort((a, b) => Number(b.has_image) - Number(a.has_image) || b.asset_count - a.asset_count).map(row => ({
+  const directory = (kind: string) => ({ kind, items: entities.filter(row => row.kind === kind).sort((a, b) => Number(b.has_image || b.has_logo) - Number(a.has_image || a.has_logo) || b.asset_count - a.asset_count).map(row => ({
     entity_id: row.id, entity_kind: kind, k: row.name, n: row.asset_count, rep: row.representative_asset_id,
     cat: 'general', favorite: false, following: true, has_image: row.has_image, has_avatar: row.has_avatar, image_version: row.image_version,
+    ...(row.has_logo ? { has_logo: true, logo_version: row.logo_version } : {}),
     avatar_focus: null, identity_categories: row.identity_categories, identity_labels: row.identity_labels,
   })), has_more: false, categories: {} });
   const authors = directory('creator').items.map(row => ({ ...row, key: `entity:${row.entity_id}`, avatar: row.has_image ? `/entity-image?kind=creator&id=${row.entity_id}` : '', providers: ['demo'], held_by: '' }));
@@ -231,12 +242,16 @@ export function publicMovies(films: readonly PublicMovie[] = FILMS, people: read
     privacy: { raw_history_local_only: true, ledger_unchanged: true, candidate_only: true }, window: 'all', updated_at: now, storage: { exports: 0, bytes: 0 }, browsers: [], demo_notice: DEMO_DATA_NOTICE };
   put('/api/taste', taste); for (const window of ['all', '30d', '90d', '7d']) put(query('/api/taste', { window }), { ...taste, window });
   const bytes = items.reduce((sum, row) => sum + row.size, 0);
+  // 演示卷容量为固定示例值：本地卷按馆藏体积计入，网盘为演示配额。
+  const gibibyte = 1024 ** 3, volume = (kind: string, label: string, root: string, used: number, total: number) => ({ kind, label, root, online: true, used, total, free: total - used });
+  const volumes = [volume('local', '演示馆藏', 'R:\\Media', bytes, 4096 * gibibyte), volume('115', '115 收藏', 'A:\\115', 1228 * gibibyte, 10240 * gibibyte),
+    volume('pikpak', 'PikPak 收藏', 'B:\\PikPak', 307 * gibibyte, 2048 * gibibyte)];
   put('/api/stats', { by_loc: [{ k: 'local', n: items.length, videos: items.length, bytes }],
     by_medium: [{ k: 'video', n: items.length, bytes }], by_length: ['速食', '短', '中', '长'].map(k => ({ k, n: items.filter(row => row.ctx_length === k).length })).filter(row => row.n), by_quality: [],
     by_library: [{ k: 'demo-movies', name: '电影演示馆藏', icon: 'local', videos: items.length, bytes }],
     attribution: { videos: items.length, creator: items.filter(row => row.creator).length, code: items.length, studio: items.filter(row => row.studio).length, thumb: items.length, duration: items.filter(row => row.duration > 0).length }, tag_source: [], tag_cov: items.filter(row => row.tags.length).length, top_tags: tags,
     consumption: { played, library_played: played, online_played: 0, play_seconds: playSeconds, library_play_seconds: playSeconds, online_play_seconds: 0, o_total: 0, liked: 1, dislike: 0, seen: 0, trash: 0, skimmed: 0 },
-    recent: items.filter(row => row.play_count).map(row => ({ ...row, last_played: 1790812800, kind: 'library' })), play_activity: { timezone: 'UTC+08:00', days: [], hours: [] }, replays: [], storage_volumes: [], storage_summary: { volumes: 0, online: 0, measured: 0, free: 0, used: 0, total: 0 }, system_disk: null, disk_c: null, demo_notice: DEMO_DATA_NOTICE });
+    recent: items.filter(row => row.play_count).map(row => ({ ...row, last_played: 1790812800, kind: 'library' })), play_activity: { timezone: 'UTC+08:00', days: [], hours: [] }, replays: [], storage_volumes: volumes, storage_summary: { volumes: volumes.length, online: volumes.length, measured: volumes.length, free: volumes.reduce((sum, row) => sum + row.free, 0), used: volumes.reduce((sum, row) => sum + row.used, 0), total: volumes.reduce((sum, row) => sum + row.total, 0) }, system_disk: null, disk_c: null, demo_notice: DEMO_DATA_NOTICE });
   const playlist = { id: 1, name: '电影精选（演示）', source_kind: 'manual', source_seed_asset_id: null, current_asset_id: 1, created_at: now, updated_at: now, item_count: items.length, preview_asset_id: 1, preview_ids: items.map(row => row.id), faces: [] };
   put('/api/playlists', { items: [playlist] }); put('/api/playlist?id=1', { ...playlist, items, total: items.length });
   put('/api/tops?n=60', { performers: directory('performer').items.map(row => ({ ...row, id: row.entity_id })), studios: directory('studio').items.map(row => ({ ...row, id: row.entity_id })) });

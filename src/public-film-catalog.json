@@ -7125,6 +7125,3888 @@
         },
         "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AMaurice%20Chevalier%201959.JPG&oldid=1268036950"
       }
+    },
+    {
+      "id": "Q1200141",
+      "name": "德雷克·德·林克",
+      "original_name": "Derek de Lint",
+      "source": "https://www.wikidata.org/wiki/Q1200141",
+      "films": [
+        "tears-of-steel"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/6/64/Derek-de-lint-1340646708.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Derek-de-lint-1340646708.jpg",
+        "title": "File:Derek-de-lint-1340646708.jpg",
+        "artist": "Jerome de lint",
+        "credit": "wikiportret.nl",
+        "license": "CC BY 3.0",
+        "license_url": "https://creativecommons.org/licenses/by/3.0",
+        "sha256": "f35ed59993a73c5630321d98b4523e1298b158c575ea1b86ec59ce51601aac0b",
+        "bytes": 9656,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q1200141.webp",
+        "license_evidence": {
+          "title": "File:Derek-de-lint-1340646708.jpg",
+          "revision": 1146802994,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3ADerek-de-lint-1340646708.jpg&oldid=1146802994",
+          "licences": [
+            {
+              "name": "Cc-by-3.0",
+              "parameters": ""
+            },
+            {
+              "name": "Cc-by-layout",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3ADerek-de-lint-1340646708.jpg&oldid=1146802994"
+      }
+    },
+    {
+      "id": "Q15881854",
+      "name": "塞尔吉奥·哈塞尔巴因克",
+      "original_name": "Sergio Hasselbaink",
+      "source": "https://www.wikidata.org/wiki/Q15881854",
+      "films": [
+        "tears-of-steel"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/2/24/Sergio-hasselbaink.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Sergio-hasselbaink.jpg",
+        "title": "File:Sergio-hasselbaink.jpg",
+        "artist": "Roel Wijnants",
+        "credit": "Wikiportret",
+        "license": "CC BY 3.0",
+        "license_url": "https://creativecommons.org/licenses/by/3.0",
+        "sha256": "03101822fceb18e5bee0aa53b7309e828af0a1f89fb742b6fe4663fb76676569",
+        "bytes": 3936,
+        "changes": "缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q15881854.webp",
+        "license_evidence": {
+          "title": "File:Sergio-hasselbaink.jpg",
+          "revision": 1113636274,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3ASergio-hasselbaink.jpg&oldid=1113636274",
+          "licences": [
+            {
+              "name": "Cc-by-3.0",
+              "parameters": ""
+            },
+            {
+              "name": "Cc-by-layout",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3ASergio-hasselbaink.jpg&oldid=1113636274"
+      }
+    },
+    {
+      "id": "Q19504",
+      "name": "弗里茨·朗",
+      "original_name": "Fritz Lang",
+      "source": "https://www.wikidata.org/wiki/Q19504",
+      "films": [
+        "Q151599",
+        "Q65295621",
+        "Q701584",
+        "Q1199484",
+        "Q570143"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/2/20/Fritz_Lang_%281969%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Fritz_Lang_(1969).jpg",
+        "title": "File:Fritz Lang (1969).jpg",
+        "artist": "Joost Evers / Anefo",
+        "credit": "Nationaal Archief",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+        "sha256": "ba18eacbbce98499f45670e367a4a18dd481791d8feb06e380a9b6570d2d55f4",
+        "bytes": 8600,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q19504.webp",
+        "license_evidence": {
+          "title": "File:Fritz Lang (1969).jpg",
+          "revision": 1261943423,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AFritz%20Lang%20(1969).jpg&oldid=1261943423",
+          "licences": [
+            {
+              "name": "Cc-by-sa-3.0",
+              "parameters": ""
+            },
+            {
+              "name": "Cc-by-sa-layout",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AFritz%20Lang%20(1969).jpg&oldid=1261943423"
+      }
+    },
+    {
+      "id": "Q55412",
+      "name": "F·W·穆瑙",
+      "original_name": "F. W. Murnau",
+      "source": "https://www.wikidata.org/wiki/Q55412",
+      "films": [
+        "Q151895",
+        "Q431093",
+        "Q258830",
+        "Q672480"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/6/65/Friedrich_Wilhelm_Murnau.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Friedrich_Wilhelm_Murnau.jpg",
+        "title": "File:Friedrich Wilhelm Murnau.jpg",
+        "artist": "未署名",
+        "credit": "",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "045954ed43d29e83335468e14f3fbaf5aefb374b5b877071597157255598cc6d",
+        "bytes": 13582,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q55412.webp",
+        "license_evidence": {
+          "title": "File:Friedrich Wilhelm Murnau.jpg",
+          "revision": 1261841934,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AFriedrich%20Wilhelm%20Murnau.jpg&oldid=1261841934",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AFriedrich%20Wilhelm%20Murnau.jpg&oldid=1261841934"
+      }
+    },
+    {
+      "id": "Q330819",
+      "name": "哈利·达巴迪·达拉斯特",
+      "original_name": "Harry d'Abbadie d'Arrast",
+      "source": "https://www.wikidata.org/wiki/Q330819",
+      "films": [
+        "Q272036"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/d/d1/Harry_d%27Abbadie_d%27Arrast_%281897%E2%80%931968%29.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Harry_d'Abbadie_d'Arrast_(1897%E2%80%931968).png",
+        "title": "File:Harry d'Abbadie d'Arrast (1897–1968).png",
+        "artist": "Unknown authorUnknown author",
+        "credit": "The Film Daily Year Book, Volume 11, 1928, page 356",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "dae135de16bb75da10eba95137365262b44ce5d33b051a63d5842926fce146d9",
+        "bytes": 11562,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q330819.webp",
+        "license_evidence": {
+          "title": "File:Harry d'Abbadie d'Arrast (1897–1968).png",
+          "revision": 1293239106,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AHarry%20d'Abbadie%20d'Arrast%20(1897%E2%80%931968).png&oldid=1293239106",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AHarry%20d'Abbadie%20d'Arrast%20(1897%E2%80%931968).png&oldid=1293239106"
+      }
+    },
+    {
+      "id": "Q290962",
+      "name": "威廉·A·韦尔曼",
+      "original_name": "William A. Wellman",
+      "source": "https://www.wikidata.org/wiki/Q290962",
+      "films": [
+        "Q272036"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/9/96/First_Lieutenant_William_Augustus_Wellman.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:First_Lieutenant_William_Augustus_Wellman.png",
+        "title": "File:First Lieutenant William Augustus Wellman.png",
+        "artist": "Unknown authorUnknown author",
+        "credit": "New England Aviators 1914-1918, Volume 1, 1919, page 245",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "c526c49ec9aef21c898e4b4b98175dda2169fc6e477cbc5625bd4a68c6a7f625",
+        "bytes": 7604,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q290962.webp",
+        "license_evidence": {
+          "title": "File:First Lieutenant William Augustus Wellman.png",
+          "revision": 1253467633,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AFirst%20Lieutenant%20William%20Augustus%20Wellman.png&oldid=1253467633",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AFirst%20Lieutenant%20William%20Augustus%20Wellman.png&oldid=1253467633"
+      }
+    },
+    {
+      "id": "Q669045",
+      "name": "哈里·博蒙特",
+      "original_name": "Harry Beaumont",
+      "source": "https://www.wikidata.org/wiki/Q669045",
+      "films": [
+        "Q463620",
+        "Q2041732"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/0/0a/Harry_Beaumont_1921.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Harry_Beaumont_1921.jpg",
+        "title": "File:Harry Beaumont 1921.jpg",
+        "artist": "Hartsock (?)",
+        "credit": "Internet Archive",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "e58f34e6f6d608642a99e58c6d4a6d3ed83cd8601d4a34eabf63f1bb172be0d8",
+        "bytes": 20610,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q669045.webp",
+        "license_evidence": {
+          "title": "File:Harry Beaumont 1921.jpg",
+          "revision": 1293191301,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AHarry%20Beaumont%201921.jpg&oldid=1293191301",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AHarry%20Beaumont%201921.jpg&oldid=1293191301"
+      }
+    },
+    {
+      "id": "Q1281943",
+      "name": "艾伦· 克罗斯兰",
+      "original_name": "Alan Crosland",
+      "source": "https://www.wikidata.org/wiki/Q1281943",
+      "films": [
+        "Q465087"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/c/ce/Alan_Crosland_-_Aug_1921_EH.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Alan_Crosland_-_Aug_1921_EH.jpg",
+        "title": "File:Alan Crosland - Aug 1921 EH.jpg",
+        "artist": "Unknown photographer",
+        "credit": "Exhibitors Herald (Jul. - Sep. 1921) on the Internet Archive",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "98c7d59e37f4c6f9c7e150ce91ec0c075a450517eab9a42378467a09f1a826eb",
+        "bytes": 6944,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q1281943.webp",
+        "license_evidence": {
+          "title": "File:Alan Crosland - Aug 1921 EH.jpg",
+          "revision": 910026096,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AAlan%20Crosland%20-%20Aug%201921%20EH.jpg&oldid=910026096",
+          "licences": [
+            {
+              "name": "PD-1923",
+              "parameters": ""
+            },
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AAlan%20Crosland%20-%20Aug%201921%20EH.jpg&oldid=910026096"
+      }
+    },
+    {
+      "id": "Q726107",
+      "name": "克莱德·布鲁克曼",
+      "original_name": "Clyde Bruckman",
+      "source": "https://www.wikidata.org/wiki/Q726107",
+      "films": [
+        "Q850159"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/1/1f/Clyde_Bruckman_in_1935.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Clyde_Bruckman_in_1935.png",
+        "title": "File:Clyde Bruckman in 1935.png",
+        "artist": "Universal Studios Licensing LLC. From the collections of the Margaret Herrick Library, Academy of Motion Picture Arts and Sciences.",
+        "credit": "The Gag Man: Clyde Bruckman and the Birth of Film Comedy book by Matthew Dessem.",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "49de3782797f557aa88e9f854aebf41f29e8cb69a7ab644d6fee059eec156e77",
+        "bytes": 5954,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q726107.webp",
+        "license_evidence": {
+          "title": "File:Clyde Bruckman in 1935.png",
+          "revision": 1056494929,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AClyde%20Bruckman%20in%201935.png&oldid=1056494929",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-no notice",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US no notice",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AClyde%20Bruckman%20in%201935.png&oldid=1056494929"
+      }
+    },
+    {
+      "id": "Q55193",
+      "name": "狄嘉·維托夫",
+      "original_name": "Dziga Vertov",
+      "source": "https://www.wikidata.org/wiki/Q55193",
+      "films": [
+        "Q829250"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/0/0e/David_Kaufman_%28Dziga_Vertov%29_1913.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:David_Kaufman_(Dziga_Vertov)_1913.jpg",
+        "title": "File:David Kaufman (Dziga Vertov) 1913.jpg",
+        "artist": "Mikhail Kaufman",
+        "credit": "YouTube: https://www.youtube.com/watch?v=qdezIx9E1QE – View/save archived versions on archive.org",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "2d1ded87654891a180c303e026d8b50a9b091a65ddaef97c5d8202ed1ffded69",
+        "bytes": 6208,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q55193.webp",
+        "license_evidence": {
+          "title": "File:David Kaufman (Dziga Vertov) 1913.jpg",
+          "revision": 999878576,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3ADavid%20Kaufman%20(Dziga%20Vertov)%201913.jpg&oldid=999878576",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-RusEmpire",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3ADavid%20Kaufman%20(Dziga%20Vertov)%201913.jpg&oldid=999878576"
+      }
+    },
+    {
+      "id": "Q1369749",
+      "name": "鲁伯特·朱利安",
+      "original_name": "Rupert Julian",
+      "source": "https://www.wikidata.org/wiki/Q1369749",
+      "films": [
+        "Q927919"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/8/88/Rupert_Julian%2C_silent_films_%28SAYRE_4913%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Rupert_Julian%2C_silent_films_(SAYRE_4913).jpg",
+        "title": "File:Rupert Julian, silent films (SAYRE 4913).jpg",
+        "artist": "De Gaston",
+        "credit": "J. Willis Sayre Collection of Theatrical Photographs",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "bfb6c9707d1bebde466d5d4a2d1206bbc15f7624183d6bebb85f5e683a2fad65",
+        "bytes": 11170,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q1369749.webp",
+        "license_evidence": {
+          "title": "File:Rupert Julian, silent films (SAYRE 4913).jpg",
+          "revision": 1090156455,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3ARupert%20Julian%2C%20silent%20films%20(SAYRE%204913).jpg&oldid=1090156455",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3ARupert%20Julian%2C%20silent%20films%20(SAYRE%204913).jpg&oldid=1090156455"
+      }
+    },
+    {
+      "id": "Q555691",
+      "name": "爱德华·塞奇威克",
+      "original_name": "Edward Sedgwick",
+      "source": "https://www.wikidata.org/wiki/Q555691",
+      "films": [
+        "Q927919",
+        "Q2138984"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/1/16/Edward_Sedgwick%2C_1933.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Edward_Sedgwick%2C_1933.jpg",
+        "title": "File:Edward Sedgwick, 1933.jpg",
+        "artist": "Los Angeles Times",
+        "credit": "https://digital.library.ucla.edu/catalog/ark:/21198/zz002ckqf4",
+        "license": "CC BY 4.0",
+        "license_url": "https://creativecommons.org/licenses/by/4.0",
+        "sha256": "e0d06bde280885e5b01c17bc95296010b9b390f1fb8cccca7161c4d8d958460a",
+        "bytes": 7662,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q555691.webp",
+        "license_evidence": {
+          "title": "File:Edward Sedgwick, 1933.jpg",
+          "revision": 1224401333,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AEdward%20Sedgwick%2C%201933.jpg&oldid=1224401333",
+          "licences": [
+            {
+              "name": "Cc-by-4.0",
+              "parameters": ""
+            },
+            {
+              "name": "Cc-by-layout",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AEdward%20Sedgwick%2C%201933.jpg&oldid=1224401333"
+      }
+    },
+    {
+      "id": "Q312656",
+      "name": "朗·钱尼",
+      "original_name": "Lon Chaney",
+      "source": "https://www.wikidata.org/wiki/Q312656",
+      "films": [
+        "Q927919"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/0/0b/Lon_Chaney%2C_Sr._The_Miracle_Man.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Lon_Chaney%2C_Sr._The_Miracle_Man.jpg",
+        "title": "File:Lon Chaney, Sr. The Miracle Man.jpg",
+        "artist": "Unknown authorUnknown author",
+        "credit": "edit of scan retrieved from http://www.doctormacro.com/Movie%20Star%20Pages/Chaney%20Sr.,%20Lon.htm",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "cfde7d441cdb7e24f50c836174f0e76675bf6b37ef752b0d0f23a8342c3aeed1",
+        "bytes": 8498,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q312656.webp",
+        "license_evidence": {
+          "title": "File:Lon Chaney, Sr. The Miracle Man.jpg",
+          "revision": 1057833848,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3ALon%20Chaney%2C%20Sr.%20The%20Miracle%20Man.jpg&oldid=1057833848",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3ALon%20Chaney%2C%20Sr.%20The%20Miracle%20Man.jpg&oldid=1057833848"
+      }
+    },
+    {
+      "id": "Q51127",
+      "name": "卡爾·西奧多·德萊葉",
+      "original_name": "Carl Theodor Dreyer",
+      "source": "https://www.wikidata.org/wiki/Q51127",
+      "films": [
+        "Q51520"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/7/7e/Carl_Theodor_Dreyer_%281965%29_by_Erling_Mandelmann.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Carl_Theodor_Dreyer_(1965)_by_Erling_Mandelmann.jpg",
+        "title": "File:Carl Theodor Dreyer (1965) by Erling Mandelmann.jpg",
+        "artist": "Erling Mandelmann",
+        "credit": "photo©ErlingMandelmann.ch",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+        "sha256": "2dc53d8059f44350487901c49f6fdaa18b96fe26e8ca2351d69ceb4a475b2d64",
+        "bytes": 12344,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q51127.webp",
+        "license_evidence": {
+          "title": "File:Carl Theodor Dreyer (1965) by Erling Mandelmann.jpg",
+          "revision": 1106142111,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3ACarl%20Theodor%20Dreyer%20(1965)%20by%20Erling%20Mandelmann.jpg&oldid=1106142111",
+          "licences": [
+            {
+              "name": "Cc-by-sa-3.0",
+              "parameters": ""
+            },
+            {
+              "name": "Cc-by-sa-layout",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3ACarl%20Theodor%20Dreyer%20(1965)%20by%20Erling%20Mandelmann.jpg&oldid=1106142111"
+      }
+    },
+    {
+      "id": "Q263148",
+      "name": "罗伯特·弗拉哈迪",
+      "original_name": "Robert J. Flaherty",
+      "source": "https://www.wikidata.org/wiki/Q263148",
+      "films": [
+        "Q918401"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/5/52/Portrait_of_Robert_J._Flaherty.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Portrait_of_Robert_J._Flaherty.jpg",
+        "title": "File:Portrait of Robert J. Flaherty.jpg",
+        "artist": "Arnold Genthé",
+        "credit": "The World's Work, 1922: https://archive.org/stream/worldswork44gard#page/564/mode/2up",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "94c69713acc36eeccab783d2083e1874bff9ca5b97af283e3cd1da0e9f868854",
+        "bytes": 11824,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q263148.webp",
+        "license_evidence": {
+          "title": "File:Portrait of Robert J. Flaherty.jpg",
+          "revision": 812916059,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3APortrait%20of%20Robert%20J.%20Flaherty.jpg&oldid=812916059",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3APortrait%20of%20Robert%20J.%20Flaherty.jpg&oldid=812916059"
+      }
+    },
+    {
+      "id": "Q369190",
+      "name": "法蘭·波西治",
+      "original_name": "Frank Borzage",
+      "source": "https://www.wikidata.org/wiki/Q369190",
+      "films": [
+        "Q368451",
+        "Q1077902"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/6/6f/Frank_Borzage_001.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Frank_Borzage_001.JPG",
+        "title": "File:Frank Borzage 001.JPG",
+        "artist": "James R. Quirk, editor - Photoplay Publishing Co.",
+        "credit": "Photoplay Magazine vol. 18 issues 2-6, 1920, pg 43",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "31469bfcef270c35ba8fdae27c44733d80700b50825ca858c5cbbab155cec614",
+        "bytes": 16380,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q369190.webp",
+        "license_evidence": {
+          "title": "File:Frank Borzage 001.JPG",
+          "revision": 1085724549,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AFrank%20Borzage%20001.JPG&oldid=1085724549",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AFrank%20Borzage%20001.JPG&oldid=1085724549"
+      }
+    },
+    {
+      "id": "Q1452243",
+      "name": "弗雷德·C·纽迈尔",
+      "original_name": "Fred C. Newmeyer",
+      "source": "https://www.wikidata.org/wiki/Q1452243",
+      "films": [
+        "Q778755",
+        "Q2482628",
+        "Q4000773"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/b/b6/Fred_C._Newmeyer_%281888%E2%80%931967%29.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Fred_C._Newmeyer_(1888%E2%80%931967).png",
+        "title": "File:Fred C. Newmeyer (1888–1967).png",
+        "artist": "Unknown authorUnknown author",
+        "credit": "Moving Picture World, Volume 84, Number 8, February 19, 1927, page 556",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "609802b7ddd7410ded6e9f774362be760ab4ae413aaca7b2bdfdec0325653681",
+        "bytes": 7678,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q1452243.webp",
+        "license_evidence": {
+          "title": "File:Fred C. Newmeyer (1888–1967).png",
+          "revision": 1260505291,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AFred%20C.%20Newmeyer%20(1888%E2%80%931967).png&oldid=1260505291",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AFred%20C.%20Newmeyer%20(1888%E2%80%931967).png&oldid=1260505291"
+      }
+    },
+    {
+      "id": "Q719427",
+      "name": "山姆·泰勒",
+      "original_name": "Sam Taylor",
+      "source": "https://www.wikidata.org/wiki/Q719427",
+      "films": [
+        "Q778755",
+        "Q570506",
+        "Q2482628",
+        "Q4000773"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/9/99/Sam_Taylor_1926.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Sam_Taylor_1926.jpg",
+        "title": "File:Sam Taylor 1926.jpg",
+        "artist": "Paramount Pictures",
+        "credit": "Motion Picture News; April 17, 1926, p. 740 (via Internet Archive)",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "bab7eea8498b933cf9130f60a42cd6b11a972db3f1294e8bcc850a4b187b5d9c",
+        "bytes": 11966,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q719427.webp",
+        "license_evidence": {
+          "title": "File:Sam Taylor 1926.jpg",
+          "revision": 1150110277,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3ASam%20Taylor%201926.jpg&oldid=1150110277",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-no notice advertisement",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3ASam%20Taylor%201926.jpg&oldid=1150110277"
+      }
+    },
+    {
+      "id": "Q72756",
+      "name": "拉乌尔·沃尔什",
+      "original_name": "Raoul Walsh",
+      "source": "https://www.wikidata.org/wiki/Q72756",
+      "films": [
+        "Q1192927",
+        "Q776337",
+        "Q426472"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/c/c8/Raoul_Walsh.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Raoul_Walsh.jpg",
+        "title": "File:Raoul Walsh.jpg",
+        "artist": "Photographer uncredited",
+        "credit": "https://archive.org/stream/motrestu00moti#page/n31/mode/2up",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "8c189c800be1ada56e2fe59dc6d98fcbe9de22b535729eaf42f8b91f4fb6b00f",
+        "bytes": 11152,
+        "changes": "缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q72756.webp",
+        "license_evidence": {
+          "title": "File:Raoul Walsh.jpg",
+          "revision": 1254400028,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3ARaoul%20Walsh.jpg&oldid=1254400028",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3ARaoul%20Walsh.jpg&oldid=1254400028"
+      }
+    },
+    {
+      "id": "Q84780",
+      "name": "亨利·勒曼",
+      "original_name": "Henry Lehrman",
+      "source": "https://www.wikidata.org/wiki/Q84780",
+      "films": [
+        "Q1151392"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/2/23/Henrylehrman.gif?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Henrylehrman.gif",
+        "title": "File:Henrylehrman.gif",
+        "artist": "Unknown authorUnknown author",
+        "credit": "http://www.allstarpics.net/0015889/015426824/henry-lehrman-pic.html",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "db8cdf9abd9cdd9cc4811b2a280f1d0bbc4a6c2acad87b335f2634658fe9cd54",
+        "bytes": 9510,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q84780.webp",
+        "license_evidence": {
+          "title": "File:Henrylehrman.gif",
+          "revision": 643786215,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AHenrylehrman.gif&oldid=643786215",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AHenrylehrman.gif&oldid=643786215"
+      }
+    },
+    {
+      "id": "Q78719",
+      "name": "约瑟夫·冯·斯坦伯格",
+      "original_name": "Josef von Sternberg",
+      "source": "https://www.wikidata.org/wiki/Q78719",
+      "films": [
+        "Q466816",
+        "Q1483683",
+        "Q2439201"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/d/d2/Dishonored_%28film%29_1931_On_set%2C_BW_photo%2C_L_to_R_Josef_von_Sternberg%2C_Marlene_Dietrich_%28cropped-1%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Dishonored_(film)_1931_On_set%2C_BW_photo%2C_L_to_R_Josef_von_Sternberg%2C_Marlene_Dietrich_(cropped-1).jpg",
+        "title": "File:Dishonored (film) 1931 On set, BW photo, L to R Josef von Sternberg, Marlene Dietrich (cropped-1).jpg",
+        "artist": "Paramount Pictures, Josef von Sternberg",
+        "credit": "http://www.filmreference.com/Directors-Ve-Y/von-Sternberg-Josef.html",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "337ed9740670e89208b88f58b1d28ba7209139a17cc2d2b17c7511dd62b1daff",
+        "bytes": 3304,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q78719.webp",
+        "license_evidence": {
+          "title": "File:Dishonored (film) 1931 On set, BW photo, L to R Josef von Sternberg, Marlene Dietrich (cropped-1).jpg",
+          "revision": 1241410568,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3ADishonored%20(film)%201931%20On%20set%2C%20BW%20photo%2C%20L%20to%20R%20Josef%20von%20Sternberg%2C%20Marlene%20Dietrich%20(cropped-1).jpg&oldid=1241410568",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-not renewed",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3ADishonored%20(film)%201931%20On%20set%2C%20BW%20photo%2C%20L%20to%20R%20Josef%20von%20Sternberg%2C%20Marlene%20Dietrich%20(cropped-1).jpg&oldid=1241410568"
+      }
+    },
+    {
+      "id": "Q278657",
+      "name": "A·爱德华·萨瑟兰",
+      "original_name": "A. Edward Sutherland",
+      "source": "https://www.wikidata.org/wiki/Q278657",
+      "films": [
+        "Q470895"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/8/85/Edward_Sutherland%2C_silent_film_actor_%28SAYRE_9035%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Edward_Sutherland%2C_silent_film_actor_(SAYRE_9035).jpg",
+        "title": "File:Edward Sutherland, silent film actor (SAYRE 9035).jpg",
+        "artist": "Unknown authorUnknown author",
+        "credit": "J. Willis Sayre Collection of Theatrical Photographs",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "c5a827c02bd5eb50dd4e51bc07171ddb1fad750632fe2a4fffdd7a3084f3450e",
+        "bytes": 9916,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q278657.webp",
+        "license_evidence": {
+          "title": "File:Edward Sutherland, silent film actor (SAYRE 9035).jpg",
+          "revision": 1224405203,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AEdward%20Sutherland%2C%20silent%20film%20actor%20(SAYRE%209035).jpg&oldid=1224405203",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AEdward%20Sutherland%2C%20silent%20film%20actor%20(SAYRE%209035).jpg&oldid=1224405203"
+      }
+    },
+    {
+      "id": "Q53043",
+      "name": "乔瓦尼·帕斯特洛纳",
+      "original_name": "Giovanni Pastrone",
+      "source": "https://www.wikidata.org/wiki/Q53043",
+      "films": [
+        "Q1024861"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/d/db/Giovanni_Pastrone_-_Foto_da_giovane_1910_ca..jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Giovanni_Pastrone_-_Foto_da_giovane_1910_ca..jpg",
+        "title": "File:Giovanni Pastrone - Foto da giovane 1910 ca..jpg",
+        "artist": "Unknown authorUnknown author",
+        "credit": "http://www.piemontetopnews.it/figli-illustri-del-piemonte-giovanni-pastrone-il-genio-del-cinema-muto/",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "bb9f9796a5ea8be6d92469cc43b70baeea5db4bf134f57c7d92d5f0c3c3de115",
+        "bytes": 5012,
+        "changes": "缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q53043.webp",
+        "license_evidence": {
+          "title": "File:Giovanni Pastrone - Foto da giovane 1910 ca..jpg",
+          "revision": 1273636279,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AGiovanni%20Pastrone%20-%20Foto%20da%20giovane%201910%20ca..jpg&oldid=1273636279",
+          "licences": [
+            {
+              "name": "PD-Italy",
+              "parameters": ""
+            },
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AGiovanni%20Pastrone%20-%20Foto%20da%20giovane%201910%20ca..jpg&oldid=1273636279"
+      }
+    },
+    {
+      "id": "Q78508",
+      "name": "埃里克·冯·施特罗海姆",
+      "original_name": "Erich von Stroheim",
+      "source": "https://www.wikidata.org/wiki/Q78508",
+      "films": [
+        "Q690583",
+        "Q1116541"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/9/90/Erich_von_Stroheim.lowrey.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Erich_von_Stroheim.lowrey.jpg",
+        "title": "File:Erich von Stroheim.lowrey.jpg",
+        "artist": "Uncredited.",
+        "credit": "The First One Hundred Noted Men and Women of the Screen, by Carolyn Lowrey. Publisher: Moffat, Yard & Company (New York). Retrieved from Google Book Search.",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "20203961217e6392c5386dd0a9380cd8b0414a2965a93df7ef29e0f43ffbcc58",
+        "bytes": 8914,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q78508.webp",
+        "license_evidence": {
+          "title": "File:Erich von Stroheim.lowrey.jpg",
+          "revision": 1225385221,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AErich%20von%20Stroheim.lowrey.jpg&oldid=1225385221",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AErich%20von%20Stroheim.lowrey.jpg&oldid=1225385221"
+      }
+    },
+    {
+      "id": "Q1421677",
+      "name": "哈里·O·霍伊特",
+      "original_name": "Harry O. Hoyt",
+      "source": "https://www.wikidata.org/wiki/Q1421677",
+      "films": [
+        "Q1219785"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/8/82/Harry_O._Hoyt_%281925%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Harry_O._Hoyt_(1925).jpg",
+        "title": "File:Harry O. Hoyt (1925).jpg",
+        "artist": "Paul Grenbeaux, photographer",
+        "credit": "Homestead Museum",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "2661334e7a821a601ca3e75cdd78f8d7787dab6a95b8d6a80884c6e4744a4869",
+        "bytes": 5356,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q1421677.webp",
+        "license_evidence": {
+          "title": "File:Harry O. Hoyt (1925).jpg",
+          "revision": 1293220424,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AHarry%20O.%20Hoyt%20(1925).jpg&oldid=1293220424",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AHarry%20O.%20Hoyt%20(1925).jpg&oldid=1293220424"
+      }
+    },
+    {
+      "id": "Q1750696",
+      "name": "雷克斯·英格拉姆",
+      "original_name": "Rex Ingram",
+      "source": "https://www.wikidata.org/wiki/Q1750696",
+      "films": [
+        "Q1219825"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/3/3b/Rexingram2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Rexingram2.jpg",
+        "title": "File:Rexingram2.jpg",
+        "artist": "Unknown authorUnknown author",
+        "credit": "This image is available from the United States Library of Congress's Prints and Photographs division under the digital ID ggbain.37545.This tag does not indicate the copyright status of the attached work. A normal copyright tag is still required. See Commons:Licensing.",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "726999fabee0b8c854306103acf045ac60125ca6157e6049b0baa8d6be70eb9a",
+        "bytes": 7094,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q1750696.webp",
+        "license_evidence": {
+          "title": "File:Rexingram2.jpg",
+          "revision": 1034243536,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3ARexingram2.jpg&oldid=1034243536",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3ARexingram2.jpg&oldid=1034243536"
+      }
+    },
+    {
+      "id": "Q72267",
+      "name": "塞西爾·德米爾",
+      "original_name": "Cecil B. DeMille",
+      "source": "https://www.wikidata.org/wiki/Q72267",
+      "films": [
+        "Q1217715",
+        "Q1246289"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/a/a9/Cecil_B_de_Mille_in_Ten_Commandments_trailer.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Cecil_B_de_Mille_in_Ten_Commandments_trailer.jpg",
+        "title": "File:Cecil B de Mille in Ten Commandments trailer.jpg",
+        "artist": "Trailer screenshot",
+        "credit": "The Ten Commandments trailer",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "a46bf1c30d83eb74f7faca53c82d057f0423f28f40e434c29b6edb488c1976a8",
+        "bytes": 8010,
+        "changes": "缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q72267.webp",
+        "license_evidence": {
+          "title": "File:Cecil B de Mille in Ten Commandments trailer.jpg",
+          "revision": 1067477363,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3ACecil%20B%20de%20Mille%20in%20Ten%20Commandments%20trailer.jpg&oldid=1067477363",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-no notice",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3ACecil%20B%20de%20Mille%20in%20Ten%20Commandments%20trailer.jpg&oldid=1067477363"
+      }
+    },
+    {
+      "id": "Q55170",
+      "name": "维克多·斯约史特洛姆",
+      "original_name": "Victor Sjöström",
+      "source": "https://www.wikidata.org/wiki/Q55170",
+      "films": [
+        "Q1193655",
+        "Q2046050",
+        "Q2426434"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/a/ac/VictorSjostrom.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:VictorSjostrom.jpg",
+        "title": "File:VictorSjostrom.jpg",
+        "artist": "未署名",
+        "credit": "",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "e82479dee6ca7e5be7dbc674caead44ed05d3467aa2a8b93ed52266cfdf249f8",
+        "bytes": 10534,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q55170.webp",
+        "license_evidence": {
+          "title": "File:VictorSjostrom.jpg",
+          "revision": 1150877968,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AVictorSjostrom.jpg&oldid=1150877968",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-Sweden-photo",
+              "parameters": ""
+            },
+            {
+              "name": "PD-old-warning-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AVictorSjostrom.jpg&oldid=1150877968"
+      }
+    },
+    {
+      "id": "Q727791",
+      "name": "欧文·卡明斯",
+      "original_name": "Irving Cummings",
+      "source": "https://www.wikidata.org/wiki/Q727791",
+      "films": [
+        "Q776337"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/c/ca/Silent_film_actor_Irving_Cummings_%28SAYRE_22341%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Silent_film_actor_Irving_Cummings_(SAYRE_22341).jpg",
+        "title": "File:Silent film actor Irving Cummings (SAYRE 22341).jpg",
+        "artist": "Unknown authorUnknown author",
+        "credit": "J. Willis Sayre Collection of Theatrical Photographs",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "bca7d988ecc21fada03902f258607cc51e319849ab627ce896479fdd81134d47",
+        "bytes": 10568,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q727791.webp",
+        "license_evidence": {
+          "title": "File:Silent film actor Irving Cummings (SAYRE 22341).jpg",
+          "revision": 1185284274,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3ASilent%20film%20actor%20Irving%20Cummings%20(SAYRE%2022341).jpg&oldid=1185284274",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3ASilent%20film%20actor%20Irving%20Cummings%20(SAYRE%2022341).jpg&oldid=1185284274"
+      }
+    },
+    {
+      "id": "Q51133",
+      "name": "金·维多",
+      "original_name": "King Vidor",
+      "source": "https://www.wikidata.org/wiki/Q51133",
+      "films": [
+        "Q1304986",
+        "Q1571464"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/5/5b/King_Vidor_%281921%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:King_Vidor_(1921).jpg",
+        "title": "File:King Vidor (1921).jpg",
+        "artist": "Cathrine Curtis Corporation / First National Pictures",
+        "credit": "Exhibitors Herald (Apr. - Jun. 1921) on the Internet Archive",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "4ea799ac945f5a66d6e97187c3f892ee455e32b5f1c2f9b811e4d011065223a4",
+        "bytes": 6464,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q51133.webp",
+        "license_evidence": {
+          "title": "File:King Vidor (1921).jpg",
+          "revision": 1030495221,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AKing%20Vidor%20(1921).jpg&oldid=1030495221",
+          "licences": [
+            {
+              "name": "PD-1923",
+              "parameters": ""
+            },
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AKing%20Vidor%20(1921).jpg&oldid=1030495221"
+      }
+    },
+    {
+      "id": "Q512431",
+      "name": "达达沙赫布·帕尔凯",
+      "original_name": "Dadasaheb Phalke",
+      "source": "https://www.wikidata.org/wiki/Q512431",
+      "films": [
+        "Q2985396"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/0/0b/Phalke.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Phalke.jpg",
+        "title": "File:Phalke.jpg",
+        "artist": "Palaviprabhu at English Wikipedia",
+        "credit": "scanned from personal collection",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "9935ff9b657e710bbcdc74281801ae827dd7b85d71235a42c816154b74db3453",
+        "bytes": 14072,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q512431.webp",
+        "license_evidence": {
+          "title": "File:Phalke.jpg",
+          "revision": 1157949795,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3APhalke.jpg&oldid=1157949795",
+          "licences": [
+            {
+              "name": "PD-India",
+              "parameters": ""
+            },
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-old-warning-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3APhalke.jpg&oldid=1157949795"
+      }
+    },
+    {
+      "id": "Q55195",
+      "name": "弗谢沃罗德·普多夫金",
+      "original_name": "Vsevolod Pudovkin",
+      "source": "https://www.wikidata.org/wiki/Q55195",
+      "films": [
+        "Q1214957",
+        "Q2198716"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/9/97/Vsevolod_Pudovkin_1929.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Vsevolod_Pudovkin_1929.JPG",
+        "title": "File:Vsevolod Pudovkin 1929.JPG",
+        "artist": "Film screenshot",
+        "credit": "[1]",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "5bd9739097fe51feb583f50491d9d58bee021d895c12628478d42f633fd526f7",
+        "bytes": 12218,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q55195.webp",
+        "license_evidence": {
+          "title": "File:Vsevolod Pudovkin 1929.JPG",
+          "revision": 979043637,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AVsevolod%20Pudovkin%201929.JPG&oldid=979043637",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-Russia",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AVsevolod%20Pudovkin%201929.JPG&oldid=979043637"
+      }
+    },
+    {
+      "id": "Q28941",
+      "name": "弗蘭克·洛伊德",
+      "original_name": "Frank Lloyd",
+      "source": "https://www.wikidata.org/wiki/Q28941",
+      "films": [
+        "Q952079",
+        "Q2265019"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/2/24/WP_Frank_Lloyd_1920.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:WP_Frank_Lloyd_1920.jpg",
+        "title": "File:WP Frank Lloyd 1920.jpg",
+        "artist": "Anonymous photographer, not identified anywhere",
+        "credit": "Charles Donald Fox / Milton L. Silver: \"Who's Who on the Screen\". Ross Publishing, New York, 1920",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "15f27a1ebb2d32f85de168f04ac0a8a0316a55c9d95dfa171f323c4c563f8f1c",
+        "bytes": 12342,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q28941.webp",
+        "license_evidence": {
+          "title": "File:WP Frank Lloyd 1920.jpg",
+          "revision": 848405393,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AWP%20Frank%20Lloyd%201920.jpg&oldid=848405393",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US",
+              "parameters": ""
+            },
+            {
+              "name": "PD-anon-70-EU",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AWP%20Frank%20Lloyd%201920.jpg&oldid=848405393"
+      }
+    },
+    {
+      "id": "Q153527",
+      "name": "佛瑞德·尼布洛",
+      "original_name": "Fred Niblo",
+      "source": "https://www.wikidata.org/wiki/Q153527",
+      "films": [
+        "Q383795",
+        "Q1218112",
+        "Q2452327"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/0/02/Fredniblocrop.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Fredniblocrop.jpg",
+        "title": "File:Fredniblocrop.jpg",
+        "artist": "Bain News Sevice",
+        "credit": "This image is available from the United States Library of Congress's Prints and Photographs division under the digital ID ggbain.39080.This tag does not indicate the copyright status of the attached work. A normal copyright tag is still required. See Commons:Licensing.",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "6e238e9433a8e362928c6ebea5101500b82cf360bc0d955d4a8e4589ddee8359",
+        "bytes": 6168,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q153527.webp",
+        "license_evidence": {
+          "title": "File:Fredniblocrop.jpg",
+          "revision": 965452820,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AFredniblocrop.jpg&oldid=965452820",
+          "licences": [
+            {
+              "name": "PD-Bain",
+              "parameters": ""
+            },
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AFredniblocrop.jpg&oldid=965452820"
+      }
+    },
+    {
+      "id": "Q285928",
+      "name": "刘易斯·迈尔斯通",
+      "original_name": "Lewis Milestone",
+      "source": "https://www.wikidata.org/wiki/Q285928",
+      "films": [
+        "Q374577",
+        "Q1434610",
+        "Q945230"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/d/d6/Milestone1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Milestone1.jpg",
+        "title": "File:Milestone1.jpg",
+        "artist": "film studio publicity still. Original uploader was Wikiwatcher1 at en.wikipedia",
+        "credit": "Transferred from en.wikipedia (Original text : 'Cinema and the Great War, By Andrew Kelly. Routledge, 1997)",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "053b6949cd8bf1b0cd33bd247512083c045e72697c737751590cb7098659d9d9",
+        "bytes": 10208,
+        "changes": "缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q285928.webp",
+        "license_evidence": {
+          "title": "File:Milestone1.jpg",
+          "revision": 1157695405,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AMilestone1.jpg&oldid=1157695405",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AMilestone1.jpg&oldid=1157695405"
+      }
+    },
+    {
+      "id": "Q716651",
+      "name": "喬治·梅爾佛德",
+      "original_name": "George Melford",
+      "source": "https://www.wikidata.org/wiki/Q716651",
+      "films": [
+        "Q1196670"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/e/e7/George_Melford_01.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:George_Melford_01.JPG",
+        "title": "File:George Melford 01.JPG",
+        "artist": "Film World Publishing",
+        "credit": "Who in the Film World - edited by Fred C. Justice & Tom R. Smith – 1914 - pg. 60,",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "0a8b55c237e81f0b5d3ba29a742eb723bfad2ec71c48b54bbf611710d00221fe",
+        "bytes": 11336,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q716651.webp",
+        "license_evidence": {
+          "title": "File:George Melford 01.JPG",
+          "revision": 1127589246,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AGeorge%20Melford%2001.JPG&oldid=1127589246",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AGeorge%20Melford%2001.JPG&oldid=1127589246"
+      }
+    },
+    {
+      "id": "Q77465",
+      "name": "保罗·莱妮",
+      "original_name": "Paul Leni",
+      "source": "https://www.wikidata.org/wiki/Q77465",
+      "films": [
+        "Q2336169",
+        "Q1809883"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/2/2f/Paul_Leni_%281929%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Paul_Leni_(1929).jpg",
+        "title": "File:Paul Leni (1929).jpg",
+        "artist": "Exhibitors Herald-World",
+        "credit": "The Motion Picture Almanac (page 92)",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "15c9579957bcd12e6737d7f8b09f942ece9571a4da24989160ea3e3a6505ec1e",
+        "bytes": 19720,
+        "changes": "缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q77465.webp",
+        "license_evidence": {
+          "title": "File:Paul Leni (1929).jpg",
+          "revision": 1088520365,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3APaul%20Leni%20(1929).jpg&oldid=1088520365",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3APaul%20Leni%20(1929).jpg&oldid=1088520365"
+      }
+    },
+    {
+      "id": "Q313572",
+      "name": "阿贝尔·冈斯",
+      "original_name": "Abel Gance",
+      "source": "https://www.wikidata.org/wiki/Q313572",
+      "films": [
+        "Q1632158"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/b/b8/GANCE_Abel-24x30b-.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:GANCE_Abel-24x30b-.jpg",
+        "title": "File:GANCE Abel-24x30b-.jpg",
+        "artist": "Studio Harcourt",
+        "credit": "With signature",
+        "license": "CC BY 3.0",
+        "license_url": "https://creativecommons.org/licenses/by/3.0",
+        "sha256": "29025c9bfb887652ca7871a4b8f8e618433885a20fda7ac1c4c555a5ef0cdef1",
+        "bytes": 12844,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q313572.webp",
+        "license_evidence": {
+          "title": "File:GANCE Abel-24x30b-.jpg",
+          "revision": 1264282096,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AGANCE%20Abel-24x30b-.jpg&oldid=1264282096",
+          "licences": [
+            {
+              "name": "Cc-by-3.0",
+              "parameters": ""
+            },
+            {
+              "name": "Cc-by-layout",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AGANCE%20Abel-24x30b-.jpg&oldid=1264282096"
+      }
+    },
+    {
+      "id": "Q2076897",
+      "name": "Stuart Paton",
+      "original_name": "Stuart Paton",
+      "source": "https://www.wikidata.org/wiki/Q2076897",
+      "films": [
+        "Q111655"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/1/10/Stuart_Paton_c1921.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Stuart_Paton_c1921.jpg",
+        "title": "File:Stuart Paton c1921.jpg",
+        "artist": "Universal-Jewel",
+        "credit": "[1]",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "a04102b997599553fe4c670c72e58080ea437e69c41eca9133a7a04bc15b3bdb",
+        "bytes": 16302,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q2076897.webp",
+        "license_evidence": {
+          "title": "File:Stuart Paton c1921.jpg",
+          "revision": 906212964,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AStuart%20Paton%20c1921.jpg&oldid=906212964",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AStuart%20Paton%20c1921.jpg&oldid=906212964"
+      }
+    },
+    {
+      "id": "Q2372663",
+      "name": "Vasily Goncharov",
+      "original_name": "Vasily Goncharov",
+      "source": "https://www.wikidata.org/wiki/Q2372663",
+      "films": [
+        "Q2386718"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/1/17/Vasiliy_Goncharov_001.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Vasiliy_Goncharov_001.jpg",
+        "title": "File:Vasiliy Goncharov 001.jpg",
+        "artist": "未署名",
+        "credit": "",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "4040f1f7eff5633d0743646806f16208251e02e3e25c1fc985dfd34fe37721b4",
+        "bytes": 16938,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q2372663.webp",
+        "license_evidence": {
+          "title": "File:Vasiliy Goncharov 001.jpg",
+          "revision": 1095414950,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AVasiliy%20Goncharov%20001.jpg&oldid=1095414950",
+          "licences": [
+            {
+              "name": "Cc-pd-mark-footer",
+              "parameters": ""
+            },
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-old",
+              "parameters": ""
+            },
+            {
+              "name": "PD-old-text",
+              "parameters": ""
+            },
+            {
+              "name": "PD-old-warning-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AVasiliy%20Goncharov%20001.jpg&oldid=1095414950"
+      }
+    },
+    {
+      "id": "Q204476",
+      "name": "Aleksandr Khanzhonkov",
+      "original_name": "Aleksandr Khanzhonkov",
+      "source": "https://www.wikidata.org/wiki/Q204476",
+      "films": [
+        "Q2386718"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/4/42/%D0%90%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80_%D0%A5%D0%B0%D0%BD%D0%B6%D0%BE%D0%BD%D0%BA%D0%BE%D0%B2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:%D0%90%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80_%D0%A5%D0%B0%D0%BD%D0%B6%D0%BE%D0%BD%D0%BA%D0%BE%D0%B2.jpg",
+        "title": "File:Александр Ханжонков.jpg",
+        "artist": "Unknown authorUnknown author",
+        "credit": "https://www.facebook.com/photo.php?fbid=153689134965321&set=pb.100009727066774.-2207520000.1439135832.&type=3&theater",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "1e10435920928c25494dc0fdc40c8b4fbe5a7263c5135826030955d0370d1257",
+        "bytes": 7162,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q204476.webp",
+        "license_evidence": {
+          "title": "File:Александр Ханжонков.jpg",
+          "revision": 1092932305,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3A%D0%90%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80%20%D0%A5%D0%B0%D0%BD%D0%B6%D0%BE%D0%BD%D0%BA%D0%BE%D0%B2.jpg&oldid=1092932305",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-RusEmpire",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3A%D0%90%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80%20%D0%A5%D0%B0%D0%BD%D0%B6%D0%BE%D0%BD%D0%BA%D0%BE%D0%B2.jpg&oldid=1092932305"
+      }
+    },
+    {
+      "id": "Q2960106",
+      "name": "查里士萊士拿",
+      "original_name": "Charles Reisner",
+      "source": "https://www.wikidata.org/wiki/Q2960106",
+      "films": [
+        "Q1365572",
+        "Q981032"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/a/a1/Charles_Reisner_1926.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Charles_Reisner_1926.jpg",
+        "title": "File:Charles Reisner 1926.jpg",
+        "artist": "Metro-Goldwyn-Mayer",
+        "credit": "eBay",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "b9e6a7575601bb4e9df0ab4f4f4cfc738c003f4843272745554a1d393901216a",
+        "bytes": 8048,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q2960106.webp",
+        "license_evidence": {
+          "title": "File:Charles Reisner 1926.jpg",
+          "revision": 1058839659,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3ACharles%20Reisner%201926.jpg&oldid=1058839659",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-no notice",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3ACharles%20Reisner%201926.jpg&oldid=1058839659"
+      }
+    },
+    {
+      "id": "Q317574",
+      "name": "麦克·塞纳",
+      "original_name": "Mack Sennett",
+      "source": "https://www.wikidata.org/wiki/Q317574",
+      "films": [
+        "Q2590533"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/c/c2/MackSennett1910.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:MackSennett1910.jpg",
+        "title": "File:MackSennett1910.jpg",
+        "artist": "未署名",
+        "credit": "",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "a525e219d6650a435519dc5ca601e56d2a114a0caa0f846164978cace89e5dbc",
+        "bytes": 6108,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q317574.webp",
+        "license_evidence": {
+          "title": "File:MackSennett1910.jpg",
+          "revision": 1173124133,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AMackSennett1910.jpg&oldid=1173124133",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AMackSennett1910.jpg&oldid=1173124133"
+      }
+    },
+    {
+      "id": "Q2709694",
+      "name": "J. Gordon Edwards",
+      "original_name": "J. Gordon Edwards",
+      "source": "https://www.wikidata.org/wiki/Q2709694",
+      "films": [
+        "Q1753597"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/1/19/J_Gordon_Edwards_-_Aug_1920_EH.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:J_Gordon_Edwards_-_Aug_1920_EH.jpg",
+        "title": "File:J Gordon Edwards - Aug 1920 EH.jpg",
+        "artist": "Fox Film Corporation",
+        "credit": "Exhibitors Herald (Aug. 1920) on the Internet Archive",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "df08d826c632d892d8d78d64dee5e5ecaef375eb9f5c3a5ec157f3f2f6bfa27d",
+        "bytes": 7348,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q2709694.webp",
+        "license_evidence": {
+          "title": "File:J Gordon Edwards - Aug 1920 EH.jpg",
+          "revision": 944426899,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AJ%20Gordon%20Edwards%20-%20Aug%201920%20EH.jpg&oldid=944426899",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AJ%20Gordon%20Edwards%20-%20Aug%201920%20EH.jpg&oldid=944426899"
+      }
+    },
+    {
+      "id": "Q62503",
+      "name": "维克托·弗莱明",
+      "original_name": "Victor Fleming",
+      "source": "https://www.wikidata.org/wiki/Q62503",
+      "films": [
+        "Q979015"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/f/f3/Victor_Fleming_%281927_headshot%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Victor_Fleming_(1927_headshot).jpg",
+        "title": "File:Victor Fleming (1927 headshot).jpg",
+        "artist": "Photographer unknown; work-for-hire on behalf of Paramount Pictures.",
+        "credit": "*Information about publisher and publication year of the photo: Page 68, from Edmonds, I. G.; Mimura, Reiko (1980) The Oscar Directors, The Tantivy Press Immediate source: Fandango (direct link to original)",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "822042091413547cb73f89a490dad0ff3c02cdb716fdcd7dc4e33ae24253ca3d",
+        "bytes": 5676,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q62503.webp",
+        "license_evidence": {
+          "title": "File:Victor Fleming (1927 headshot).jpg",
+          "revision": 863690063,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AVictor%20Fleming%20(1927%20headshot).jpg&oldid=863690063",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            },
+            {
+              "name": "PD-art-category",
+              "parameters": ""
+            },
+            {
+              "name": "PD-scan",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AVictor%20Fleming%20(1927%20headshot).jpg&oldid=863690063"
+      }
+    },
+    {
+      "id": "Q51562",
+      "name": "恩斯特·劉別謙",
+      "original_name": "Ernst Lubitsch",
+      "source": "https://www.wikidata.org/wiki/Q51562",
+      "films": [
+        "Q1109750",
+        "Q1581723"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/d/d6/Ernst_Lubitsch_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Ernst_Lubitsch_01.jpg",
+        "title": "File:Ernst Lubitsch 01.jpg",
+        "artist": "Unknown (George Grantham Bain collection)",
+        "credit": "This image is available from the United States Library of Congress's Prints and Photographs division under the digital ID ggbain.33605.This tag does not indicate the copyright status of the attached work. A normal copyright tag is still required. See Commons:Licensing.",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "0a10dc4b0b22fdf820e40477da38ce6bad660bd2c1ec094273d147b70e41805c",
+        "bytes": 6326,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q51562.webp",
+        "license_evidence": {
+          "title": "File:Ernst Lubitsch 01.jpg",
+          "revision": 1232265789,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AErnst%20Lubitsch%2001.jpg&oldid=1232265789",
+          "licences": [
+            {
+              "name": "PD-Bain",
+              "parameters": ""
+            },
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AErnst%20Lubitsch%2001.jpg&oldid=1232265789"
+      }
+    },
+    {
+      "id": "Q957475",
+      "name": "赫伯·布雷農",
+      "original_name": "Herbert Brenon",
+      "source": "https://www.wikidata.org/wiki/Q957475",
+      "films": [
+        "Q1537132",
+        "Q1058426",
+        "Q1763559"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/2/24/Herbertbrenon.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Herbertbrenon.jpg",
+        "title": "File:Herbertbrenon.jpg",
+        "artist": "Bain News Service",
+        "credit": "This image is available from the United States Library of Congress's Prints and Photographs division under the digital ID ggbain.22360.This tag does not indicate the copyright status of the attached work. A normal copyright tag is still required. See Commons:Licensing.",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "d46b017a9bbb7ba90efc6c7377ca2314251d5bee56901a8c03ece22b2579e224",
+        "bytes": 8242,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q957475.webp",
+        "license_evidence": {
+          "title": "File:Herbertbrenon.jpg",
+          "revision": 1027081944,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AHerbertbrenon.jpg&oldid=1027081944",
+          "licences": [
+            {
+              "name": "PD-Bain",
+              "parameters": ""
+            },
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AHerbertbrenon.jpg&oldid=1027081944"
+      }
+    },
+    {
+      "id": "Q51476",
+      "name": "托德·布朗寧",
+      "original_name": "Tod Browning",
+      "source": "https://www.wikidata.org/wiki/Q51476",
+      "films": [
+        "Q253397",
+        "Q1197672"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/5/5b/Tod_Browning_1921.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Tod_Browning_1921.jpg",
+        "title": "File:Tod Browning 1921.jpg",
+        "artist": "Freulich (?)",
+        "credit": "Internet Archive",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "b0fd3c6e4c21a7300b5cccfb9f15453f006139d000ba1b6c25ed38e66a6c5037",
+        "bytes": 14614,
+        "changes": "缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q51476.webp",
+        "license_evidence": {
+          "title": "File:Tod Browning 1921.jpg",
+          "revision": 1011726781,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3ATod%20Browning%201921.jpg&oldid=1011726781",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3ATod%20Browning%201921.jpg&oldid=1011726781"
+      }
+    },
+    {
+      "id": "Q1388800",
+      "name": "加斯塔夫·马哈蒂",
+      "original_name": "Gustav Machatý",
+      "source": "https://www.wikidata.org/wiki/Q1388800",
+      "films": [
+        "Q1116541"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/a/ac/Gustav_Machat%C3%BD_%281901-1963%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Gustav_Machat%C3%BD_(1901-1963).jpg",
+        "title": "File:Gustav Machatý (1901-1963).jpg",
+        "artist": "AnonymousUnknown author",
+        "credit": "http://www.filmavideo.cz/index.php/osobnosti/447-gustav-machaty",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "42bfae3e4d4b4de8002b57e678ef68494d70f5f11792521bde7a47d42e9ef1d7",
+        "bytes": 3156,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q1388800.webp",
+        "license_evidence": {
+          "title": "File:Gustav Machatý (1901-1963).jpg",
+          "revision": 933859619,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AGustav%20Machat%C3%BD%20(1901-1963).jpg&oldid=933859619",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-anon-70-EU",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AGustav%20Machat%C3%BD%20(1901-1963).jpg&oldid=933859619"
+      }
+    },
+    {
+      "id": "Q959677",
+      "name": "艾伦·德万",
+      "original_name": "Allan Dwan",
+      "source": "https://www.wikidata.org/wiki/Q959677",
+      "films": [
+        "Q2159851"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/8/8f/Allan_Dwan_-_Sep_1920_EH.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Allan_Dwan_-_Sep_1920_EH.jpg",
+        "title": "File:Allan Dwan - Sep 1920 EH.jpg",
+        "artist": "Unknown photographer",
+        "credit": "Exhibitors Herald (Sep. 1920) on the Internet Archive",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "b070d8db044a8de3bebc7b6f7f9cc7aeeec70b52e087d0ef66d6e2129931d454",
+        "bytes": 5792,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q959677.webp",
+        "license_evidence": {
+          "title": "File:Allan Dwan - Sep 1920 EH.jpg",
+          "revision": 789245405,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AAllan%20Dwan%20-%20Sep%201920%20EH.jpg&oldid=789245405",
+          "licences": [
+            {
+              "name": "PD-1923",
+              "parameters": ""
+            },
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AAllan%20Dwan%20-%20Sep%201920%20EH.jpg&oldid=789245405"
+      }
+    },
+    {
+      "id": "Q78874",
+      "name": "里夏德·奥斯瓦尔德",
+      "original_name": "Richard Oswald",
+      "source": "https://www.wikidata.org/wiki/Q78874",
+      "films": [
+        "Q491335"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/0/07/Richard_Oswald_1914.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Richard_Oswald_1914.jpg",
+        "title": "File:Richard Oswald 1914.jpg",
+        "artist": "Jules Greenbaum",
+        "credit": "Movie \"Der Hund von Baskerville\" (1914)",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "056149db4c4b532f5baee8f811729585b2e5aba0a32248d86d323c9ef4be6b1f",
+        "bytes": 2926,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q78874.webp",
+        "license_evidence": {
+          "title": "File:Richard Oswald 1914.jpg",
+          "revision": 1213459083,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3ARichard%20Oswald%201914.jpg&oldid=1213459083",
+          "licences": [
+            {
+              "name": "Cc-pd-mark-footer",
+              "parameters": ""
+            },
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            },
+            {
+              "name": "PD-old-100-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-old-X-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-old-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3ARichard%20Oswald%201914.jpg&oldid=1213459083"
+      }
+    },
+    {
+      "id": "Q55421",
+      "name": "格奥尔格·威廉·帕布斯特",
+      "original_name": "Georg Wilhelm Pabst",
+      "source": "https://www.wikidata.org/wiki/Q55421",
+      "films": [
+        "Q700736",
+        "Q645611"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/a/a1/G.W._Pabst_crop_from_Pabst_Prejean_1931.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:G.W._Pabst_crop_from_Pabst_Prejean_1931.jpg",
+        "title": "File:G.W. Pabst crop from Pabst Prejean 1931.jpg",
+        "artist": "AnonymousUnknown author",
+        "credit": "Rozpravy Aventina, volume 6/1930-1931, issue 24 page 285 Digitized by Institute of Czech Literature, Czech Academy of Sciences.",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "2dc1243aac42a5626400a54fb4df767865ede4a9d0437a16d06b9289b7b30b13",
+        "bytes": 20784,
+        "changes": "缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q55421.webp",
+        "license_evidence": {
+          "title": "File:G.W. Pabst crop from Pabst Prejean 1931.jpg",
+          "revision": 1264174078,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AG.W.%20Pabst%20crop%20from%20Pabst%20Prejean%201931.jpg&oldid=1264174078",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-anon-70-EU",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AG.W.%20Pabst%20crop%20from%20Pabst%20Prejean%201931.jpg&oldid=1264174078"
+      }
+    },
+    {
+      "id": "Q967502",
+      "name": "羅蘭·韋斯特",
+      "original_name": "Roland West",
+      "source": "https://www.wikidata.org/wiki/Q967502",
+      "films": [
+        "Q1618533",
+        "Q1143988"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/4/46/Roland_West_1918.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Roland_West_1918.jpg",
+        "title": "File:Roland West 1918.jpg",
+        "artist": "Brunel",
+        "credit": "Theatre Magazine, Vol. 28. December 1918 https://archive.org/details/theatremagazine28newyuoft/page/308/mode/2up",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "c34bd510bf898c9c31062b7a529fc300e37290ce8b56480b3d329c9a2189310f",
+        "bytes": 7520,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q967502.webp",
+        "license_evidence": {
+          "title": "File:Roland West 1918.jpg",
+          "revision": 977236597,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3ARoland%20West%201918.jpg&oldid=977236597",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3ARoland%20West%201918.jpg&oldid=977236597"
+      }
+    },
+    {
+      "id": "Q1292174",
+      "name": "爱德华·F·克莱因",
+      "original_name": "Edward F. Cline",
+      "source": "https://www.wikidata.org/wiki/Q1292174",
+      "films": [
+        "Q966597",
+        "Q1257198"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/6/68/Edward_F_Cline_-_May_1920_MPN.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Edward_F_Cline_-_May_1920_MPN.jpg",
+        "title": "File:Edward F Cline - May 1920 MPN.jpg",
+        "artist": "Evans (L.A.)",
+        "credit": "Motion Picture News (Mar. - Jun. 1920) at the Internet Archive",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "e60147ac115edbb7046125dce10bb2acf77fd029c47da79e850cd2ce4266b7e3",
+        "bytes": 16572,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q1292174.webp",
+        "license_evidence": {
+          "title": "File:Edward F Cline - May 1920 MPN.jpg",
+          "revision": 1194859792,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AEdward%20F%20Cline%20-%20May%201920%20MPN.jpg&oldid=1194859792",
+          "licences": [
+            {
+              "name": "Cc-pd-mark-footer",
+              "parameters": ""
+            },
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            },
+            {
+              "name": "PD-old-100-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-old-X-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-old-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AEdward%20F%20Cline%20-%20May%201920%20MPN.jpg&oldid=1194859792"
+      }
+    },
+    {
+      "id": "Q1352043",
+      "name": "乔治·菲茨莫里斯",
+      "original_name": "George Fitzmaurice",
+      "source": "https://www.wikidata.org/wiki/Q1352043",
+      "films": [
+        "Q1196933"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/0/09/George_Fitzmaurice_-_1922_ETR.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:George_Fitzmaurice_-_1922_ETR.jpg",
+        "title": "File:George Fitzmaurice - 1922 ETR.jpg",
+        "artist": "Unknown photographer",
+        "credit": "Exhibitor's Trade Review (Dec. 1922 - Feb. 1923) at the Internet Archive",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "d01471cf18e97729e14a4c96a092353ff92961fc115bd19630b80756b887f924",
+        "bytes": 21320,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q1352043.webp",
+        "license_evidence": {
+          "title": "File:George Fitzmaurice - 1922 ETR.jpg",
+          "revision": 997967735,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AGeorge%20Fitzmaurice%20-%201922%20ETR.jpg&oldid=997967735",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AGeorge%20Fitzmaurice%20-%201922%20ETR.jpg&oldid=997967735"
+      }
+    },
+    {
+      "id": "Q3181549",
+      "name": "约翰·G·布莱斯通",
+      "original_name": "John G. Blystone",
+      "source": "https://www.wikidata.org/wiki/Q3181549",
+      "films": [
+        "Q1199039"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/2/2d/John_G._Blystone.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:John_G._Blystone.jpg",
+        "title": "File:John G. Blystone.jpg",
+        "artist": "Unknown authorUnknown author",
+        "credit": "https://www.findagrave.com/memorial/7992843/john-g_-blystone",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "8edbd1ddcf224e89003a7d95e6e0c9fa2db60b785af78002fb4b8a01c3de367e",
+        "bytes": 9810,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q3181549.webp",
+        "license_evidence": {
+          "title": "File:John G. Blystone.jpg",
+          "revision": 1037377431,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AJohn%20G.%20Blystone.jpg&oldid=1037377431",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AJohn%20G.%20Blystone.jpg&oldid=1037377431"
+      }
+    },
+    {
+      "id": "Q367073",
+      "name": "唐纳德·克利斯普",
+      "original_name": "Donald Crisp",
+      "source": "https://www.wikidata.org/wiki/Q367073",
+      "films": [
+        "Q1195998",
+        "Q607786"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/f/f8/Donald_Crisp_%281937%29_vintage_photo_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Donald_Crisp_(1937)_vintage_photo_(cropped).jpg",
+        "title": "File:Donald Crisp (1937) vintage photo (cropped).jpg",
+        "artist": "Warner Bros. & Vitaphone Pictures",
+        "credit": "eBay",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "c4d8201e47efa12b094a2041dc0222fdd3267512e465f96819637789f5337920",
+        "bytes": 8956,
+        "changes": "缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q367073.webp",
+        "license_evidence": {
+          "title": "File:Donald Crisp (1937) vintage photo (cropped).jpg",
+          "revision": 1091270922,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3ADonald%20Crisp%20(1937)%20vintage%20photo%20(cropped).jpg&oldid=1091270922",
+          "licences": [
+            {
+              "name": "Cc-pd-mark-footer",
+              "parameters": ""
+            },
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-Pre1978",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-no notice",
+              "parameters": ""
+            },
+            {
+              "name": "PD-old-70",
+              "parameters": ""
+            },
+            {
+              "name": "PD-old-text",
+              "parameters": ""
+            },
+            {
+              "name": "PD-old-warning-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3ADonald%20Crisp%20(1937)%20vintage%20photo%20(cropped).jpg&oldid=1091270922"
+      }
+    },
+    {
+      "id": "Q435029",
+      "name": "克拉伦斯·布朗",
+      "original_name": "Clarence Brown",
+      "source": "https://www.wikidata.org/wiki/Q435029",
+      "films": [
+        "Q1366555",
+        "Q444242"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/e/e0/Clarence_Brown_1921.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Clarence_Brown_1921.jpg",
+        "title": "File:Clarence Brown 1921.jpg",
+        "artist": "Freulich (?)",
+        "credit": "Internet Archive",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "27d45702c63539a33912209f768d91c95ae36ebe4484fa495156c5139c7db765",
+        "bytes": 17522,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q435029.webp",
+        "license_evidence": {
+          "title": "File:Clarence Brown 1921.jpg",
+          "revision": 933690347,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AClarence%20Brown%201921.jpg&oldid=933690347",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AClarence%20Brown%201921.jpg&oldid=933690347"
+      }
+    },
+    {
+      "id": "Q2420942",
+      "name": "H·布鲁斯·亨伯斯通",
+      "original_name": "H. Bruce Humberstone",
+      "source": "https://www.wikidata.org/wiki/Q2420942",
+      "films": [
+        "Q570506"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/e/e3/H_Bruce_Humberstone_-_Jun_1925_EH.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:H_Bruce_Humberstone_-_Jun_1925_EH.jpg",
+        "title": "File:H Bruce Humberstone - Jun 1925 EH.jpg",
+        "artist": "Universal Pictures",
+        "credit": "Exhibitors Herald (Mar. - Jun. 1925), on the Internet Archive",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "d666ab10a47cb3a4dec40525c3557cd9a85cdb6167f4d7ca3010cc6e95c0b361",
+        "bytes": 20456,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q2420942.webp",
+        "license_evidence": {
+          "title": "File:H Bruce Humberstone - Jun 1925 EH.jpg",
+          "revision": 957084301,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AH%20Bruce%20Humberstone%20-%20Jun%201925%20EH.jpg&oldid=957084301",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AH%20Bruce%20Humberstone%20-%20Jun%201925%20EH.jpg&oldid=957084301"
+      }
+    },
+    {
+      "id": "Q120541",
+      "name": "阿爾弗雷德·E·格林",
+      "original_name": "Alfred Edward Green",
+      "source": "https://www.wikidata.org/wiki/Q120541",
+      "films": [
+        "Q774800"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/9/9a/Alfred_E_Green_1921.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Alfred_E_Green_1921.jpg",
+        "title": "File:Alfred E Green 1921.jpg",
+        "artist": "Unknown authorUnknown author",
+        "credit": "Internet Archive",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "237db6f7c7ca55cd705e370730faa5ed2764c10289c7c89df508889cf3ec6405",
+        "bytes": 19894,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q120541.webp",
+        "license_evidence": {
+          "title": "File:Alfred E Green 1921.jpg",
+          "revision": 1045773839,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AAlfred%20E%20Green%201921.jpg&oldid=1045773839",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AAlfred%20E%20Green%201921.jpg&oldid=1045773839"
+      }
+    },
+    {
+      "id": "Q2975559",
+      "name": "Clarence G. Badger",
+      "original_name": "Clarence G. Badger",
+      "source": "https://www.wikidata.org/wiki/Q2975559",
+      "films": [
+        "Q2439201"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/9/90/Clarence_Badger.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Clarence_Badger.jpg",
+        "title": "File:Clarence Badger.jpg",
+        "artist": "Unknown authorUnknown author",
+        "credit": "The First 100 Noted Men and Women of the Screen by Carolyn Lowery, p. 9 (1920)",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "ecc34c6c0a90a190e734eb5f84bee2ac5b4bf928cd13bed6d6aa9259340a7f32",
+        "bytes": 15730,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q2975559.webp",
+        "license_evidence": {
+          "title": "File:Clarence Badger.jpg",
+          "revision": 1126487232,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AClarence%20Badger.jpg&oldid=1126487232",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AClarence%20Badger.jpg&oldid=1126487232"
+      }
+    },
+    {
+      "id": "Q67169",
+      "name": "漢斯·海茲·愛華斯",
+      "original_name": "Hanns Heinz Ewers",
+      "source": "https://www.wikidata.org/wiki/Q67169",
+      "films": [
+        "Q551025"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/f/f1/Hanns_H._Ewers_%281934%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Hanns_H._Ewers_(1934).jpg",
+        "title": "File:Hanns H. Ewers (1934).jpg",
+        "artist": "Unknown authorUnknown author",
+        "credit": "Archiv Corps Alemannia Wien zu Linz",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "490695e5d077ef2952a4a1b8fbd441e876a107ca5c5940ddc710c23212b42510",
+        "bytes": 8276,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q67169.webp",
+        "license_evidence": {
+          "title": "File:Hanns H. Ewers (1934).jpg",
+          "revision": 1017281669,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AHanns%20H.%20Ewers%20(1934).jpg&oldid=1017281669",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-anon-70-EU",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AHanns%20H.%20Ewers%20(1934).jpg&oldid=1017281669"
+      }
+    },
+    {
+      "id": "Q66410",
+      "name": "保罗·魏格纳",
+      "original_name": "Paul Wegener",
+      "source": "https://www.wikidata.org/wiki/Q66410",
+      "films": [
+        "Q551025"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Paul_Wegener_2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Paul_Wegener_2.jpg",
+        "title": "File:Paul Wegener 2.jpg",
+        "artist": "Photouploader",
+        "credit": "Cigarette card from 1916",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "2aadce2218b58391223ff95aedec93a6d3ebb860303c6c653970a6300fa7be57",
+        "bytes": 5866,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q66410.webp",
+        "license_evidence": {
+          "title": "File:Paul Wegener 2.jpg",
+          "revision": 1087475598,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3APaul%20Wegener%202.jpg&oldid=1087475598",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3APaul%20Wegener%202.jpg&oldid=1087475598"
+      }
+    },
+    {
+      "id": "Q1350928",
+      "name": "泰德·懷德",
+      "original_name": "Ted Wilde",
+      "source": "https://www.wikidata.org/wiki/Q1350928",
+      "films": [
+        "Q1246225",
+        "Q945230"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/3/37/Ted_Wilde_-_Dec_1926_Variety.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Ted_Wilde_-_Dec_1926_Variety.jpg",
+        "title": "File:Ted Wilde - Dec 1926 Variety.jpg",
+        "artist": "Harold Lloyd Corporation",
+        "credit": "Variety (December 1926), on the Internet Archive",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "5ca8db0389be45b3c81ef88df5189dab5d3fd4310b9c9142e91034b05ea5974e",
+        "bytes": 12726,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q1350928.webp",
+        "license_evidence": {
+          "title": "File:Ted Wilde - Dec 1926 Variety.jpg",
+          "revision": 1249624480,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3ATed%20Wilde%20-%20Dec%201926%20Variety.jpg&oldid=1249624480",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3ATed%20Wilde%20-%20Dec%201926%20Variety.jpg&oldid=1249624480"
+      }
+    },
+    {
+      "id": "Q1628080",
+      "name": "Joseph Santley",
+      "original_name": "Joseph Santley",
+      "source": "https://www.wikidata.org/wiki/Q1628080",
+      "films": [
+        "Q581117"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/b/b3/Joseph_Santley_01.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Joseph_Santley_01.JPG",
+        "title": "File:Joseph Santley 01.JPG",
+        "artist": "Mabel Rowland, Inc.",
+        "credit": "Celebrated Actor Folks' Cookeries: 1916 pg.77",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "7feb45b8e764d6dcca3e4454753e604b70bfdc70854255b31eae139f78ca2b2e",
+        "bytes": 5152,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q1628080.webp",
+        "license_evidence": {
+          "title": "File:Joseph Santley 01.JPG",
+          "revision": 1151359084,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AJoseph%20Santley%2001.JPG&oldid=1151359084",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AJoseph%20Santley%2001.JPG&oldid=1151359084"
+      }
+    },
+    {
+      "id": "Q1349886",
+      "name": "羅伯特·弗洛里",
+      "original_name": "Robert Florey",
+      "source": "https://www.wikidata.org/wiki/Q1349886",
+      "films": [
+        "Q581117"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/8/8a/Robert_Florey_%281900%E2%80%931979%29.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Robert_Florey_(1900%E2%80%931979).png",
+        "title": "File:Robert Florey (1900–1979).png",
+        "artist": "Unknown authorUnknown author",
+        "credit": "The Film Daily Year Book, Volume 11, 1929, page 147",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "17a66193040b7db8a87fab9f2fadee8c10ea7538f3406aa4d6c46059d2af7985",
+        "bytes": 13602,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q1349886.webp",
+        "license_evidence": {
+          "title": "File:Robert Florey (1900–1979).png",
+          "revision": 997906659,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3ARobert%20Florey%20(1900%E2%80%931979).png&oldid=997906659",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3ARobert%20Florey%20(1900%E2%80%931979).png&oldid=997906659"
+      }
+    },
+    {
+      "id": "Q55198",
+      "name": "亚历山大·多夫任科",
+      "original_name": "Oleksandr Dovzhenko",
+      "source": "https://www.wikidata.org/wiki/Q55198",
+      "films": [
+        "Q1964744"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Alexander_Dovzhenko.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Alexander_Dovzhenko.jpg",
+        "title": "File:Alexander Dovzhenko.jpg",
+        "artist": "Na",
+        "credit": "https://www.archives.gov.ua/Sections/Dovzhenko_2/CDAMLM/index.php?21",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "48d6bdbba222bead25e16390c93ed0115066165d8e6602ac0e91f18ec5163a45",
+        "bytes": 12294,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q55198.webp",
+        "license_evidence": {
+          "title": "File:Alexander Dovzhenko.jpg",
+          "revision": 905190104,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AAlexander%20Dovzhenko.jpg&oldid=905190104",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-Ukraine",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AAlexander%20Dovzhenko.jpg&oldid=905190104"
+      }
+    },
+    {
+      "id": "Q2011506",
+      "name": "Albert Parker",
+      "original_name": "Albert Parker",
+      "source": "https://www.wikidata.org/wiki/Q2011506",
+      "films": [
+        "Q2377258"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/e/e2/Albert_Parker_Jan_1926.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Albert_Parker_Jan_1926.jpg",
+        "title": "File:Albert Parker Jan 1926.jpg",
+        "artist": "Unknown authorUnknown author",
+        "credit": "[1]",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "0b4c8d84d6a8225fd61a304477f6354d2f31fa2e9e11f7f7bbee95dbb441ea1f",
+        "bytes": 17986,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q2011506.webp",
+        "license_evidence": {
+          "title": "File:Albert Parker Jan 1926.jpg",
+          "revision": 1267495578,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AAlbert%20Parker%20Jan%201926.jpg&oldid=1267495578",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AAlbert%20Parker%20Jan%201926.jpg&oldid=1267495578"
+      }
+    },
+    {
+      "id": "Q447847",
+      "name": "朵洛西·阿茲納",
+      "original_name": "Dorothy Arzner",
+      "source": "https://www.wikidata.org/wiki/Q447847",
+      "films": [
+        "Q2452327"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/6/68/Dorothy_Arzner_1929.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Dorothy_Arzner_1929.jpg",
+        "title": "File:Dorothy Arzner 1929.jpg",
+        "artist": "Unknown author",
+        "credit": "eBay item 205484978178 – View/save archived versions on archive.org and megalodon.jp",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "44dc9c7a955a02b951f3bc87227de7e910448354901f0f1f7c9ecb390532f7fb",
+        "bytes": 7228,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q447847.webp",
+        "license_evidence": {
+          "title": "File:Dorothy Arzner 1929.jpg",
+          "revision": 1211494043,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3ADorothy%20Arzner%201929.jpg&oldid=1211494043",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3ADorothy%20Arzner%201929.jpg&oldid=1211494043"
+      }
+    },
+    {
+      "id": "Q269505",
+      "name": "亨利·金",
+      "original_name": "Henry King",
+      "source": "https://www.wikidata.org/wiki/Q269505",
+      "films": [
+        "Q1694130"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/3/3e/Henry_King%2C_film_director_%28SAYRE_4167%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Henry_King%2C_film_director_(SAYRE_4167).jpg",
+        "title": "File:Henry King, film director (SAYRE 4167).jpg",
+        "artist": "Woodbury",
+        "credit": "J. Willis Sayre Collection of Theatrical Photographs",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "faced16fbad939c2ee95c0ac3f4aa44181dbd4b95b1be5a965ade1bfbd2f0aaa",
+        "bytes": 5514,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q269505.webp",
+        "license_evidence": {
+          "title": "File:Henry King, film director (SAYRE 4167).jpg",
+          "revision": 1163028311,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AHenry%20King%2C%20film%20director%20(SAYRE%204167).jpg&oldid=1163028311",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AHenry%20King%2C%20film%20director%20(SAYRE%204167).jpg&oldid=1163028311"
+      }
+    },
+    {
+      "id": "Q1752340",
+      "name": "John Francis Dillon",
+      "original_name": "John Francis Dillon",
+      "source": "https://www.wikidata.org/wiki/Q1752340",
+      "films": [
+        "Q252625"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/8/86/John_Francis_Dillon_1926_%2814776404382%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:John_Francis_Dillon_1926_(14776404382).jpg",
+        "title": "File:John Francis Dillon 1926 (14776404382).jpg",
+        "artist": "Metro-Goldwyn-Mayer",
+        "credit": "Smedley Butler, John Francis Dillon, Pauline Starke, and Elinor Glyn, 1926 from USMC Archives from Quantico, USA",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "6405d4cb270dada4b83fd60266e6e3f9063c77363a41b2541c877b9cb698109a",
+        "bytes": 10242,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q1752340.webp",
+        "license_evidence": {
+          "title": "File:John Francis Dillon 1926 (14776404382).jpg",
+          "revision": 818593190,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AJohn%20Francis%20Dillon%201926%20(14776404382).jpg&oldid=818593190",
+          "licences": [
+            {
+              "name": "Cc-by-2.0",
+              "parameters": ""
+            },
+            {
+              "name": "Cc-by-layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AJohn%20Francis%20Dillon%201926%20(14776404382).jpg&oldid=818593190"
+      }
+    },
+    {
+      "id": "Q523961",
+      "name": "Frank Powell",
+      "original_name": "Frank Powell",
+      "source": "https://www.wikidata.org/wiki/Q523961",
+      "films": [
+        "Q933724"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/7/70/Frank_Powell_001.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Frank_Powell_001.jpg",
+        "title": "File:Frank Powell 001.jpg",
+        "artist": "Pathé Frères",
+        "credit": "Robert Grau (1914) The Theatre of Science, Broadway publishing company, New York",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "12fca834bc272f241f4c00d9139afc72a08f39c1d3867b5930d1d1e41e61ae10",
+        "bytes": 4318,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q523961.webp",
+        "license_evidence": {
+          "title": "File:Frank Powell 001.jpg",
+          "revision": 1260044740,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AFrank%20Powell%20001.jpg&oldid=1260044740",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AFrank%20Powell%20001.jpg&oldid=1260044740"
+      }
+    },
+    {
+      "id": "Q1343809",
+      "name": "Enrico Guazzoni",
+      "original_name": "Enrico Guazzoni",
+      "source": "https://www.wikidata.org/wiki/Q1343809",
+      "films": [
+        "Q1057825"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/a/a3/Enrico_guazzoni.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Enrico_guazzoni.jpg",
+        "title": "File:Enrico guazzoni.jpg",
+        "artist": "op unknown",
+        "credit": "http://1.bp.blogspot.com/_N2hZG3AU8S4/TUby7O0c2fI/AAAAAAAAAkE/S--60V8xrtk/s1600/enrico_guazzoni.jpg",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "be89488337d496e368737088651b6890f143c4a83821e10bf282fa6dd0718f51",
+        "bytes": 6118,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q1343809.webp",
+        "license_evidence": {
+          "title": "File:Enrico guazzoni.jpg",
+          "revision": 1230522222,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AEnrico%20guazzoni.jpg&oldid=1230522222",
+          "licences": [
+            {
+              "name": "Cc-pd-mark-footer",
+              "parameters": ""
+            },
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-old",
+              "parameters": ""
+            },
+            {
+              "name": "PD-old-text",
+              "parameters": ""
+            },
+            {
+              "name": "PD-old-warning-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AEnrico%20guazzoni.jpg&oldid=1230522222"
+      }
+    },
+    {
+      "id": "Q1523434",
+      "name": "莫里斯·都纳尔",
+      "original_name": "Maurice Tourneur",
+      "source": "https://www.wikidata.org/wiki/Q1523434",
+      "films": [
+        "Q444242"
+      ],
+      "portrait": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/a/a1/Maurice_Tourneur_in_1919.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Maurice_Tourneur_in_1919.jpg",
+        "title": "File:Maurice Tourneur in 1919.jpg",
+        "artist": "Unknown authorUnknown author",
+        "credit": "Internet Archive",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "4ce10a39deb168a2d7104988f49cb7ed906666c7c01190fee13ce1f1c9580535",
+        "bytes": 11980,
+        "changes": "从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。",
+        "file": "person-q1523434.webp",
+        "license_evidence": {
+          "title": "File:Maurice Tourneur in 1919.jpg",
+          "revision": 1259187515,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AMaurice%20Tourneur%20in%201919.jpg&oldid=1259187515",
+          "licences": [
+            {
+              "name": "Cc-pd-mark-footer",
+              "parameters": ""
+            },
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            },
+            {
+              "name": "PD-old-70-1923",
+              "parameters": ""
+            },
+            {
+              "name": "PD-old-70-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-old-X-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-old-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AMaurice%20Tourneur%20in%201919.jpg&oldid=1259187515"
+      }
+    }
+  ],
+  "studios": [
+    {
+      "id": "Q41468",
+      "name": "乌发电影公司",
+      "original_name": "UFA",
+      "source": "https://www.wikidata.org/wiki/Q41468",
+      "logo": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/6/6c/Logo_UFA.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Logo_UFA.svg",
+        "title": "File:Logo UFA.svg",
+        "artist": "UFA GmbH",
+        "credit": "Cutout from http://www.ufa.de/static/download/UFA.pdf",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "8f83418044de394646ad506b2df1919350ed877dcab584d7ba2c409fc7d8c57f",
+        "bytes": 7812,
+        "changes": "等比缩放后居中放入480像素方形透明画布并转换为WebP；按容器缩放显示。",
+        "file": "studio-q41468.webp",
+        "license_evidence": {
+          "title": "File:Logo UFA.svg",
+          "revision": 915610579,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3ALogo%20UFA.svg&oldid=915610579",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-textlogo",
+              "parameters": ""
+            },
+            {
+              "name": "Trademarked",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3ALogo%20UFA.svg&oldid=915610579"
+      }
+    },
+    {
+      "id": "Q540172",
+      "name": "Prana Film",
+      "original_name": "Prana Film",
+      "source": "https://www.wikidata.org/wiki/Q540172",
+      "logo": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/0/03/Prana-Film_1.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Prana-Film_1.jpg",
+        "title": "File:Prana-Film 1.jpg",
+        "artist": "domínio público",
+        "credit": "Prana-Film",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "1fd93d2a09e50e53b7b17ee3dbc8d5556884479b94ccd73396354c15e4c1bd27",
+        "bytes": 9472,
+        "changes": "等比缩放后居中放入480像素方形透明画布并转换为WebP；按容器缩放显示。",
+        "file": "studio-q540172.webp",
+        "license_evidence": {
+          "title": "File:Prana-Film 1.jpg",
+          "revision": 1276609812,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3APrana-Film%201.jpg&oldid=1276609812",
+          "licences": [
+            {
+              "name": "Cc-pd-mark-footer",
+              "parameters": ""
+            },
+            {
+              "name": "PD-Art",
+              "parameters": ""
+            },
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            },
+            {
+              "name": "PD-art-category",
+              "parameters": ""
+            },
+            {
+              "name": "PD-old-X-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-old-auto-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-old-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3APrana-Film%201.jpg&oldid=1276609812"
+      }
+    },
+    {
+      "id": "Q219400",
+      "name": "聯美",
+      "original_name": "United Artists",
+      "source": "https://www.wikidata.org/wiki/Q219400",
+      "logo": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/8/83/United_Artists_1919.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:United_Artists_1919.svg",
+        "title": "File:United Artists 1919.svg",
+        "artist": "This image was improved or created by the Wikigraphists of the Graphic Lab (fr). You can propose images to clean up, improve, create or translate as well.",
+        "credit": "United_Artists_Logo_1919.JPG",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "e93ba0084322763d15aa76695b9640ca3fd6a2057ecdce84a9f39ddc0ed2c2d9",
+        "bytes": 12640,
+        "changes": "等比缩放后居中放入480像素方形透明画布并转换为WebP；按容器缩放显示。",
+        "file": "studio-q219400.webp",
+        "license_evidence": {
+          "title": "File:United Artists 1919.svg",
+          "revision": 1130472791,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AUnited%20Artists%201919.svg&oldid=1130472791",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            },
+            {
+              "name": "PD-self",
+              "parameters": ""
+            },
+            {
+              "name": "PD-textlogo",
+              "parameters": ""
+            },
+            {
+              "name": "Trademarked",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AUnited%20Artists%201919.svg&oldid=1130472791"
+      }
+    },
+    {
+      "id": "Q179200",
+      "name": "米高梅公司",
+      "original_name": "Metro-Goldwyn-Mayer",
+      "source": "https://www.wikidata.org/wiki/Q179200",
+      "logo": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/3/3f/Metro-Goldwyn-Mayer_logo.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Metro-Goldwyn-Mayer_logo.svg",
+        "title": "File:Metro-Goldwyn-Mayer logo.svg",
+        "artist": "Metro-Goldwyn-Mayer Studios, Inc.",
+        "credit": "https://logos-world.net/mgm-logo/",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "2c655b9710baef8893803d34207189b7b8c67b8dd78af5379a176ee137e1db81",
+        "bytes": 6408,
+        "changes": "等比缩放后居中放入480像素方形透明画布并转换为WebP；按容器缩放显示。",
+        "file": "studio-q179200.webp",
+        "license_evidence": {
+          "title": "File:Metro-Goldwyn-Mayer logo.svg",
+          "revision": 1127278155,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AMetro-Goldwyn-Mayer%20logo.svg&oldid=1127278155",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-textlogo",
+              "parameters": ""
+            },
+            {
+              "name": "Trademarked",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AMetro-Goldwyn-Mayer%20logo.svg&oldid=1127278155"
+      }
+    },
+    {
+      "id": "Q126399",
+      "name": "华纳兄弟、The Vitaphone Corporation",
+      "original_name": "Warner Bros. Entertainment",
+      "source": "https://www.wikidata.org/wiki/Q126399",
+      "logo": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/d/d2/Warner_Bros._%282019%29_logo.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Warner_Bros._(2019)_logo.svg",
+        "title": "File:Warner Bros. (2019) logo.svg",
+        "artist": "Warner Bros. Entertainment",
+        "credit": "warnerbros.com",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "a90917c4f242d00ddfaa067780cd5033546591d097dda1cc93ea184a8d449da4",
+        "bytes": 15490,
+        "changes": "等比缩放后居中放入480像素方形透明画布并转换为WebP；按容器缩放显示。",
+        "file": "studio-q126399.webp",
+        "license_evidence": {
+          "title": "File:Warner Bros. (2019) logo.svg",
+          "revision": 1284586326,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AWarner%20Bros.%20(2019)%20logo.svg&oldid=1284586326",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-Textlogo",
+              "parameters": ""
+            },
+            {
+              "name": "PD-textlogo",
+              "parameters": ""
+            },
+            {
+              "name": "Trademarked",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AWarner%20Bros.%20(2019)%20logo.svg&oldid=1284586326"
+      }
+    },
+    {
+      "id": "Q24679",
+      "name": "三角电影公司",
+      "original_name": "Triangle Film Corporation",
+      "source": "https://www.wikidata.org/wiki/Q24679",
+      "logo": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/1/17/Triangle_Film_Corporation_logo%2C_1915.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Triangle_Film_Corporation_logo%2C_1915.png",
+        "title": "File:Triangle Film Corporation logo, 1915.png",
+        "artist": "Anonymous designer",
+        "credit": "Moving Picture World, 1915 (https://archive.org/stream/movingpicturewor25newy#page/n1655/mode/1up)",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "e99707f24d390be98230410d100857a9b1299663fd1c421cf2f4b74b50bd0140",
+        "bytes": 5628,
+        "changes": "等比缩放后居中放入480像素方形透明画布并转换为WebP；按容器缩放显示。",
+        "file": "studio-q24679.webp",
+        "license_evidence": {
+          "title": "File:Triangle Film Corporation logo, 1915.png",
+          "revision": 1248967894,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3ATriangle%20Film%20Corporation%20logo%2C%201915.png&oldid=1248967894",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-max-year",
+              "parameters": ""
+            },
+            {
+              "name": "PD-anon-1923",
+              "parameters": ""
+            },
+            {
+              "name": "PD-anon-expired",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3ATriangle%20Film%20Corporation%20logo%2C%201915.png&oldid=1248967894"
+      }
+    },
+    {
+      "id": "Q434841",
+      "name": "二十世纪福克斯",
+      "original_name": "20th Century Studios",
+      "source": "https://www.wikidata.org/wiki/Q434841",
+      "logo": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/0/08/20th_Century_Studios_%282021%29.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:20th_Century_Studios_(2021).svg",
+        "title": "File:20th Century Studios (2021).svg",
+        "artist": "20th Century Studios",
+        "credit": "https://logos.fandom.com/wiki/20th_Century_Studios/Logo_Variations",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "fbafe35b725a7b7c8068b83ad4388b9336802c59a06e0ac19c9fe1ce327dad93",
+        "bytes": 9168,
+        "changes": "等比缩放后居中放入480像素方形透明画布并转换为WebP；按容器缩放显示。",
+        "file": "studio-q434841.webp",
+        "license_evidence": {
+          "title": "File:20th Century Studios (2021).svg",
+          "revision": 1117831378,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3A20th%20Century%20Studios%20(2021).svg&oldid=1117831378",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-textlogo",
+              "parameters": ""
+            },
+            {
+              "name": "Trademarked",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3A20th%20Century%20Studios%20(2021).svg&oldid=1117831378"
+      }
+    },
+    {
+      "id": "Q168383",
+      "name": "环球影业",
+      "original_name": "Universal Pictures",
+      "source": "https://www.wikidata.org/wiki/Q168383",
+      "logo": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/6/62/Universal_Pictures_2021_%28Blue%29.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Universal_Pictures_2021_(Blue).svg",
+        "title": "File:Universal Pictures 2021 (Blue).svg",
+        "artist": "Universal Studios",
+        "credit": "Brian Jackson Brand vectorized as SVG",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "088d9fa81f7769c6cf991a7a441e2faf26bca4884f8a212046d34f7baa485870",
+        "bytes": 19078,
+        "changes": "等比缩放后居中放入480像素方形透明画布并转换为WebP；按容器缩放显示。",
+        "file": "studio-q168383.webp",
+        "license_evidence": {
+          "title": "File:Universal Pictures 2021 (Blue).svg",
+          "revision": 1140007760,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AUniversal%20Pictures%202021%20(Blue).svg&oldid=1140007760",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            },
+            {
+              "name": "PD-textlogo",
+              "parameters": ""
+            },
+            {
+              "name": "Trademarked",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AUniversal%20Pictures%202021%20(Blue).svg&oldid=1140007760"
+      }
+    },
+    {
+      "id": "Q439623",
+      "name": "Itala Film",
+      "original_name": "Itala Film",
+      "source": "https://www.wikidata.org/wiki/Q439623",
+      "logo": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/c/ce/Itala_Film_-_Logo.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Itala_Film_-_Logo.jpg",
+        "title": "File:Itala Film - Logo.jpg",
+        "artist": "Unknown authorUnknown author",
+        "credit": "L'emigrante (film 1915)",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "658c409c2a04dbf44ba7b9b6fd977a9d46d50ba29b7370331ff3ae817b1c6441",
+        "bytes": 21130,
+        "changes": "等比缩放后居中放入480像素方形透明画布并转换为WebP；按容器缩放显示。",
+        "file": "studio-q439623.webp",
+        "license_evidence": {
+          "title": "File:Itala Film - Logo.jpg",
+          "revision": 1166835297,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AItala%20Film%20-%20Logo.jpg&oldid=1166835297",
+          "licences": [
+            {
+              "name": "Cc-pd-mark-footer",
+              "parameters": ""
+            },
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-old",
+              "parameters": ""
+            },
+            {
+              "name": "PD-old-text",
+              "parameters": ""
+            },
+            {
+              "name": "PD-old-warning-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AItala%20Film%20-%20Logo.jpg&oldid=1166835297"
+      }
+    },
+    {
+      "id": "Q1188369",
+      "name": "第一國家影業",
+      "original_name": "First National Pictures",
+      "source": "https://www.wikidata.org/wiki/Q1188369",
+      "logo": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/1/13/First-National-Pictures-Logo.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:First-National-Pictures-Logo.jpg",
+        "title": "File:First-National-Pictures-Logo.jpg",
+        "artist": "First National Pictures Inc.",
+        "credit": "Academy of Motion Picture Arts and Sciences at the Internet Archive",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "cb0633bf17fd7867b9765ca1386d213141ef8ab89fd3f6ec1f3b5143e1c67dd7",
+        "bytes": 13866,
+        "changes": "等比缩放后居中放入480像素方形透明画布并转换为WebP；按容器缩放显示。",
+        "file": "studio-q1188369.webp",
+        "license_evidence": {
+          "title": "File:First-National-Pictures-Logo.jpg",
+          "revision": 1253368845,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AFirst-National-Pictures-Logo.jpg&oldid=1253368845",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AFirst-National-Pictures-Logo.jpg&oldid=1253368845"
+      }
+    },
+    {
+      "id": "Q177955",
+      "name": "瑞典電影行业协会",
+      "original_name": "SF Studios",
+      "source": "https://www.wikidata.org/wiki/Q177955",
+      "logo": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/f/fd/SFS_logo_primary_v_red.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:SFS_logo_primary_v_red.png",
+        "title": "File:SFS logo primary v red.png",
+        "artist": "Jenny Sjöö Larsson",
+        "credit": "Own work",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "sha256": "c16b0ef2935d162fbdada41dbb11401711674709c45090238f2addb875772c95",
+        "bytes": 21912,
+        "changes": "等比缩放后居中放入480像素方形透明画布并转换为WebP；按容器缩放显示。",
+        "file": "studio-q177955.webp",
+        "license_evidence": {
+          "title": "File:SFS logo primary v red.png",
+          "revision": 974570334,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3ASFS%20logo%20primary%20v%20red.png&oldid=974570334",
+          "licences": [
+            {
+              "name": "Cc-by-sa-4.0",
+              "parameters": ""
+            },
+            {
+              "name": "Cc-by-sa-layout",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3ASFS%20logo%20primary%20v%20red.png&oldid=974570334"
+      }
+    },
+    {
+      "id": "Q126399",
+      "name": "华纳兄弟",
+      "original_name": "Warner Bros. Entertainment",
+      "source": "https://www.wikidata.org/wiki/Q126399",
+      "logo": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/d/d2/Warner_Bros._%282019%29_logo.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Warner_Bros._(2019)_logo.svg",
+        "title": "File:Warner Bros. (2019) logo.svg",
+        "artist": "Warner Bros. Entertainment",
+        "credit": "warnerbros.com",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "a90917c4f242d00ddfaa067780cd5033546591d097dda1cc93ea184a8d449da4",
+        "bytes": 15490,
+        "changes": "等比缩放后居中放入480像素方形透明画布并转换为WebP；按容器缩放显示。",
+        "file": "studio-q126399.webp",
+        "license_evidence": {
+          "title": "File:Warner Bros. (2019) logo.svg",
+          "revision": 1284586326,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AWarner%20Bros.%20(2019)%20logo.svg&oldid=1284586326",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-Textlogo",
+              "parameters": ""
+            },
+            {
+              "name": "PD-textlogo",
+              "parameters": ""
+            },
+            {
+              "name": "Trademarked",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AWarner%20Bros.%20(2019)%20logo.svg&oldid=1284586326"
+      }
+    },
+    {
+      "id": "Q2644123",
+      "name": "福克斯电影公司",
+      "original_name": "Fox Film Corporation",
+      "source": "https://www.wikidata.org/wiki/Q2644123",
+      "logo": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/7/7f/Fox_Film.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Fox_Film.svg",
+        "title": "File:Fox Film.svg",
+        "artist": "Fox Film",
+        "credit": "https://logos.fandom.com/wiki/Fox_Film_Corporation",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "3fe5c96ada7e4affd4d1774b497e20590a51e4647003a9f1c87836b03b8ce5d9",
+        "bytes": 3474,
+        "changes": "等比缩放后居中放入480像素方形透明画布并转换为WebP；按容器缩放显示。",
+        "file": "studio-q2644123.webp",
+        "license_evidence": {
+          "title": "File:Fox Film.svg",
+          "revision": 1259218371,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AFox%20Film.svg&oldid=1259218371",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-logo",
+              "parameters": ""
+            },
+            {
+              "name": "PD-textlogo",
+              "parameters": ""
+            },
+            {
+              "name": "Trademarked",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AFox%20Film.svg&oldid=1259218371"
+      }
+    },
+    {
+      "id": "Q1368540",
+      "name": "Essanay工作室",
+      "original_name": "Essanay Studios",
+      "source": "https://www.wikidata.org/wiki/Q1368540",
+      "logo": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/1/1d/Essanay_logo.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Essanay_logo.jpg",
+        "title": "File:Essanay logo.jpg",
+        "artist": "Essanay Studios",
+        "credit": "https://i.vimeocdn.com/video/540034854.jpg?mw=1920&mh=1080&q=70",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "850db60e7eee0a71b076ef78d8e10772972545e1008f337e301934dd41d67a40",
+        "bytes": 7486,
+        "changes": "等比缩放后居中放入480像素方形透明画布并转换为WebP；按容器缩放显示。",
+        "file": "studio-q1368540.webp",
+        "license_evidence": {
+          "title": "File:Essanay logo.jpg",
+          "revision": 1233211110,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AEssanay%20logo.jpg&oldid=1233211110",
+          "licences": [
+            {
+              "name": "PD-1923",
+              "parameters": ""
+            },
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AEssanay%20logo.jpg&oldid=1233211110"
+      }
+    },
+    {
+      "id": "Q4461043",
+      "name": "Khanzhonkov Company",
+      "original_name": "Khanzhonkov Company",
+      "source": "https://www.wikidata.org/wiki/Q4461043",
+      "logo": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/0/0b/Khanzhonkov_logo.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Khanzhonkov_logo.jpg",
+        "title": "File:Khanzhonkov logo.jpg",
+        "artist": "Unknown authorUnknown author",
+        "credit": "https://crimeanblog.blogspot.ru/2011/11/1911-1-40.html?m=0",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "6653a7705cd48d53eb601a12be03811087b79f603081ac8fd42d51a8c245f511",
+        "bytes": 12526,
+        "changes": "等比缩放后居中放入480像素方形透明画布并转换为WebP；按容器缩放显示。",
+        "file": "studio-q4461043.webp",
+        "license_evidence": {
+          "title": "File:Khanzhonkov logo.jpg",
+          "revision": 1211556139,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3AKhanzhonkov%20logo.jpg&oldid=1211556139",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-RusEmpire",
+              "parameters": ""
+            },
+            {
+              "name": "PD-US-expired-text",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3AKhanzhonkov%20logo.jpg&oldid=1211556139"
+      }
+    },
+    {
+      "id": "Q495396",
+      "name": "Cines",
+      "original_name": "Cines",
+      "source": "https://www.wikidata.org/wiki/Q495396",
+      "logo": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/9/9d/Logo_societ%C3%A0_italiana_Cines.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Logo_societ%C3%A0_italiana_Cines.jpg",
+        "title": "File:Logo società italiana Cines.jpg",
+        "artist": "未署名",
+        "credit": "",
+        "license": "CC BY-SA 3.0",
+        "license_url": "http://creativecommons.org/licenses/by-sa/3.0/",
+        "sha256": "089287aa8c8e1dcbb3b0f48ada481fe0e512a77b91fb957d6e8d1b402a29cdb1",
+        "bytes": 21144,
+        "changes": "等比缩放后居中放入480像素方形透明画布并转换为WebP；按容器缩放显示。",
+        "file": "studio-q495396.webp",
+        "license_evidence": {
+          "title": "File:Logo società italiana Cines.jpg",
+          "revision": 1036574738,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3ALogo%20societ%C3%A0%20italiana%20Cines.jpg&oldid=1036574738",
+          "licences": [
+            {
+              "name": "CC-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "Cc-by-sa-3.0-migrated",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3ALogo%20societ%C3%A0%20italiana%20Cines.jpg&oldid=1036574738"
+      }
     }
   ]
 }
