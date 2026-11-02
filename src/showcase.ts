@@ -46,9 +46,18 @@ export function storage(constants: AppConstants) {
 // 任务中心按应用的 TaskRunPayload 契约回放已完成任务，任务名取自应用。
 export function taskRuns(recorded: { finished?: { id: number; status?: string; message?: string; finished_at?: string; started_at?: string; done?: number; total?: number }[]; [key: string]: unknown }, constants?: AppConstants) {
     const finished = (recorded.finished || []).map(row => ({ id: row.id, task_key: 'library-processing', task_label: constants?.task_labels['library-processing'] || '扫描与采集',
-        trigger: 'manual', status: row.status || 'succeeded', host: 'demo', started_at: row.started_at || null, finished_at: row.finished_at || null, elapsed_seconds: 30,
+        trigger: 'manual', status: row.status || 'succeeded', mutex_key: 'library-processing', pid: 4242, host: 'demo', started_at: row.started_at || null,
+        finished_at: row.finished_at || null, heartbeat_at: row.finished_at || null, elapsed_seconds: 30,
         progress_current: row.done ?? null, progress_total: row.total ?? null, progress_label: '', result_summary: {}, error: '',
         parent_run_id: null, root_run_id: null, followup_key: '', followup_depth: 0 }));
+    // 一轮跑完的媒体修复，结果摘要与应用写入 task_run 的字段一致。
+    const started = Date.parse('2026-10-30T02:00:00.000Z') / 1000, id = Math.max(0, ...finished.map(row => row.id)) + 1;
+    finished.push({ id, task_key: 'media-repair', task_label: constants?.task_labels['media-repair'] || '媒体修复', trigger: 'manual', status: 'succeeded',
+        mutex_key: 'media-repair', pid: 4242, host: 'demo', started_at: new Date(started * 1000).toISOString(), finished_at: new Date((started + 42) * 1000).toISOString(),
+        heartbeat_at: new Date((started + 42) * 1000).toISOString(), elapsed_seconds: 42, progress_current: 12, progress_total: 12, progress_label: '完成',
+        result_summary: { status: 'complete', run_id: id, started_at: started, library: 'demo-movies', stage: '完成', total: 0, checked: 0, found: 0, repaired: 0,
+            failed: 0, missing_tool: 0, skipped: 0, survey_checked: 12, survey_cache_version: 2, completed_at: started + 42 },
+        error: '', parent_run_id: null, root_run_id: null, followup_key: '', followup_depth: 0 });
     return withBackend('/api/tasks', { ...recorded, available: true, running: [], skipped: [], finished }, ['followup_counts', 'result_versions', 'working_parents']);
 }
 export function configuration(recorded: {updates:Record<string,unknown>;facts:{term:string;value?:string}[];tunnel:Record<string,unknown>;push_discovery:Record<string,unknown>;[key:string]:unknown}, version: string, constants?: AppConstants) {

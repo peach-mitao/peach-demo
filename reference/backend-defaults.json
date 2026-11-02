@@ -50,8 +50,8 @@
     "catalog": "243",
     "follow": "46",
     "discoveries": "0",
-    "review": "130:1793601920644486700",
-    "artwork": "1793601915472427600:None:None:None:None"
+    "review": "130:1793606773724117200",
+    "artwork": "1793606768552211200:None:None:None:None"
    },
    "running": [],
    "skipped": [],
@@ -534,7 +534,15 @@
   },
   "/api/organize": {
    "status": "idle",
-   "locations": [],
+   "locations": [
+    {
+     "location": "local",
+     "roots": [
+      "R:\\Media",
+      "R:\\Media2"
+     ]
+    }
+   ],
    "templates": {},
    "presets": [
     {
@@ -1073,11 +1081,12 @@
   "/api/configuration": {
    "editable": false,
    "notice": "这个部署由配置文件管理服务；在本机编辑下方的设置文件。",
-   "revision": "988763d2ab7a746cca34693f57f48409a5c16eb12e5fa66fa4a3928fb32f920d",
+   "revision": "b1ba74b924d0ad97cf779359716871e7067218c0b9dd2909ef014906c616a7a3",
    "media_dirs": [
-    "R:\\Media"
+    "R:\\Media",
+    "R:\\Media2"
    ],
-   "library_count": 1,
+   "library_count": 2,
    "windows": true,
    "port": 8795,
    "port_editable": false,
@@ -1135,11 +1144,11 @@
    },
    "startup": {
     "available": true,
-    "enabled": false,
+    "enabled": true,
     "silent": true,
     "message": "",
-    "desktop": false,
-    "desktop_message": "桌面快捷方式属于另一份 Peach 安装"
+    "desktop": true,
+    "desktop_message": ""
    },
    "uninstall": {
     "available": false,
@@ -1159,7 +1168,7 @@
    },
    "storage": {
     "data_root": "C:\\Users\\peach\\peach-data",
-    "free_bytes": 142157856768,
+    "free_bytes": 140721352704,
     "total_bytes": 2031179788288,
     "system_drive": true,
     "usage": null,
@@ -1221,6 +1230,21 @@
      "root_id": "3640ae4e-0d08-5b0a-93e0-e88eea541f4b",
      "library_id": "81c37026-0dcb-5887-b745-756102ec24dd",
      "library": "media",
+     "library_icon": "",
+     "library_color": "",
+     "library_policy": "auto",
+     "library_stages": "",
+     "cost": "free",
+     "transport": "filesystem",
+     "online": true
+    },
+    {
+     "location": "local",
+     "root": "R:\\Media2",
+     "path": "R:\\Media2",
+     "root_id": "af6c80b1-dc6d-5ad1-903e-b022b8dacd74",
+     "library_id": "55ce12d3-9ed9-5304-bb01-31950e15d178",
+     "library": "media2",
      "library_icon": "",
      "library_color": "",
      "library_policy": "auto",
@@ -1326,7 +1350,7 @@
   },
   "/api/configuration/storage": {
    "data_root": "C:\\Users\\peach\\peach-data",
-   "free_bytes": 142157672448,
+   "free_bytes": 140721352704,
    "total_bytes": 2031179788288,
    "system_drive": true,
    "usage": null,
@@ -1367,9 +1391,26 @@
     "progress": 0
    },
    "repairs": {
-    "state": "unavailable",
-    "items": [],
-    "available": false
+    "state": "pending",
+    "items": [
+     {
+      "id": "catalog-v2:previews-v2:processing-v2:2:2:text-3",
+      "label": "更新已有资料",
+      "state": "pending",
+      "changed": {},
+      "review_count": 0
+     },
+     {
+      "id": "background",
+      "label": "后台更新进度",
+      "state": "pending",
+      "pending": 0,
+      "failed": 0,
+      "queued": 0
+     }
+    ],
+    "available": true,
+    "message": ""
    }
   },
   "/api/ads?limit=1": {
@@ -1378,16 +1419,384 @@
    "pending_total": 0,
    "dismissed_total": 0,
    "counts": {
+    "image": 0,
     "url": 0,
-    "audio": 0,
     "other": 0,
-    "video": 0,
     "archive": 0,
-    "image": 0
+    "audio": 0,
+    "video": 0
    },
    "kind": "",
    "status": "pending",
    "items": []
+  },
+  "/api/follow/schedule": {
+   "ok": true,
+   "available": true,
+   "enabled": true,
+   "interval_minutes": 60,
+   "running": false,
+   "next_run_at": null,
+   "last_started_at": null,
+   "last_finished_at": null,
+   "last_skipped_at": null,
+   "last_error": null,
+   "last_checked": 0,
+   "last_added": 0,
+   "consecutive_failures": 0,
+   "failing_since": null
+  },
+  "/api/diagnostics": {
+   "version": "0.53.0",
+   "status": "ok",
+   "checks": {
+    "database": {
+     "label": "数据库",
+     "status": "ok",
+     "reason": "数据库可读取",
+     "action": "",
+     "target": null,
+     "details": {
+      "state": "available"
+     }
+    },
+    "schema": {
+     "label": "数据库迁移",
+     "status": "ok",
+     "reason": "迁移校验通过",
+     "action": "",
+     "target": null,
+     "details": {
+      "schema": "current",
+      "version": "0050",
+      "pending": [],
+      "mismatched": [],
+      "unknown_versions": 0
+     }
+    },
+    "configured": {
+     "label": "配置",
+     "status": "ok",
+     "reason": "配置可读取",
+     "action": "",
+     "target": null,
+     "details": {}
+    },
+    "media_mounts": {
+     "label": "媒体挂载",
+     "status": "disabled",
+     "reason": "没有已配置的本地来源",
+     "action": "",
+     "target": null,
+     "details": {}
+    },
+    "security": {
+     "label": "访问安全",
+     "status": "ok",
+     "reason": "仅监听本机",
+     "action": "",
+     "target": null,
+     "details": {
+      "exposed": false,
+      "protected": false
+     }
+    },
+    "ffmpeg": {
+     "label": "FFmpeg／OpenSSL",
+     "status": "ok",
+     "reason": "媒体工具可执行，AV1 软件解码器可用",
+     "action": "",
+     "target": null,
+     "details": {
+      "ffmpeg": {
+       "available": true,
+       "source": "path",
+       "path": "C:\\Users\\peach\\peach-data\\tools\\ffmpeg.exe",
+       "usable": true,
+       "version": "ffmpeg version 9.0.1-full_build-www.gyan.dev Copyright (c) 2000-2026 the FFmpeg developers",
+       "av1_software": true
+      },
+      "ffprobe": {
+       "available": true,
+       "source": "path",
+       "path": "C:\\Users\\peach\\peach-data\\tools\\ffprobe.exe",
+       "usable": true,
+       "version": "ffprobe version 9.0.1-full_build-www.gyan.dev Copyright (c) 2007-2026 the FFmpeg developers"
+      },
+      "openssl": {
+       "available": true,
+       "source": "path",
+       "path": "C:\\Users\\peach\\peach-data\\tools\\openssl.exe"
+      }
+     }
+    },
+    "data_root": {
+     "label": "数据目录",
+     "status": "ok",
+     "reason": "临时写入与清理通过",
+     "action": "",
+     "target": null,
+     "details": {}
+    },
+    "port": {
+     "label": "服务端口",
+     "status": "ok",
+     "reason": "端口当前可用",
+     "action": "",
+     "target": null,
+     "details": {
+      "port": 8900,
+      "state": "available"
+     }
+    },
+    "tasks": {
+     "label": "后台任务",
+     "status": "ok",
+     "reason": "没有已记录的任务失败",
+     "action": "",
+     "target": null,
+     "details": {}
+    },
+    "version": {
+     "label": "版本",
+     "status": "ok",
+     "reason": "Peach 0.53.0 · Python 3.14.7",
+     "action": "",
+     "target": null,
+     "details": {
+      "peach": "0.53.0",
+      "python": "3.14.7"
+     }
+    }
+   },
+   "library": {
+    "groups": {
+     "identification": {
+      "label": "识别失败",
+      "status": "ok",
+      "count": 0,
+      "items": [],
+      "truncated": false
+     },
+     "metadata": {
+      "label": "补资料失败",
+      "status": "ok",
+      "count": 0,
+      "items": [],
+      "truncated": false
+     },
+     "cover": {
+      "label": "缺封面",
+      "status": "ok",
+      "count": 0,
+      "items": [],
+      "truncated": false
+     },
+     "duration": {
+      "label": "缺时长",
+      "status": "ok",
+      "count": 0,
+      "items": [],
+      "truncated": false
+     }
+    },
+    "issue_at": "2026-11-02T08:05:48.176970+00:00"
+   },
+   "sources": [
+    {
+     "source": "minnano-av",
+     "label": "みんなのAV",
+     "status": "unchecked",
+     "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "last_check_at": null,
+     "elapsed_s": null,
+     "last_success_at": null,
+     "cooldown_until": null
+    },
+    {
+     "source": "javdb",
+     "label": "JavDB",
+     "status": "unchecked",
+     "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "last_check_at": null,
+     "elapsed_s": null,
+     "last_success_at": null,
+     "cooldown_until": null
+    },
+    {
+     "source": "r18dev",
+     "label": "R18.dev",
+     "status": "unchecked",
+     "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "last_check_at": null,
+     "elapsed_s": null,
+     "last_success_at": null,
+     "cooldown_until": null
+    },
+    {
+     "source": "dmm",
+     "label": "DMM / FANZA",
+     "status": "unchecked",
+     "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "last_check_at": null,
+     "elapsed_s": null,
+     "last_success_at": null,
+     "cooldown_until": null
+    },
+    {
+     "source": "mgstage",
+     "label": "MGStage",
+     "status": "unchecked",
+     "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "last_check_at": null,
+     "elapsed_s": null,
+     "last_success_at": null,
+     "cooldown_until": null
+    },
+    {
+     "source": "avsox",
+     "label": "AVSOX",
+     "status": "unchecked",
+     "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "last_check_at": null,
+     "elapsed_s": null,
+     "last_success_at": null,
+     "cooldown_until": null
+    },
+    {
+     "source": "fc2",
+     "label": "FC2",
+     "status": "unchecked",
+     "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "last_check_at": null,
+     "elapsed_s": null,
+     "last_success_at": null,
+     "cooldown_until": null
+    },
+    {
+     "source": "fc2cmadb",
+     "label": "FC2CMADB",
+     "status": "unchecked",
+     "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "last_check_at": null,
+     "elapsed_s": null,
+     "last_success_at": null,
+     "cooldown_until": null
+    },
+    {
+     "source": "fc2ppvdb",
+     "label": "FC2PPV-DB",
+     "status": "unchecked",
+     "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "last_check_at": null,
+     "elapsed_s": null,
+     "last_success_at": null,
+     "cooldown_until": null
+    },
+    {
+     "source": "javten",
+     "label": "JAVten",
+     "status": "unchecked",
+     "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "last_check_at": null,
+     "elapsed_s": null,
+     "last_success_at": null,
+     "cooldown_until": null
+    },
+    {
+     "source": "javarchive",
+     "label": "JavArchive",
+     "status": "unchecked",
+     "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "last_check_at": null,
+     "elapsed_s": null,
+     "last_success_at": null,
+     "cooldown_until": null
+    },
+    {
+     "source": "1pondo",
+     "label": "一本道",
+     "status": "unchecked",
+     "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "last_check_at": null,
+     "elapsed_s": null,
+     "last_success_at": null,
+     "cooldown_until": null
+    },
+    {
+     "source": "javbus",
+     "label": "JavBus",
+     "status": "unchecked",
+     "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "last_check_at": null,
+     "elapsed_s": null,
+     "last_success_at": null,
+     "cooldown_until": null
+    },
+    {
+     "source": "manko",
+     "label": "manko.fun",
+     "status": "unchecked",
+     "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "last_check_at": null,
+     "elapsed_s": null,
+     "last_success_at": null,
+     "cooldown_until": null
+    },
+    {
+     "source": "sukebei",
+     "label": "sukebei",
+     "status": "unchecked",
+     "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "last_check_at": null,
+     "elapsed_s": null,
+     "last_success_at": null,
+     "cooldown_until": null
+    },
+    {
+     "source": "avbase",
+     "label": "AVBase",
+     "status": "unchecked",
+     "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "last_check_at": null,
+     "elapsed_s": null,
+     "last_success_at": null,
+     "cooldown_until": null
+    },
+    {
+     "source": "avwikidb",
+     "label": "AVWikiDB",
+     "status": "unchecked",
+     "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "last_check_at": null,
+     "elapsed_s": null,
+     "last_success_at": null,
+     "cooldown_until": null
+    }
+   ]
+  },
+  "/api/thumbnail-jobs": {
+   "mode": "off",
+   "modes": [
+    "off",
+    "precise",
+    "coarse"
+   ],
+   "intervals": {
+    "precise": 10,
+    "coarse": 30
+   },
+   "status": "idle",
+   "stage": "",
+   "message": "",
+   "waiting_for_update": false,
+   "job_id": "",
+   "total": 0,
+   "done": 0,
+   "made": 0,
+   "skipped": 0,
+   "failed": 0,
+   "stopped": ""
   }
  }
 }

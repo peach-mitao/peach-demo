@@ -56,16 +56,19 @@ test('演示数据覆盖后端参照里的字段，演示特化逐条写明原�
             if (name === '/_demo/replay-files.json') return Response.json(Object.fromEntries(names.map(file => [file, file])));
             try { return new Response(await readFile(path.join(site, name))); } catch { return new Response('not found', { status: 404 }); }
         } } };
+        // 实体类接口在参照里写成 `{performer}` 模板，两侧各取自己的第一位演员。
+        const index = await (await worker.fetch(new Request('https://demo.example/api/index?kind=performers'), env)).json() as { items: { entity_id: number }[] };
+        const resolve = (route: string) => route.replace('{performer}', String(index.items[0]!.entity_id));
         // 先经 Worker 取回各接口的回放快照，再交给交互层，与浏览器里的链路一致。
         const served = new Map<string, unknown>();
-        for (const route of [...Object.keys(reference.routes), ...BASES]) {
+        for (const route of [...Object.keys(reference.routes).map(resolve), ...BASES]) {
             const response = await worker.fetch(new Request('https://demo.example' + route), env);
             if (response.ok && (response.headers.get('content-type') || '').includes('json')) served.set(route, await response.json());
         }
         const browser = page(url => served.get(url.pathname + url.search) ?? served.get(url.pathname) ?? {});
         const report: string[] = [];
         for (const [route, shape] of Object.entries(reference.routes as Record<string, Record<string, string>>)) {
-            const response = await browser.fetch(route);
+            const response = await browser.fetch(resolve(route));
             const actual = response.ok ? shapeOf(await response.json()) : {};
             const { missing, mistyped } = unexplainedGaps(route, shape, actual);
             if (missing.length || mistyped.length)

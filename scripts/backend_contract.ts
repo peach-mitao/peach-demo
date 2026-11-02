@@ -36,6 +36,8 @@ export const DEMO_EXCEPTIONS: Record<string, Record<string, string>> = {
     '/api/related': { 'items[].cover_frame': '演示海报固定居中取景，不带应用的封面版式检测结果。' },
     '/api/index': { 'categories': '演示保留片目原有的类型名，不套用应用按 JAV 标签词表做的归类与改名，类别统一为 general。' },
     '/api/tag-management': { 'categories': '演示保留片目原有的类型名，不套用应用按 JAV 标签词表做的归类与改名，类别统一为 general。' },
+    '/api/entity': Object.fromEntries(['candidate_key', 'content_id', 'provider', 'provider_id', 'raw_snapshot', 'review_item'].map(key => [`metadata.${key}`,
+        '参照人物由 NFO 采集候选经复核批准，带候选出处；演示人物取自公开片目署名，只有来源与来源地址。'])),
 };
 
 export function unexplainedGaps(route: string, reference: Shape, actual: Shape) {

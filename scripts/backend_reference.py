@@ -33,22 +33,28 @@ DEFAULTS = ROOT / "reference" / "backend-defaults.json"
 DEFAULT_ROUTES = (
     "/api/settings", "/api/media-processing", "/api/client-updates", "/api/sources", "/api/tasks",
     "/api/review", "/api/review?counts=1", "/api/duplicates?limit=120", "/api/quality-goals?limit=200", "/api/organize",
-    "/api/media-repair", "/api/entity/shapes", "/api/configuration", "/api/configuration/storage", "/api/downloads", "/api/ads?limit=1",
+    "/api/media-repair", "/api/entity/shapes", "/api/configuration", "/api/configuration/storage", "/api/downloads", "/api/ads?limit=1", "/api/diagnostics",
+    "/api/follow/schedule", "/api/thumbnail-jobs",
 )
 #: 默认值里出现的本机路径换成演示站使用的占位路径。
 DEMO_MEDIA, DEMO_DATA = "R:\\Media", "C:\\Users\\peach\\peach-data"
 #: 参照库取片目前几部：覆盖 Blender 开放电影、带演员与多厂牌的经典片。
 FILMS = 12
-#: 只读账本、不触发抓取的接口。作品详情、发现、刮削、诊断与追更都会按番号或网址联网，不在其列。
+#: 媒体目录拆成两个根，覆盖多媒体库下条目带的根目录与媒体库身份。
+SPLIT = 6
+#: 只读账本、不触发抓取的接口。作品详情、发现、刮削与追更检查都会按番号或网址联网，不在其列；诊断与头像候选
+#: 的联网探测在断网下只会得到失败结果。`{performer}` 在参照与演示里各自换成第一位演员的实体编号。
 ROUTES = (
     "/api/items?limit=60", "/api/item?id=1", "/api/item?id=6", "/api/related?id=1&limit=20", "/api/facets", "/api/libraries",
-    "/api/sources", "/api/settings", "/api/stats", "/api/taste?window=all", "/api/tasks", "/api/downloads", "/api/wants",
-    "/api/playlists", "/api/review", "/api/review?counts=1", "/api/duplicates?limit=120", "/api/quality-goals?limit=200",
+    "/api/sources", "/api/settings", "/api/stats", "/api/taste?window=all", "/api/tasks", "/api/downloads", "/api/downloads?limit=50",
+    "/api/wants", "/api/playlists", "/api/review", "/api/review?counts=1", "/api/duplicates?limit=120", "/api/quality-goals?limit=200",
     "/api/orphan-records", "/api/organize", "/api/library-processing", "/api/media-processing", "/api/media-repair",
     "/api/tag-management", "/api/tag-management?limit=20&offset=0&category=all&view=cloud&state=active&scope=local",
     "/api/index?kind=tags", "/api/index?kind=performers", "/api/index?kind=studios", "/api/entity/shapes",
     "/api/configuration", "/api/configuration/storage", "/api/client-updates", "/api/tutorial-progress",
     "/api/player/memory?video=item%3A1", "/api/search-history?limit=10", "/api/ads?limit=1",
+    "/api/follow?limit=100&offset=0", "/api/follow?summary=1", "/api/feeds", "/api/follow/credentials", "/api/follow/schedule", "/api/diagnostics",
+    "/api/thumbnail-jobs", "/api/post-setup-tutorial", "/api/avatar-choices?kind=performer&id={performer}", "/api/entity?kind=performer&id={performer}",
 )
 DEAD_PROXY = "http://127.0.0.1:9"
 
@@ -91,11 +97,12 @@ def nfo_for(item, directors: list[str]) -> str:
     return text.replace("</movie>", "".join(f"  <director>{escape(name)}</director>\n" for name in directors) + "</movie>")
 
 
-def write_media(catalog: dict, images: Path, media: Path, ffmpeg: str) -> None:
-    """每部占位短片是官方海报循环两秒，抽帧与九宫格都派生自已认证图片。"""
+def write_media(catalog: dict, images: Path, roots: tuple[Path, Path], ffmpeg: str) -> None:
+    """每部占位短片是官方海报循环两秒，抽帧与九宫格都派生自已认证图片；前 `SPLIT` 部放第一个根。"""
     from demo_dataset import DemoItem
     from PIL import Image
     for index, film in enumerate(catalog["films"][:FILMS], 1):
+        media = roots[0] if index <= SPLIT else roots[1]
         code, blender = f"FILM-{index:03d}", "blender.org" in film["credit"]
         item = DemoItem(kind="coded", path=f"{code}/{code}.mp4", code=code, title=film["title"],
                         original_title=film.get("original_title") or film["title"], orientation="横屏", duration=max(2, film["seconds"]),
@@ -130,10 +137,15 @@ def shape(value, at: str = "", out: dict | None = None) -> dict:
     return out
 
 
-def scrub(value, media: Path, data: Path, route: str = ""):
-    """临时实例的路径换成演示占位路径；之后不允许再出现任何本机目录。"""
+def scrub(value, roots: tuple[Path, Path], data: Path, route: str = ""):
+    """临时实例的路径换成演示占位路径；之后不允许再出现任何本机目录。第二个根先换，免得被第一个根的前缀吃掉。"""
+    if route == "/api/diagnostics":
+        # 外部工具取自本机 PATH，换成演示数据根下的工具目录。
+        for name, tool in value["checks"]["ffmpeg"]["details"].items():
+            if tool.get("path"):
+                tool["path"] = f"{DEMO_DATA}\\tools\\{name}.exe"
     text = json.dumps(value, ensure_ascii=False)
-    for real, demo in ((media, DEMO_MEDIA), (data, DEMO_DATA)):
+    for real, demo in ((roots[1], DEMO_MEDIA + "2"), (roots[0], DEMO_MEDIA), (data, DEMO_DATA)):
         for form in (str(real), str(real).replace("\\", "/")):
             text = text.replace(json.dumps(form)[1:-1], json.dumps(demo)[1:-1])
     forms = {json.dumps(str(path))[1:-1].casefold() for path in (Path.home(), ROOT)} | {str(path).replace("\\", "/").casefold() for path in (Path.home(), ROOT)}
@@ -166,12 +178,50 @@ def approve_candidates(client) -> int:
         approved += 1
 
 
+def seed_states(client, db: Path) -> None:
+    """离线写入几类只靠账本的状态：一轮跑完的媒体修复（只读本地文件）、一个演示作者的两条关注条目（借用 patreon 的来源规格，地址指向 example.invalid）、三种状态的下载任务。"""
+    import sqlite3
+    import time
+    from peach.downloads import DownloadStore, DownloadTask
+    from peach.follow_sources import FollowCandidate, SourceFetch
+    from peach.follow_store import FollowStore
+    from peach.repository import LedgerDatabase
+    library = client.get("/api/libraries").json()["libraries"][0]["id"]
+    started = client.post("/api/media-repair", json={"library": library, "restart": True})
+    if started.status_code >= 400:
+        raise RuntimeError(f"媒体修复未启动：{started.status_code} {started.text[:200]}")
+    for _ in range(240):
+        if client.get("/api/media-repair").json().get("status") not in ("running", "starting", "queued", "stopping"):
+            break
+        time.sleep(0.5)
+    connection = sqlite3.connect(db)
+    connection.row_factory = sqlite3.Row
+    try:
+        store = FollowStore(lambda: connection)
+        url = "https://example.invalid/demo"
+        source = store.register(provider="patreon", ref="demo-author", label="演示作者", url=url)
+        candidates = tuple(FollowCandidate(provider="patreon", external_id=str(number), title=f"演示作品 {number}", url=f"{url}/{number}",
+                                           published_at="2026-10-01T12:00:00Z", author="演示作者") for number in (1, 2))
+        store.record(source, SourceFetch(provider="patreon", ref="demo-author", request_url=url, semantics="work", candidates=candidates))
+        connection.commit()
+    finally:
+        connection.close()
+    downloads = DownloadStore(LedgerDatabase(db))
+    for number, (state, extra) in enumerate((("remote_running", {"progress": 0.64}), ("ingested", {"progress": 1.0, "asset_id": 1}),
+                                             ("failed", {"failure": "rejected", "failure_detail": "演示失败"})), 1):
+        downloads.save(DownloadTask(id=0, info_hash=f"{number:040x}", provider="115", source_uri="", display_name=f"FILM-{number:03d}",
+                                    target="/115/Peach", state=state, code=f"FILM-{number:03d}", title=f"演示任务 {number}",
+                                    submitted_at="2026-10-01T12:00:00Z", updated_at=f"2026-10-0{number}T12:00:00Z", **extra))
+
+
 def build(app: Path, images: Path, work: Path) -> dict:
     if work.exists():
         shutil.rmtree(work)
-    media, data = work / "media", work / "peach-data"
+    roots, data = (work / "media", work / "media2"), work / "peach-data"
+    media = roots[0]
     (data / "database").mkdir(parents=True)
-    media.mkdir(parents=True)
+    for root in roots:
+        root.mkdir(parents=True)
     # 应用在导入时按数据根定下全部目录，环境变量必须先于任何 `peach` 导入。
     os.environ["PEACH_DATA_ROOT"] = str(data)
     isolate_network()
@@ -189,28 +239,33 @@ def build(app: Path, images: Path, work: Path) -> dict:
     choice = FFmpegResolver(FFMPEG_DIR).ffmpeg()
     if choice is None:
         raise RuntimeError("应用未取得 ffmpeg")
-    write_media(catalog, images, media, str(choice.path))
+    write_media(catalog, images, roots, str(choice.path))
     db = fresh_ledger(data / "database")
     config = settings_file.PeachConfig(data, data / settings_file.SETTINGS_FILENAME, present=True, data_root_found=True,
-                                       locations={"local": (str(media),)}, server=settings_file.ServerSettings(port=8795))
+                                       locations={"local": tuple(str(root) for root in roots)}, server=settings_file.ServerSettings(port=8795))
     settings_file.write(config)
+    settings_file.reset_cache()
     generated = config.directory("generated")
-    seed_metadata_cache(media, config.directory("sources"))
+    for root in roots:
+        seed_metadata_cache(root, config.directory("sources"))
     process_library(config, db, generated, generated / "covers", provider_factory=refuse_network)
     client = TestClient(create_app(PeachSettings(db_path=db, configured=True, token="")), base_url="http://127.0.0.1", client=("127.0.0.1", 50000))
     try:
         approved = approve_candidates(client)
-        routes, defaults = {}, {}
-        for route in ROUTES:
-            response = client.get(route)
+        performer = client.get("/api/index?kind=performers").json()["items"][0]["entity_id"]
+
+        def read(route: str):
+            response = client.get(route.replace("{performer}", str(performer)))
             if response.status_code == 404:
                 print(f"跳过：应用没有这个接口：{route}")
-                continue
+                return None
             if response.status_code != 200 or "json" not in response.headers.get("content-type", ""):
                 raise RuntimeError(f"参照接口不可读：{route}：{response.status_code}")
-            routes[route] = dict(sorted(shape(response.json()).items()))
-            if route in DEFAULT_ROUTES:
-                defaults[route] = scrub(response.json(), media, data, route)
+            return response.json()
+        # 默认值是空闲状态，要在造数之前读：造出的任务记录带本机主机名与进程号，也不该成为演示的默认值。
+        defaults = {route: scrub(value, roots, data, route) for route in ROUTES if route in DEFAULT_ROUTES and (value := read(route)) is not None}
+        seed_states(client, db)
+        routes = {route: dict(sorted(shape(value).items())) for route in ROUTES if (value := read(route)) is not None}
     finally:
         client.close()
     commit = subprocess.check_output(["git", "-C", str(app), "rev-parse", "HEAD"], text=True).strip()
