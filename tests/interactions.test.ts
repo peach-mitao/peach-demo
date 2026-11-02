@@ -185,3 +185,28 @@ test('目录用途可预览、保存和移除，刷新恢复录制状态且不�
     assert.equal((await (await page(respond).fetch('/api/folders?folder=demo-root')).json()).rules_revision, 0);
     assert.ok(p.calls.every(call => call.method === 'GET'));
 });
+test('教程进度、播放记忆与外部播放只改变当前页面，不产生写请求', async () => {
+    const p = page(() => ({}));
+    const progress = async (body?: object) => (await p.fetch('/api/tutorial-progress', body ? { method: 'POST', body: JSON.stringify(body) } : undefined)).json();
+    assert.deepEqual(await progress(), { version: 1, campaign: 'tutorial-center-1', invited: true, completed: false, chapters: {} });
+    await progress({ campaign: 'tutorial-center-1', action: 'step', chapter: 'basics', step: 'search', next: 1, skipped: false });
+    await progress({ campaign: 'tutorial-center-1', action: 'step', chapter: 'basics', step: 'search', next: 1, skipped: true });
+    assert.deepEqual((await progress()).chapters.basics, { next: 1, read: [], skipped: ['search'] });
+    assert.equal((await progress({ campaign: 'tutorial-center-1', action: 'complete' })).completed, true);
+    const memory = '/api/player/memory?video=item%3A1';
+    assert.deepEqual(await (await p.fetch(memory)).json(), { selected: null, tracks: [] });
+    await p.fetch(memory, { method: 'PUT', body: JSON.stringify({ rotation: 90, caption_style: { size: 2 } }) });
+    await p.fetch(memory, { method: 'PUT', body: JSON.stringify({ rate: 1.5, caption_style: { color: 'white' } }) });
+    assert.deepEqual(await (await p.fetch(memory)).json(), { selected: null, tracks: [], rotation: 90, rate: 1.5, caption_style: { size: 2, color: 'white' } });
+    assert.deepEqual((await (await p.fetch('/api/local-players')).json()).players.map((row: { id: string }) => row.id), ['default']);
+    assert.equal((await p.fetch('/api/local-playback?id=1&player=default', { method: 'POST', body: '{}' })).status, 400);
+    assert.equal((await p.fetch('/api/diagnostics/exports', { method: 'POST', body: '{}' })).status, 400);
+    assert.equal((await (await p.fetch('/api/diagnostics/exports')).json()).status, 'idle');
+    assert.deepEqual(p.calls, []);
+});
+test('标签管理带分页参数时返回应用的分页契约', async () => {
+    const p = page(() => tagManagement.tagInventory({ tags: { items: [{ entity_id: 1, k: '旅行', n: 2, cat: 'meta' }, { entity_id: 2, k: '风景', n: 1, cat: 'story' }] }, onlineTags: { items: [] } }));
+    const data = await (await p.fetch('/api/tag-management?limit=1&offset=0&category=all&view=cloud&state=active&scope=local')).json();
+    assert.deepEqual([data.items.map((row: { k: string }) => row.k), data.total, data.categories], [['旅行'], 2, { meta: 1, story: 1 }]);
+    assert.equal((await p.fetch('/api/tag-management?limit=1&state=gone')).status, 400);
+});

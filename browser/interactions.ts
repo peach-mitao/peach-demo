@@ -88,6 +88,7 @@
     const folderPlans = new Map();
     let folderRevision = 0;
     let searchHistory: any[] = [];
+    let tutorial: any = null;
     // 每个访客的草稿只存在当前页面内存中，刷新即恢复夹具。
     const snapshots = new Map();
     const pending = new Map();
@@ -243,8 +244,16 @@
             const body = request.method === 'GET' ? {} : await request.clone().json();
             const scope = body.scope || url.searchParams.get('scope') || 'local', key = '/api/tag-management' + (scope === 'online' ? '?scope=online' : '');
             const inventory = await read(key);
-            if (request.method === 'GET')
-                return result(inventory);
+            if (request.method === 'GET') {
+                if (!url.searchParams.has('limit'))
+                    return result(inventory);
+                try {
+                    return result(globalThis.peachDemoTags.tagPage(inventory, url.searchParams));
+                }
+                catch (error) {
+                    return result({ message: (error instanceof Error ? error.message : String(error)) }, 400);
+                }
+            }
             try {
                 if (path.endsWith('/preview')) {
                     const catalog = await read('/api/items?limit=1000');
@@ -359,17 +368,63 @@
         }
         if (path.startsWith('/api/configuration/') && request.method === 'GET' && snapshots.has(path))
             return result(snapshots.get(path));
-        if (path === '/api/subtitles/memory') {
-            const key = path + url.search, state = await read(key);
+        if (path === '/api/player/memory' && ['GET', 'PUT'].includes(request.method)) {
+            // 字幕、旋转、倍速与字幕外观只记在当前页面，刷新恢复默认。
+            const key = path + url.search;
+            if (!snapshots.has(key))
+                snapshots.set(key, { selected: null, tracks: [] });
+            const state = snapshots.get(key);
             if (request.method === 'PUT') {
-                const body = await request.clone().json();
-                state.selected = body.selected;
-                if (body.track) {
-                    const track = { key: body.track.key, name: body.track.name, src: URL.createObjectURL(new Blob([body.track.text], { type: 'text/vtt' })) };
-                    state.tracks = [...state.tracks.filter((row: { key: any; }) => row.key !== track.key), track];
+                const { track, caption_style, ...patch } = await request.clone().json();
+                Object.assign(state, patch);
+                if (caption_style)
+                    state.caption_style = { ...state.caption_style, ...caption_style };
+                if (track) {
+                    const row = { key: track.key, name: track.name, src: URL.createObjectURL(new Blob([track.text], { type: 'text/vtt' })) };
+                    state.tracks = [...state.tracks.filter((item: { key: any; }) => item.key !== row.key), row];
                 }
             }
             return result(state);
+        }
+        if (path === '/api/client-updates' && request.method === 'GET') {
+            const config = await read('/api/configuration'), browser = await read('/api/configuration/jav-browser'), health = await read('/healthz');
+            return result({ runtime: { version: health.version, build_id: String(health.build_commit).slice(0, 24) }, release: config.updates,
+                update_job: config.update_job || { state: 'idle', progress: 0 }, userscript: browser.userscript,
+                repairs: { state: 'complete', available: true, message: '', items: [
+                    { id: 'catalog', label: '更新已有资料', state: 'complete', changed: {}, review_count: 0 },
+                    { id: 'background', label: '后台更新进度', state: 'complete', pending: 0, failed: 0, queued: 0 }] } });
+        }
+        if (path === '/api/tutorial-progress' && ['GET', 'POST'].includes(request.method)) {
+            // 与应用同一套动作语义；进度只留在当前页面。
+            tutorial ||= { version: 1, campaign: 'tutorial-center-1', invited: true, completed: false, chapters: {} };
+            if (request.method === 'POST') {
+                const body = await request.clone().json();
+                if (body.action === 'dismiss')
+                    tutorial.invited = true;
+                else if (body.action === 'reopen')
+                    Object.assign(tutorial, { invited: true, completed: false });
+                else if (body.action === 'complete')
+                    Object.assign(tutorial, { invited: true, completed: true });
+                else if (['position', 'step'].includes(body.action)) {
+                    const row = tutorial.chapters[body.chapter] ||= { next: 0, read: [], skipped: [] };
+                    row.next = body.next;
+                    if (body.action === 'step') {
+                        row.read = row.read.filter((step: string) => step !== body.step);
+                        row.skipped = row.skipped.filter((step: string) => step !== body.step);
+                        row[body.skipped ? 'skipped' : 'read'].push(body.step);
+                    }
+                }
+            }
+            return result(tutorial);
+        }
+        if (path === '/api/local-players' && request.method === 'GET')
+            return result({ players: [{ id: 'default', label: '系统默认播放器' }] });
+        if (request.method === 'POST' && ['/api/local-playback', '/api/external-playback'].includes(path))
+            return result({ error: '仅提供演示，不会打开外部播放器。' }, 400);
+        if (path === '/api/diagnostics/exports') {
+            if (request.method === 'POST')
+                return result({ error: '演示站不会生成诊断报告或刮削记录。' }, 400);
+            return result({ status: 'idle' });
         }
         if (path === '/api/folders' && request.method === 'GET') {
             const response = await originalFetch(input, init);
