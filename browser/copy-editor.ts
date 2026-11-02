@@ -3,7 +3,8 @@
 // 本机预览同时把草稿交给 scripts/edit_server.ts 落盘到工作目录，维护者据此改回维护源。
 (() => {
     const Core = globalThis.PeachCopyEditorCore, key = 'peach.copy-edits.v1';
-    const local = ['127.0.0.1', 'localhost'].includes(location.hostname), endpoint = 'http://127.0.0.1:8792/copy-edits';
+    // 自动化浏览器的改字只留在它自己的草稿里，避免回归测试写进维护者的改字文件。
+    const local = ['127.0.0.1', 'localhost'].includes(location.hostname) && !navigator.webdriver, endpoint = 'http://127.0.0.1:8792/copy-edits';
     let edits: Record<string, string> = {}, active = true, editor: CopyEditor;
     try {
         const saved = JSON.parse(localStorage.getItem(key) || '{}');
