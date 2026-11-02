@@ -1,14 +1,26 @@
 "use strict";
-// 演示站仅适配浏览器草稿和工具条；编辑交互使用应用仓库的唯一共享核心。
+// 演示站适配浏览器草稿和工具条；编辑交互使用应用仓库的唯一共享核心。
+// 本机预览同时把草稿交给 scripts/edit_server.ts 落盘到工作目录，维护者据此改回维护源。
 (() => {
     const Core = globalThis.PeachCopyEditorCore, key = 'peach.copy-edits.v1';
-    let edits = {}, active = true, editor: CopyEditor;
+    const local = ['127.0.0.1', 'localhost'].includes(location.hostname), endpoint = 'http://127.0.0.1:8792/copy-edits';
+    let edits: Record<string, string> = {}, active = true, editor: CopyEditor;
     try {
         const saved = JSON.parse(localStorage.getItem(key) || '{}');
         if (saved && typeof saved === 'object' && !Array.isArray(saved))
             edits = saved;
     }
     catch { }
+    const upload = async (data: Record<string, string>) => {
+        if (!local)
+            return false;
+        try {
+            return (await fetch(endpoint, { method: 'PUT', headers: { 'content-type': 'application/json' }, body: JSON.stringify(data) })).ok;
+        }
+        catch {
+            return false;
+        }
+    };
     const originals = new WeakMap(), css = document.createElement('style');
     css.dataset.copyEditor = '';
     css.textContent = `
@@ -42,14 +54,19 @@
         onBusy: (value) => { bar.setAttribute('aria-busy', String(value)); if (!value)
             apply(); },
         resolve: (node) => ({ original: originals.get(node) ?? node.data.trim(), multiline: !!node.parentElement?.closest('pre,code') }),
-        save(edit, text) {
+        async save(edit, text) {
             const next = { ...edits, [edit.original]: text };
             localStorage.setItem(key, JSON.stringify(next));
             edits = next;
             originals.set(edit.node, edit.original);
-            return { text, message: text ? '已保存到本浏览器' : '已删除文字，刷新后仍保留' };
+            const stored = await upload({ [edit.original]: text });
+            return { text, message: stored ? (text ? '已保存到本机工作目录' : '已删除文字，已保存到本机工作目录')
+                    : local ? '本机改字服务未启动，仅保存到本浏览器' : (text ? '已保存到本浏览器' : '已删除文字，刷新后仍保留') };
         },
     });
     new MutationObserver(apply).observe(document.body, { childList: true, subtree: true, characterData: true });
     apply();
+    // 打开编辑页时补交本浏览器里已有的草稿，避免改字只留在某一个浏览器。
+    if (Object.keys(edits).length)
+        void upload(edits).then(stored => { if (stored) say(`已把本浏览器的 ${Object.keys(edits).length} 处改字同步到本机工作目录`); });
 })();

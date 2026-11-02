@@ -62,6 +62,8 @@
 !/scripts/check_tour.ts
 !/scripts/check_folders.ts
 !/scripts/check_edit.ts
+!/scripts/edit_server.ts
+!/scripts/fetch_public_credits.ts
 !/scripts/check_routes.ts
 !/scripts/check_region.ts
 !/scripts/build_region_data.py
