@@ -46,8 +46,14 @@ test('名册、搜索、推荐、关注和业务状态共享普通电影身份',
     assert.ok(data.routes.has(`/api/entity?kind=${row.entity_kind}&id=${row.entity_id}`));
   }
   const follow = data.routes.get('/api/follow?limit=100&offset=0');
-  assert.equal(follow.groups.length, Math.min(FILMS.length, 36));
+  assert.equal(follow.groups.length, Math.min(FILMS.length, 60));
   assert.ok(follow.groups.every((group: any) => ids.has(group.primary.asset_id) && group.primary.playable === false));
+  // 电影是视频帖、带时长；海报是图片帖、不带时长。两种媒体页都有内容。
+  const kinds = (kind: string) => follow.groups.filter((group: any) => group.primary.media_items.every((media: any) => media.media_kind === kind));
+  assert.equal(kinds('video').length, Math.min(FILMS.length, 36));
+  assert.ok(kinds('video').every((group: any) => group.primary.duration > 0));
+  assert.equal(kinds('image').length, Math.max(0, Math.min(FILMS.length, 60) - 36));
+  assert.ok(kinds('image').every((group: any) => group.primary.duration === null));
   assert.deepEqual(data.recorded['/api/downloads'].tasks.map(row => row.state), ['remote_running', 'ingested', 'failed']);
   assert.equal(data.routes.get('/api/stats').attribution.videos, FILMS.length);
   assert.equal(data.routes.get('/api/stats').attribution.studio, FILMS.filter(film => film.studio).length);

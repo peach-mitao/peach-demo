@@ -6,7 +6,7 @@ export const pageRoutes = [
     '/', '/?browse=folders', '/?jav=1', '/unseen', '/watch-later', '/flagged',
     '/jav?tab=discover', '/jav?tab=discover&scope=library', '/jav?tab=wants',
     '/performers', '/performers?category=animation', '/creators', '/studios', '/agencies', '/tags', '/tags?scope=online',
-    '/follow?media=images', '/follow?media=images&view=table', '/playlists', '/wall', '/immerse',
+    '/follow', '/follow?media=images', '/follow?media=images&view=table', '/playlists', '/wall', '/immerse',
     '/stats', '/taste', '/review', '/data-cleanup', '/duplicates', '/quality-goals', '/sources',
     '/tasks', '/subscriptions?tab=list', '/subscriptions?tab=add', '/subscriptions?tab=feeds', '/junk-files', '/trash',
     ...['appearance', 'playback', 'jav', 'search', 'content', 'library', 'subscriptions', 'downloads', 'network', 'maintenance', 'diagnostics'].map(key => '/settings/' + key),

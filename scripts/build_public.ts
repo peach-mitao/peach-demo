@@ -5,7 +5,7 @@ import { createHash } from 'node:crypto';
 import { build } from 'esbuild';
 import { buildStatic, staticImageExpressions } from './build_static.ts';
 import { buildReplay } from './build_replay.ts';
-import { DEMO_SETTINGS, FOLLOW_IMAGES, NOTICE } from '../src/page-shell.ts';
+import { DEMO_SETTINGS, NOTICE } from '../src/page-shell.ts';
 import sharp from 'sharp';
 import { bundlePlayer } from './bundle_player.ts';
 import { pageRoutes } from './demo_pages.ts';
@@ -56,7 +56,7 @@ export async function buildPublic(site = path.join(root, 'site'), out = path.joi
     if (!appOutput)
         throw Error('应用入口构建未取得');
     const appURL = '/' + path.relative(out, path.resolve(appOutput)).split(path.sep).join('/');
-    const decorate = (html:string) => movieHTML(html).replace('<head>', '<head><meta http-equiv="Content-Security-Policy" content="media-src \'none\'">').replace('</head>', DEMO_SETTINGS + FOLLOW_IMAGES + `<script src="${runtime}"></script><script src="${interaction}"></script>` + tourGate + '</head>').replace('src="/dist/peach-app.js"', `src="${appURL}"`).replace('</body>', NOTICE + editorGate + `<script defer src="${behavior}"></script></body>`);
+    const decorate = (html:string) => movieHTML(html).replace('<head>', '<head><meta http-equiv="Content-Security-Policy" content="media-src \'none\'">').replace('</head>', DEMO_SETTINGS + `<script src="${runtime}"></script><script src="${interaction}"></script>` + tourGate + '</head>').replace('src="/dist/peach-app.js"', `src="${appURL}"`).replace('</body>', NOTICE + editorGate + `<script defer src="${behavior}"></script></body>`);
     const rights = [...FILMS.map(film => ({ ...film.poster, ...MOVIE_RIGHTS[film.slug], title: film.title, kind: '电影图片' })), ...PEOPLE.map(person => ({ ...person.portrait, title: person.name, kind: '人物肖像' })), ...STUDIOS.map(studio => ({ ...studio.logo, title: studio.name, kind: '厂牌标识' }))];
     const escape = (value: unknown) => String(value || '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]!);
     await mkdir(path.join(out, 'film-sources'), { recursive: true });
