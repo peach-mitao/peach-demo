@@ -110,9 +110,12 @@ export const REVIEWED_OUT: Record<string, string> = {
 export const REVIEWED_PORTRAITS: Record<string, string> = { Q2011506: 'Albert Parker Jan 1926.jpg', Q447847: 'Dorothy Arzner 1929.jpg' };
 // 没有 Wikidata 影片条目的开放电影，按署名直接对应人物条目。
 export const CREDITED: Record<string, string> = { 'Derek de Lint': 'Q1200141', 'Sergio Hasselbaink': 'Q15881854' };
+// 开放电影的出品方：Blender Institute 与 Blender Studio 隶属基金会、没有独立标识条目，沿用基金会标识。
+export const CREDITED_STUDIOS: Record<string, string> = { 'Blender Foundation': 'Q883799', 'Blender Institute': 'Q883799', 'Blender Studio': 'Q883799' };
 
 // 竖幅人像从顶部取正方形，圆形头像才会落在脸上而不是躯干；
-// 标识等比放进方形透明画布的内切区，小位的圆形图标也能完整显示宽幅字标。
+// 标识等比放进方形白底画布的内切区，小位的圆形图标也能完整显示宽幅字标；
+// 白底与应用里厂牌图标的常见底色一致，头像圆框的灰色底不会透出来。
 async function image(file: CommonsFile, name: string, width: number, changes: string, directory: string, shape: 'portrait' | 'logo'): Promise<PublicImage & Record<string, unknown> | null> {
   const granted = licence(file);
   if (!granted) return null;
@@ -124,7 +127,7 @@ async function image(file: CommonsFile, name: string, width: number, changes: st
   }
   if (shape === 'logo') {
     const inner = Math.round(width * 0.7), mark = await picture.resize(inner, inner, { fit: 'inside' }).toBuffer();
-    picture = sharp({ create: { width, height: width, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } }).composite([{ input: mark, gravity: 'center' }]);
+    picture = sharp({ create: { width, height: width, channels: 3, background: '#ffffff' } }).composite([{ input: mark, gravity: 'center' }]);
   }
   const body = await sharp(await picture.png().toBuffer()).resize({ width, withoutEnlargement: true }).webp({ quality: 82, alphaQuality: 90 }).toBuffer();
   await writeFile(path.join(directory, name), body);
@@ -141,7 +144,7 @@ export async function fetchPublicCredits(catalogFile: string, directory: string)
   const known = new Set(catalog.people.flatMap(person => [person.name, person.original_name]));
   const films = await entities(catalog.films.flatMap(film => film.wikidata ? [film.wikidata] : []), 'claims');
   const related = [...films.values()].flatMap(film => [...ids(film, 'P57'), ...ids(film, 'P161'), ...ids(film, 'P272')]);
-  const linked = await entities([...related, ...Object.values(CREDITED)], 'labels|claims');
+  const linked = await entities([...related, ...Object.values(CREDITED), ...Object.values(CREDITED_STUDIOS)], 'labels|claims');
   const wanted = new Map<string, { entity: Entity; films: Set<string>; names: Set<string> }>(), studios = new Map<string, Entity>();
   for (const film of catalog.films) {
     const source = film.wikidata ? films.get(film.wikidata) : undefined;
@@ -153,9 +156,9 @@ export async function fetchPublicCredits(catalogFile: string, directory: string)
       const row = wanted.get(match.id) || wanted.set(match.id, { entity: match, films: new Set(), names: new Set() }).get(match.id)!;
       row.films.add(film.wikidata || film.slug); row.names.add(name);
     }
-    if (!source) continue;
     const first = film.studio.split('、')[0];
-    const company = first && ids(source, 'P272').map(id => linked.get(id)).find(entity => entity && labels(entity).includes(first));
+    const company = CREDITED_STUDIOS[first!] ? linked.get(CREDITED_STUDIOS[first!]!)
+      : first && ids(source, 'P272').map(id => linked.get(id)).find(entity => entity && labels(entity).includes(first));
     if (company && !studios.has(film.studio)) studios.set(film.studio, company);
   }
   const portraits = await commons([...wanted.values()].flatMap(row => [portraitOf(row.entity)].filter(Boolean)), PORTRAIT_WIDTH);
@@ -180,7 +183,7 @@ export async function fetchPublicCredits(catalogFile: string, directory: string)
   for (const [name, entity] of studios) {
     if (REVIEWED_OUT[entity.id]) { skipped.push(`${name}（${REVIEWED_OUT[entity.id]}）`); continue; }
     const file = logos.get(values(entity, 'P154')[0]);
-    const logo = file && await image(file, `studio-${entity.id.toLowerCase()}.webp`, LOGO_WIDTH, `等比缩放后居中放入${LOGO_WIDTH}像素方形透明画布并转换为WebP；按容器缩放显示。`, directory, 'logo');
+    const logo = file && await image(file, `studio-${entity.id.toLowerCase()}.webp`, LOGO_WIDTH, `等比缩放后居中放入${LOGO_WIDTH}像素方形白底画布并转换为WebP；按容器缩放显示。`, directory, 'logo');
     if (logo) marks.push({ id: entity.id, name, original_name: englishName(entity), source: `https://www.wikidata.org/wiki/${entity.id}`, logo });
     else skipped.push(name);
   }

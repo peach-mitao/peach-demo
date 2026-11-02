@@ -10309,6 +10309,150 @@
   ],
   "studios": [
     {
+      "id": "Q883799",
+      "name": "Blender Institute",
+      "original_name": "Blender Foundation",
+      "source": "https://www.wikidata.org/wiki/Q883799",
+      "logo": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/3/3c/Logo_Blender.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Logo_Blender.svg",
+        "title": "File:Logo Blender.svg",
+        "artist": "™/®Blender Foundation",
+        "credit": "Vectorised by VulcanSphere from http://www.blender.org/ (SVG code)",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "7fda13fa62a10f06e68dc5d8640e4ccc7c24a7171ee6392bfad5b487bedb9ce4",
+        "bytes": 4416,
+        "changes": "等比缩放后居中放入480像素方形白底画布并转换为WebP；按容器缩放显示。",
+        "file": "studio-q883799.webp",
+        "license_evidence": {
+          "title": "File:Logo Blender.svg",
+          "revision": 1244516388,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3ALogo%20Blender.svg&oldid=1244516388",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-Trademark-Text-Logo",
+              "parameters": ""
+            },
+            {
+              "name": "PD-textlogo",
+              "parameters": ""
+            },
+            {
+              "name": "PD-trademark",
+              "parameters": ""
+            },
+            {
+              "name": "Trademarked",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3ALogo%20Blender.svg&oldid=1244516388"
+      }
+    },
+    {
+      "id": "Q883799",
+      "name": "Blender Foundation",
+      "original_name": "Blender Foundation",
+      "source": "https://www.wikidata.org/wiki/Q883799",
+      "logo": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/3/3c/Logo_Blender.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Logo_Blender.svg",
+        "title": "File:Logo Blender.svg",
+        "artist": "™/®Blender Foundation",
+        "credit": "Vectorised by VulcanSphere from http://www.blender.org/ (SVG code)",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "7fda13fa62a10f06e68dc5d8640e4ccc7c24a7171ee6392bfad5b487bedb9ce4",
+        "bytes": 4416,
+        "changes": "等比缩放后居中放入480像素方形白底画布并转换为WebP；按容器缩放显示。",
+        "file": "studio-q883799.webp",
+        "license_evidence": {
+          "title": "File:Logo Blender.svg",
+          "revision": 1244516388,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3ALogo%20Blender.svg&oldid=1244516388",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-Trademark-Text-Logo",
+              "parameters": ""
+            },
+            {
+              "name": "PD-textlogo",
+              "parameters": ""
+            },
+            {
+              "name": "PD-trademark",
+              "parameters": ""
+            },
+            {
+              "name": "Trademarked",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3ALogo%20Blender.svg&oldid=1244516388"
+      }
+    },
+    {
+      "id": "Q883799",
+      "name": "Blender Studio",
+      "original_name": "Blender Foundation",
+      "source": "https://www.wikidata.org/wiki/Q883799",
+      "logo": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/3/3c/Logo_Blender.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "source": "https://commons.wikimedia.org/wiki/File:Logo_Blender.svg",
+        "title": "File:Logo Blender.svg",
+        "artist": "™/®Blender Foundation",
+        "credit": "Vectorised by VulcanSphere from http://www.blender.org/ (SVG code)",
+        "license": "Public domain",
+        "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
+        "sha256": "7fda13fa62a10f06e68dc5d8640e4ccc7c24a7171ee6392bfad5b487bedb9ce4",
+        "bytes": 4416,
+        "changes": "等比缩放后居中放入480像素方形白底画布并转换为WebP；按容器缩放显示。",
+        "file": "studio-q883799.webp",
+        "license_evidence": {
+          "title": "File:Logo Blender.svg",
+          "revision": 1244516388,
+          "source": "https://commons.wikimedia.org/w/index.php?title=File%3ALogo%20Blender.svg&oldid=1244516388",
+          "licences": [
+            {
+              "name": "PD-Layout",
+              "parameters": ""
+            },
+            {
+              "name": "PD-Trademark-Text-Logo",
+              "parameters": ""
+            },
+            {
+              "name": "PD-textlogo",
+              "parameters": ""
+            },
+            {
+              "name": "PD-trademark",
+              "parameters": ""
+            },
+            {
+              "name": "Trademarked",
+              "parameters": ""
+            }
+          ],
+          "concerns": []
+        },
+        "license_source": "https://commons.wikimedia.org/w/index.php?title=File%3ALogo%20Blender.svg&oldid=1244516388"
+      }
+    },
+    {
       "id": "Q41468",
       "name": "乌发电影公司",
       "original_name": "UFA",
@@ -10321,9 +10465,9 @@
         "credit": "Cutout from http://www.ufa.de/static/download/UFA.pdf",
         "license": "Public domain",
         "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
-        "sha256": "8f83418044de394646ad506b2df1919350ed877dcab584d7ba2c409fc7d8c57f",
-        "bytes": 7812,
-        "changes": "等比缩放后居中放入480像素方形透明画布并转换为WebP；按容器缩放显示。",
+        "sha256": "9ca2c2d127fad37e6f17a22b983c0d58deba2a65428a66aeb994d65486f9e0ef",
+        "bytes": 3296,
+        "changes": "等比缩放后居中放入480像素方形白底画布并转换为WebP；按容器缩放显示。",
         "file": "studio-q41468.webp",
         "license_evidence": {
           "title": "File:Logo UFA.svg",
@@ -10361,9 +10505,9 @@
         "credit": "Prana-Film",
         "license": "Public domain",
         "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
-        "sha256": "1fd93d2a09e50e53b7b17ee3dbc8d5556884479b94ccd73396354c15e4c1bd27",
-        "bytes": 9472,
-        "changes": "等比缩放后居中放入480像素方形透明画布并转换为WebP；按容器缩放显示。",
+        "sha256": "e948bf66dd29058c63627c3de136525d536efb48349168dddad465739ad3d305",
+        "bytes": 9298,
+        "changes": "等比缩放后居中放入480像素方形白底画布并转换为WebP；按容器缩放显示。",
         "file": "studio-q540172.webp",
         "license_evidence": {
           "title": "File:Prana-Film 1.jpg",
@@ -10421,9 +10565,9 @@
         "credit": "United_Artists_Logo_1919.JPG",
         "license": "Public domain",
         "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
-        "sha256": "e93ba0084322763d15aa76695b9640ca3fd6a2057ecdce84a9f39ddc0ed2c2d9",
-        "bytes": 12640,
-        "changes": "等比缩放后居中放入480像素方形透明画布并转换为WebP；按容器缩放显示。",
+        "sha256": "5d8f091aac4ea03e824f3aeacf14ae3cfaf255b81685b796ccc409947c289b3c",
+        "bytes": 7938,
+        "changes": "等比缩放后居中放入480像素方形白底画布并转换为WebP；按容器缩放显示。",
         "file": "studio-q219400.webp",
         "license_evidence": {
           "title": "File:United Artists 1919.svg",
@@ -10473,9 +10617,9 @@
         "credit": "https://logos-world.net/mgm-logo/",
         "license": "Public domain",
         "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
-        "sha256": "2c655b9710baef8893803d34207189b7b8c67b8dd78af5379a176ee137e1db81",
-        "bytes": 6408,
-        "changes": "等比缩放后居中放入480像素方形透明画布并转换为WebP；按容器缩放显示。",
+        "sha256": "10327acdbad602cb7d88f9f7b27859ce12b644ddf79be8be7b843a685a9d0021",
+        "bytes": 4314,
+        "changes": "等比缩放后居中放入480像素方形白底画布并转换为WebP；按容器缩放显示。",
         "file": "studio-q179200.webp",
         "license_evidence": {
           "title": "File:Metro-Goldwyn-Mayer logo.svg",
@@ -10513,9 +10657,9 @@
         "credit": "warnerbros.com",
         "license": "Public domain",
         "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
-        "sha256": "a90917c4f242d00ddfaa067780cd5033546591d097dda1cc93ea184a8d449da4",
-        "bytes": 15490,
-        "changes": "等比缩放后居中放入480像素方形透明画布并转换为WebP；按容器缩放显示。",
+        "sha256": "ef9f8b990c686c225637e81332cd63539fe6dbd08dc55716f2626b91b568ac89",
+        "bytes": 9896,
+        "changes": "等比缩放后居中放入480像素方形白底画布并转换为WebP；按容器缩放显示。",
         "file": "studio-q126399.webp",
         "license_evidence": {
           "title": "File:Warner Bros. (2019) logo.svg",
@@ -10557,9 +10701,9 @@
         "credit": "Moving Picture World, 1915 (https://archive.org/stream/movingpicturewor25newy#page/n1655/mode/1up)",
         "license": "Public domain",
         "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
-        "sha256": "e99707f24d390be98230410d100857a9b1299663fd1c421cf2f4b74b50bd0140",
-        "bytes": 5628,
-        "changes": "等比缩放后居中放入480像素方形透明画布并转换为WebP；按容器缩放显示。",
+        "sha256": "64c67e30d6247caaaab8e6364824cdf46e274c42e6b992ef0e85914661ad339d",
+        "bytes": 5486,
+        "changes": "等比缩放后居中放入480像素方形白底画布并转换为WebP；按容器缩放显示。",
         "file": "studio-q24679.webp",
         "license_evidence": {
           "title": "File:Triangle Film Corporation logo, 1915.png",
@@ -10601,9 +10745,9 @@
         "credit": "https://logos.fandom.com/wiki/20th_Century_Studios/Logo_Variations",
         "license": "Public domain",
         "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
-        "sha256": "fbafe35b725a7b7c8068b83ad4388b9336802c59a06e0ac19c9fe1ce327dad93",
-        "bytes": 9168,
-        "changes": "等比缩放后居中放入480像素方形透明画布并转换为WebP；按容器缩放显示。",
+        "sha256": "916d799450f577697899c98c0fc6a1fd32ecbf47988425ee247170a5f87568df",
+        "bytes": 5728,
+        "changes": "等比缩放后居中放入480像素方形白底画布并转换为WebP；按容器缩放显示。",
         "file": "studio-q434841.webp",
         "license_evidence": {
           "title": "File:20th Century Studios (2021).svg",
@@ -10641,9 +10785,9 @@
         "credit": "Brian Jackson Brand vectorized as SVG",
         "license": "Public domain",
         "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
-        "sha256": "088d9fa81f7769c6cf991a7a441e2faf26bca4884f8a212046d34f7baa485870",
-        "bytes": 19078,
-        "changes": "等比缩放后居中放入480像素方形透明画布并转换为WebP；按容器缩放显示。",
+        "sha256": "7e66221f01f0eb698c32b04d53cd150847f245286a0fe73e20c0d7d549424c70",
+        "bytes": 8994,
+        "changes": "等比缩放后居中放入480像素方形白底画布并转换为WebP；按容器缩放显示。",
         "file": "studio-q168383.webp",
         "license_evidence": {
           "title": "File:Universal Pictures 2021 (Blue).svg",
@@ -10689,9 +10833,9 @@
         "credit": "L'emigrante (film 1915)",
         "license": "Public domain",
         "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
-        "sha256": "658c409c2a04dbf44ba7b9b6fd977a9d46d50ba29b7370331ff3ae817b1c6441",
-        "bytes": 21130,
-        "changes": "等比缩放后居中放入480像素方形透明画布并转换为WebP；按容器缩放显示。",
+        "sha256": "d7cb6d4e92eb3715476c442bc458b7eea73ad51aab183bd9cd3d1640b3e33262",
+        "bytes": 21002,
+        "changes": "等比缩放后居中放入480像素方形白底画布并转换为WebP；按容器缩放显示。",
         "file": "studio-q439623.webp",
         "license_evidence": {
           "title": "File:Itala Film - Logo.jpg",
@@ -10737,9 +10881,9 @@
         "credit": "Academy of Motion Picture Arts and Sciences at the Internet Archive",
         "license": "Public domain",
         "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
-        "sha256": "cb0633bf17fd7867b9765ca1386d213141ef8ab89fd3f6ec1f3b5143e1c67dd7",
-        "bytes": 13866,
-        "changes": "等比缩放后居中放入480像素方形透明画布并转换为WebP；按容器缩放显示。",
+        "sha256": "fb6eab827a349f08e44a3bef21f8c1cc9e070d85334054df378f4f81588a626e",
+        "bytes": 13706,
+        "changes": "等比缩放后居中放入480像素方形白底画布并转换为WebP；按容器缩放显示。",
         "file": "studio-q1188369.webp",
         "license_evidence": {
           "title": "File:First-National-Pictures-Logo.jpg",
@@ -10777,9 +10921,9 @@
         "credit": "Own work",
         "license": "CC BY-SA 4.0",
         "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
-        "sha256": "c16b0ef2935d162fbdada41dbb11401711674709c45090238f2addb875772c95",
-        "bytes": 21912,
-        "changes": "等比缩放后居中放入480像素方形透明画布并转换为WebP；按容器缩放显示。",
+        "sha256": "8267437356fd71890c05dddef16c4d95ffbed3da21ed12f884926ae11e5a9be4",
+        "bytes": 10246,
+        "changes": "等比缩放后居中放入480像素方形白底画布并转换为WebP；按容器缩放显示。",
         "file": "studio-q177955.webp",
         "license_evidence": {
           "title": "File:SFS logo primary v red.png",
@@ -10813,9 +10957,9 @@
         "credit": "warnerbros.com",
         "license": "Public domain",
         "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
-        "sha256": "a90917c4f242d00ddfaa067780cd5033546591d097dda1cc93ea184a8d449da4",
-        "bytes": 15490,
-        "changes": "等比缩放后居中放入480像素方形透明画布并转换为WebP；按容器缩放显示。",
+        "sha256": "ef9f8b990c686c225637e81332cd63539fe6dbd08dc55716f2626b91b568ac89",
+        "bytes": 9896,
+        "changes": "等比缩放后居中放入480像素方形白底画布并转换为WebP；按容器缩放显示。",
         "file": "studio-q126399.webp",
         "license_evidence": {
           "title": "File:Warner Bros. (2019) logo.svg",
@@ -10857,9 +11001,9 @@
         "credit": "https://logos.fandom.com/wiki/Fox_Film_Corporation",
         "license": "Public domain",
         "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
-        "sha256": "3fe5c96ada7e4affd4d1774b497e20590a51e4647003a9f1c87836b03b8ce5d9",
-        "bytes": 3474,
-        "changes": "等比缩放后居中放入480像素方形透明画布并转换为WebP；按容器缩放显示。",
+        "sha256": "95bd05ce6329a1c19f60d44f0defc32260a1c12a8e06f7d97244db44f94d40f5",
+        "bytes": 2360,
+        "changes": "等比缩放后居中放入480像素方形白底画布并转换为WebP；按容器缩放显示。",
         "file": "studio-q2644123.webp",
         "license_evidence": {
           "title": "File:Fox Film.svg",
@@ -10901,9 +11045,9 @@
         "credit": "https://i.vimeocdn.com/video/540034854.jpg?mw=1920&mh=1080&q=70",
         "license": "Public domain",
         "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
-        "sha256": "850db60e7eee0a71b076ef78d8e10772972545e1008f337e301934dd41d67a40",
-        "bytes": 7486,
-        "changes": "等比缩放后居中放入480像素方形透明画布并转换为WebP；按容器缩放显示。",
+        "sha256": "6763dd45edef66e9a7808ebe31b858941d56b1a8da6aadd5da10fc089943eb11",
+        "bytes": 7502,
+        "changes": "等比缩放后居中放入480像素方形白底画布并转换为WebP；按容器缩放显示。",
         "file": "studio-q1368540.webp",
         "license_evidence": {
           "title": "File:Essanay logo.jpg",
@@ -10945,9 +11089,9 @@
         "credit": "https://crimeanblog.blogspot.ru/2011/11/1911-1-40.html?m=0",
         "license": "Public domain",
         "license_url": "https://commons.wikimedia.org/wiki/Help:Public_domain",
-        "sha256": "6653a7705cd48d53eb601a12be03811087b79f603081ac8fd42d51a8c245f511",
-        "bytes": 12526,
-        "changes": "等比缩放后居中放入480像素方形透明画布并转换为WebP；按容器缩放显示。",
+        "sha256": "1cba51fc9f3ad0a2e43b9a65e21ba0196323eb3e28e2328c4d615f3bd7d0fcad",
+        "bytes": 12450,
+        "changes": "等比缩放后居中放入480像素方形白底画布并转换为WebP；按容器缩放显示。",
         "file": "studio-q4461043.webp",
         "license_evidence": {
           "title": "File:Khanzhonkov logo.jpg",
@@ -10985,9 +11129,9 @@
         "credit": "",
         "license": "CC BY-SA 3.0",
         "license_url": "http://creativecommons.org/licenses/by-sa/3.0/",
-        "sha256": "089287aa8c8e1dcbb3b0f48ada481fe0e512a77b91fb957d6e8d1b402a29cdb1",
-        "bytes": 21144,
-        "changes": "等比缩放后居中放入480像素方形透明画布并转换为WebP；按容器缩放显示。",
+        "sha256": "a3c9f78183078b073357f6c00186cdab3fb246c246496ae2a4001ffc1dcfafb9",
+        "bytes": 21240,
+        "changes": "等比缩放后居中放入480像素方形白底画布并转换为WebP；按容器缩放显示。",
         "file": "studio-q495396.webp",
         "license_evidence": {
           "title": "File:Logo società italiana Cines.jpg",
