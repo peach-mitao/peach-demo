@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { configuration, cloudProxies, providers } from '../src/showcase.ts';
+import { configuration, cloudProxies, providers, taskRuns, storage } from '../src/showcase.ts';
 import { downloadTasks } from './showcase-fixtures.ts';
 import { mkdtemp, mkdir, readFile, writeFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -69,7 +69,12 @@ test('素材构建保留录制业务状态，重复构建也不拼装事件', as
             assert.equal(browser.userscript.install_url, '/integrations/peach-jav.user.js');
             for (const [route, expected] of Object.entries(recorded)) {
                 const actual = JSON.parse(await readFile(path.join(directory, await key(route) + '.json'), 'utf8'));
-                if (route === '/api/downloads') {
+                if (route === '/api/tasks') {
+                    // 任务按应用的 TaskRunPayload 契约投影，保留录制的身份与状态。
+                    assert.deepEqual(actual, taskRuns(expected), route);
+                    assert.deepEqual([actual.finished[0].id, actual.finished[0].status, typeof actual.finished[0].task_label], [91, 'failed', 'string']);
+                }
+                else if (route === '/api/downloads') {
                     delete actual.providers;
                     assert.deepEqual(actual, { ...expected, tasks: expected.tasks.map((task: any) => ({ ...task, asset_id: null })) }, route);
                 }
@@ -81,4 +86,13 @@ test('素材构建保留录制业务状态，重复构建也不拼装事件', as
     finally {
         await rm(site, { recursive: true, force: true });
     }
+});
+test('存储空间沿用应用的分类，可清理的类别才给可回收字节', () => {
+    const constants = { task_labels: { 'library-processing': '扫描与采集' }, storage_categories: [
+        { key: 'database', label: '数据库', description: '资料', note: '', cleanable: false }, { key: 'playback', label: '播放缓存', description: '转码', note: '', cleanable: true }] };
+    const state = storage(constants);
+    assert.deepEqual(state.usage.categories.map(row => [row.key, row.reclaimable > 0]), [['database', false], ['playback', true]]);
+    assert.equal(state.usage.total_bytes, state.usage.categories.reduce((sum, row) => sum + row.bytes, 0));
+    assert.equal(configuration({ updates: {}, facts: [], tunnel: {}, push_discovery: {} }, '1.0.0', constants).storage.relocation.available, false);
+    assert.equal(taskRuns({ finished: [{ id: 1 }] }, constants).finished[0].task_label, '扫描与采集');
 });

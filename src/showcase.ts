@@ -22,7 +22,33 @@ export const cloudProxies = () => ({ accounts: sources.slice(1).map((source, ind
         id: `demo-cloud-${index + 1}`, name: source.library, cloud: source.location, path: index ? '/PikPak' : '/115', revision: 'demo-1', writable: true,
         api: proxy('system'), data: proxy('direct'), libraries: [{ name: source.library, root: source.root, location: source.location }],
     })), unlinked: [] });
-export function configuration(recorded: {updates:Record<string,unknown>;facts:{term:string;value?:string}[];tunnel:Record<string,unknown>;push_discovery:Record<string,unknown>;[key:string]:unknown}, version: string) {
+// 同步时由 record_entry_pages.py 从应用检出读取的后端常量：存储分类与任务名称。
+export interface AppConstants {
+    storage_categories: { key: string; label: string; description: string; note: string; cleanable: boolean }[];
+    task_labels: Record<string, string>;
+}
+const MIB = 1024 ** 2;
+// 「存储空间」一节：分类与说明取自应用，占用为固定示例值；统计、清理与迁移在演示站不可执行。
+export function storage(constants: AppConstants) {
+    const sizes: Record<string, number> = { database: 186, backups: 372, playback: 2150, thumbnails: 455, previews: 3290, downloads: 828, sources: 12, records: 41, tools: 610, accounts: 1, logs: 24, other: 3 };
+    const categories = constants.storage_categories.map(row => {
+        const bytes = (sizes[row.key] ?? 8) * MIB;
+        return { ...row, bytes, files: Math.round(bytes / (256 * 1024)), reclaimable: row.cleanable ? bytes : 0 };
+    });
+    const total = categories.reduce((sum, row) => sum + row.bytes, 0);
+    return { data_root: 'C:\\Users\\peach\\peach-data', free_bytes: 412 * 1024 * MIB, total_bytes: 931 * 1024 * MIB, system_drive: true,
+        usage: { measured_at: 1790812800, total_bytes: total, total_files: categories.reduce((sum, row) => sum + row.files, 0), categories },
+        job: { state: 'idle', message: '' }, relocation: { available: false, message: '演示站不会迁移数据目录。', last: null } };
+}
+// 任务中心按应用的 TaskRunPayload 契约回放已完成任务，任务名取自应用。
+export function taskRuns(recorded: { finished?: { id: number; status?: string; message?: string; finished_at?: string; started_at?: string; done?: number; total?: number }[]; [key: string]: unknown }, constants?: AppConstants) {
+    const finished = (recorded.finished || []).map(row => ({ id: row.id, task_key: 'library-processing', task_label: constants?.task_labels['library-processing'] || '扫描与采集',
+        trigger: 'manual', status: row.status || 'succeeded', host: 'demo', started_at: row.started_at || null, finished_at: row.finished_at || null, elapsed_seconds: 30,
+        progress_current: row.done ?? null, progress_total: row.total ?? null, progress_label: '', result_summary: {}, error: '',
+        parent_run_id: null, root_run_id: null, followup_key: '', followup_depth: 0 }));
+    return { ...recorded, available: true, running: [], skipped: [], finished };
+}
+export function configuration(recorded: {updates:Record<string,unknown>;facts:{term:string;value?:string}[];tunnel:Record<string,unknown>;push_discovery:Record<string,unknown>;[key:string]:unknown}, version: string, constants?: AppConstants) {
     const data: Record<string,any> = structuredClone(recorded);
     Object.assign(data, { editable: true, notice: '', port_editable: true, ledger_read_only: false, revision: 'demo-configuration',
         media_sources: structuredClone(sources), media_dirs: sources.map(row => row.path), library_count: sources.length, downloads: downloads(),
@@ -37,6 +63,8 @@ export function configuration(recorded: {updates:Record<string,unknown>;facts:{t
     data.push_discovery = { ...data.push_discovery, enabled: true, available: true, watch_local: true, cloud: true, local_running: true,
         local_roots: ['R:\\Media'], media_roots: sources.map(row => row.root),
         prefixes: [{ prefix: '/115/Peach', root: 'A:\\115' }, { prefix: '/PikPak/Peach', root: 'B:\\PikPak' }] };
+    if (constants)
+        data.storage = storage(constants);
     // 操作系统卸载保持不可执行；演示不能创建真实系统操作。
     return data;
 }

@@ -157,6 +157,8 @@
         const key = path.slice('/api/configuration/'.length);
         if (key === 'downloads/check' || key === 'downloads/folder')
             return read('/api/configuration/downloads/check');
+        if (key === 'storage' || key.startsWith('storage/'))
+            return Object.keys(body).length ? { ...config.storage, job: { state: 'idle', message: '演示站不会统计、清理或迁移本机数据。' } } : config.storage;
         if (key === 'downloads') {
             const { token: _token, ...safe } = body;
             config.downloads.config = { ...config.downloads.config, ...safe };
@@ -670,7 +672,7 @@
             Object.assign(data, { status: 'complete', [path.endsWith('rollback') ? 'restored' : 'moved']: 0, last_batch: path.endsWith('rollback') ? '' : 'demo', message: '演示站未移动真实文件。' });
             return result(data);
         }
-        if (path.startsWith('/api/configuration/') && (request.method !== 'GET' || ['updates', 'update-status', 'automatic-updates'].includes(path.split('/').at(-1)!))) {
+        if (path.startsWith('/api/configuration/') && (request.method !== 'GET' || ['updates', 'update-status', 'automatic-updates', 'storage'].includes(path.split('/').at(-1)!))) {
             let body = {};
             try {
                 body = await request.clone().json();

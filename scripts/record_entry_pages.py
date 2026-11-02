@@ -42,8 +42,15 @@ def main():
                                    "fields": {"usage": "版本与系统信息", "errors": "故障类型与代码位置"}, "notice": ""}
     commit = subprocess.check_output(["git", "-C", str(source), "rev-parse", "HEAD"], text=True).strip()
     bridge = userscript_bridge()
+    # 演示数据里与后端同名的分类和任务名直接取自同一检出，后端改名或增删时随同步更新。
+    from peach.data_storage import CATEGORIES
+    from peach.task_runs import TASK_LABELS
+    constants = {"storage_categories": [{"key": item.key, "label": item.label, "description": item.description,
+                                         "note": item.note, "cleanable": item.cleanable} for item in CATEGORIES],
+                 "task_labels": TASK_LABELS}
     pages = {"commit": commit, "login": login_html("/"), "setup": setup_shell(), "questions": payload,
-             "userscript_bridge": {"html": bytes(bridge.body).decode('utf-8'), "headers": dict(bridge.headers)}}
+             "userscript_bridge": {"html": bytes(bridge.body).decode('utf-8'), "headers": dict(bridge.headers)},
+             "constants": constants}
     target.mkdir(parents=True, exist_ok=True)
     (target / "entry-pages.json").write_text(json.dumps(pages, ensure_ascii=False), encoding="utf-8")
     print("已录制应用登录页、首次设置页与题目；未读取真实配置。")

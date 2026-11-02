@@ -6,7 +6,7 @@ import { fixtureKey, fixtureHash } from '../src/key.ts';
 import { PUBLIC_CATALOG, MOVIE_READS, DEMO_DATA_NOTICE, publicMovies, responseShape } from '../src/public-movies.ts';
 import type { PublicCatalog, PublicImage } from '../src/public-movies.ts';
 import type { FixtureManifest } from '../src/types.ts';
-import { configuration, downloads, downloadCheck, cloudProxies, providers } from '../src/showcase.ts';
+import { configuration, downloads, downloadCheck, cloudProxies, providers, taskRuns } from '../src/showcase.ts';
 import { tagInventory } from '../src/tag-management.ts';
 
 const digest = (value: string | Uint8Array) => createHash('sha256').update(value).digest('hex');
@@ -28,7 +28,9 @@ export async function verifyPublicMovies(site: string, dataset: PublicCatalog = 
     const info = JSON.parse(await readFile(path.join(site, '_demo/frontend-source.json'), 'utf8'));
     const release = JSON.parse(await readFile(path.join(site, 'integrations/jav-userscript-release.json'), 'utf8'));
     const sites = JSON.parse(await readFile(path.join(site, 'integrations/jav-sites.json'), 'utf8')).sites;
-    const config = configuration(certificate.configuration, info.version);
+    const constants = JSON.parse(await readFile(path.join(fixtures, 'entry-pages.json'), 'utf8')).constants;
+    const config = configuration(certificate.configuration, info.version, constants);
+    derived.set('/api/tasks', taskRuns(expected.recorded['/api/tasks'], constants));
     derived.set('/api/configuration', config);
     derived.set('/healthz', { ...certificate.health, version: info.version, build_commit: info.commit });
     derived.set('/api/configuration/downloads', downloads());

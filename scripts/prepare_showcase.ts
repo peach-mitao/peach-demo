@@ -2,7 +2,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import path from 'node:path';
 import { fixtureKey, fixtureHash } from '../src/key.ts';
-import { configuration, downloads, downloadCheck, cloudProxies, providers } from '../src/showcase.ts';
+import { configuration, downloads, downloadCheck, cloudProxies, providers, taskRuns } from '../src/showcase.ts';
 import { tagInventory } from '../src/tag-management.ts';
 export async function prepareShowcase(site = fileURLToPath(new URL('../site/', import.meta.url))) {
     const directory = path.join(site, '_fixtures');
@@ -33,7 +33,7 @@ export async function prepareShowcase(site = fileURLToPath(new URL('../site/', i
         if (!manifest.fixtures[key])
             await write(route, data);
     };
-    const config = configuration(await read('/api/configuration'), info.version);
+    const config = configuration(await read('/api/configuration'), info.version, entry.constants);
     await write('/api/configuration', config);
     const health = await read('/healthz');
     await write('/healthz', { ...health, version: info.version, build_commit: info.commit });
@@ -58,7 +58,8 @@ export async function prepareShowcase(site = fileURLToPath(new URL('../site/', i
             postprocess_run_id: runIds.has(task.postprocess_run_id) ? task.postprocess_run_id : null, })) };
     await write('/api/downloads', snapshot);
     await write('/api/downloads?limit=50', snapshot);
-    for (const route of ['/api/wants', '/api/orphan-records', '/api/tasks'] as const)
+    await write('/api/tasks', taskRuns(recorded['/api/tasks'], entry.constants));
+    for (const route of ['/api/wants', '/api/orphan-records'] as const)
         await write(route, recorded[route]);
     for (const [key, value] of Object.entries(config))
         if (['automatic_updates', 'remote_reporting', 'library_sharing'].includes(key))
