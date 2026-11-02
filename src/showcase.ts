@@ -1,8 +1,11 @@
-// 演示专用连接配置，只使用公开占位地址。
+import { withBackend } from './backend-defaults.ts';
+// 演示专用连接配置，只使用公开占位地址。根目录与媒体库身份按应用的多媒体库契约给出稳定演示值。
+const source = (location: string, root: string, library: string, cost: string, library_id: string) => ({ location, root, path: root, root_id: `demo-root-${location}`,
+    library_id, library, library_icon: location, library_color: '', library_policy: 'auto', library_stages: '', cost, transport: 'filesystem', online: true });
 export const sources = [
-    { location: 'local', root: 'R:\\Media', path: 'R:\\Media', library: '演示馆藏', library_icon: 'local', online: true, cost: 'free' },
-    { location: '115', root: 'A:\\115', path: 'A:\\115', library: '115 收藏', library_icon: '115', online: true, cost: 'metered' },
-    { location: 'pikpak', root: 'B:\\PikPak', path: 'B:\\PikPak', library: 'PikPak 收藏', library_icon: 'pikpak', online: true, cost: 'metered' },
+    source('local', 'R:\\Media', '演示馆藏', 'free', 'demo-movies'),
+    source('115', 'A:\\115', '115 收藏', 'metered', 'demo-115'),
+    source('pikpak', 'B:\\PikPak', 'PikPak 收藏', 'metered', 'demo-pikpak'),
 ];
 export const providers = [
     { key: '115', source: '115', label: '115 收藏 · 115', configured: true, target: '/115/Peach', root: 'A:\\115', can_cancel: true },
@@ -20,7 +23,7 @@ export const downloadCheck = () => ({ ok: true, address: 'http://localhost:19798
 const proxy = (mode: string) => ({ mode, host: '', port: 0, username: '', password_set: false });
 export const cloudProxies = () => ({ accounts: sources.slice(1).map((source, index) => ({
         id: `demo-cloud-${index + 1}`, name: source.library, cloud: source.location, path: index ? '/PikPak' : '/115', revision: 'demo-1', writable: true,
-        api: proxy('system'), data: proxy('direct'), libraries: [{ name: source.library, root: source.root, location: source.location }],
+        api: proxy('system'), data: proxy('direct'), libraries: [{ name: source.library, root: source.root, location: source.location, account: `demo-cloud-${index + 1}` }],
     })), unlinked: [] });
 // 同步时由 record_entry_pages.py 从应用检出读取的后端常量：存储分类与任务名称。
 export interface AppConstants {
@@ -38,7 +41,7 @@ export function storage(constants: AppConstants) {
     const total = categories.reduce((sum, row) => sum + row.bytes, 0);
     return { data_root: 'C:\\Users\\peach\\peach-data', free_bytes: 412 * 1024 * MIB, total_bytes: 931 * 1024 * MIB, system_drive: true,
         usage: { measured_at: 1790812800, total_bytes: total, total_files: categories.reduce((sum, row) => sum + row.files, 0), categories },
-        job: { state: 'idle', message: '' }, relocation: { available: false, message: '演示站不会迁移数据目录。', last: null } };
+        job: { state: 'idle', message: '' }, relocation: { available: false, message: '演示站不会迁移数据目录。', steps: [], last: null } };
 }
 // 任务中心按应用的 TaskRunPayload 契约回放已完成任务，任务名取自应用。
 export function taskRuns(recorded: { finished?: { id: number; status?: string; message?: string; finished_at?: string; started_at?: string; done?: number; total?: number }[]; [key: string]: unknown }, constants?: AppConstants) {
@@ -46,7 +49,7 @@ export function taskRuns(recorded: { finished?: { id: number; status?: string; m
         trigger: 'manual', status: row.status || 'succeeded', host: 'demo', started_at: row.started_at || null, finished_at: row.finished_at || null, elapsed_seconds: 30,
         progress_current: row.done ?? null, progress_total: row.total ?? null, progress_label: '', result_summary: {}, error: '',
         parent_run_id: null, root_run_id: null, followup_key: '', followup_depth: 0 }));
-    return { ...recorded, available: true, running: [], skipped: [], finished };
+    return withBackend('/api/tasks', { ...recorded, available: true, running: [], skipped: [], finished }, ['followup_counts', 'result_versions', 'working_parents']);
 }
 export function configuration(recorded: {updates:Record<string,unknown>;facts:{term:string;value?:string}[];tunnel:Record<string,unknown>;push_discovery:Record<string,unknown>;[key:string]:unknown}, version: string, constants?: AppConstants) {
     const data: Record<string,any> = structuredClone(recorded);
@@ -65,6 +68,8 @@ export function configuration(recorded: {updates:Record<string,unknown>;facts:{t
         prefixes: [{ prefix: '/115/Peach', root: 'A:\\115' }, { prefix: '/PikPak/Peach', root: 'B:\\PikPak' }] };
     if (constants)
         data.storage = storage(constants);
-    // 操作系统卸载保持不可执行；演示不能创建真实系统操作。
-    return data;
+    // 操作系统卸载保持不可执行；演示不能创建真实系统操作。其余字段以应用的实际配置打底。
+    return withBackend('/api/configuration', data);
 }
+// 更新提示的基础快照取自应用；运行版本、发布状态与脚本版本由页面按当前配置覆盖。
+export const clientUpdates = (version: string) => withBackend('/api/client-updates', { runtime: { version, build_id: 'demo' } });

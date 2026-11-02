@@ -389,9 +389,10 @@
             return result(state);
         }
         if (path === '/api/client-updates' && request.method === 'GET') {
-            const config = await read('/api/configuration'), browser = await read('/api/configuration/jav-browser'), health = await read('/healthz');
-            return result({ runtime: { version: health.version, build_id: String(health.build_commit).slice(0, 24) }, release: config.updates,
-                update_job: config.update_job || { state: 'idle', progress: 0 }, userscript: browser.userscript,
+            // 应用的更新提示快照打底，运行版本、发布状态与脚本版本按当前演示配置覆盖。
+            const [base, config, browser, health] = await Promise.all(['/api/client-updates', '/api/configuration', '/api/configuration/jav-browser', '/healthz'].map(read));
+            return result({ ...base, runtime: { version: health.version, build_id: String(health.build_commit).slice(0, 24) }, release: { ...base.release, ...config.updates },
+                update_job: config.update_job || { state: 'idle', progress: 0 }, userscript: { ...base.userscript, ...browser.userscript },
                 repairs: { state: 'complete', available: true, message: '', items: [
                     { id: 'catalog', label: '更新已有资料', state: 'complete', changed: {}, review_count: 0 },
                     { id: 'background', label: '后台更新进度', state: 'complete', pending: 0, failed: 0, queued: 0 }] } });
@@ -487,12 +488,16 @@
         if (request.method === 'POST' && ['/api/activity', '/api/play'].includes(path))
             return result({ ok: true });
         if (path === '/api/media-processing' && ['GET', 'POST'].includes(request.method)) {
-            const policy = snapshots.get(path) || { metadata_only: false };
+            // 读回放快照（以应用默认值打底）；写入与应用一样只送改了的那一项，回整份。
+            const policy = snapshots.get(path) || await read(path).catch(() => ({ metadata_only: false, preview_acceleration: 'auto', playback_acceleration: 'auto' }));
             if (request.method === 'POST') {
                 const body = await request.clone().json().catch(() => ({}));
-                if (typeof body.metadata_only !== 'boolean')
+                const keys = ['metadata_only', 'preview_acceleration', 'playback_acceleration'].filter(key => key in body);
+                if (!keys.length || ('metadata_only' in body && typeof body.metadata_only !== 'boolean')
+                    || keys.some(key => key !== 'metadata_only' && typeof body[key] !== 'string'))
                     return result({ message: '视频预览设置无效。' }, 400);
-                policy.metadata_only = body.metadata_only;
+                for (const key of keys)
+                    policy[key] = body[key];
             }
             snapshots.set(path, policy);
             return result(policy);
@@ -752,7 +757,7 @@
         if (feedbackResult.error || feedbackResult.ok === false)
             return response;
         if (path === '/api/watch-later')
-            item.watch_later = !item.watch_later;
+            item.watch_later = item.watch_later ? 0 : 1;
         else if (path === '/api/preference') {
             item.liked = body.liked;
             item.like_reason = body.reason || '';

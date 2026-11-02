@@ -1,0 +1,1393 @@
+{
+ "schema": 1,
+ "app_commit": "9847efb8e63a01f7fb43bb1ec6ed82ea1f800747",
+ "app_version": "0.53.0",
+ "routes": {
+  "/api/sources": {
+   "ok": true,
+   "sources": [
+    {
+     "location": "online",
+     "declared": null,
+     "resolved": null,
+     "mapped": true,
+     "online": true,
+     "state": "ok",
+     "message": ""
+    }
+   ],
+   "offline": [],
+   "offline_roots": []
+  },
+  "/api/settings": {
+   "sidebarOrder": [
+    "",
+    "follow",
+    "jav",
+    "performers",
+    "tags",
+    "studios",
+    "flagged",
+    "manage"
+   ],
+   "avatarRefreshDays": 90,
+   "faviconRefreshDays": 365,
+   "followInitialDays": 30,
+   "postSetupTutorialDone": false,
+   "organizeTemplates": {},
+   "codePatterns": [],
+   "feedHideGroupCompilations": true,
+   "feedHideSoloCompilations": false,
+   "feedHideExcerpts": true,
+   "searchHistoryLimit": null,
+   "performerNameLanguage": "zh-CN"
+  },
+  "/api/tasks": {
+   "ok": true,
+   "filtered": false,
+   "available": true,
+   "result_versions": {
+    "catalog": "243",
+    "follow": "46",
+    "discoveries": "0",
+    "review": "130:1793601920644486700",
+    "artwork": "1793601915472427600:None:None:None:None"
+   },
+   "running": [],
+   "skipped": [],
+   "finished": [],
+   "finished_has_more": false,
+   "working_parents": [],
+   "followup_counts": {},
+   "statuses": {
+    "active": [
+     "pending",
+     "running"
+    ],
+    "finished": [
+     "succeeded",
+     "failed",
+     "cancelled",
+     "interrupted"
+    ]
+   }
+  },
+  "/api/downloads": {
+   "available": true,
+   "providers": [],
+   "problems": [],
+   "tasks": [],
+   "has_more": false,
+   "next_before_id": null
+  },
+  "/api/review": {
+   "sections": {
+    "metadata_fields": [],
+    "creator_tags": [],
+    "studio_logos": [],
+    "performer_avatars": [],
+    "western_identity": [],
+    "cover_sources": [],
+    "fc2_markings": [],
+    "fc2_similarity": [],
+    "video_endcards": [],
+    "code_creators": []
+   },
+   "counts": {
+    "metadata_fields": 0,
+    "creator_tags": 0,
+    "studio_logos": 0,
+    "performer_avatars": 0,
+    "western_identity": 0,
+    "cover_sources": 0,
+    "fc2_markings": 0,
+    "fc2_similarity": 0,
+    "video_endcards": 0,
+    "code_creators": 0
+   },
+   "sources": {
+    "metadata_fields": "library-metadata-field-candidates.csv",
+    "creator_tags": null,
+    "studio_logos": null,
+    "performer_avatars": null,
+    "western_identity": null,
+    "cover_sources": null,
+    "fc2_markings": null,
+    "fc2_similarity": null,
+    "video_endcards": null,
+    "code_creators": "ledger"
+   },
+   "skipped_rows": {
+    "metadata_fields": 0,
+    "creator_tags": 0,
+    "studio_logos": 0,
+    "performer_avatars": 0,
+    "western_identity": 0,
+    "cover_sources": 0,
+    "fc2_markings": 0,
+    "fc2_similarity": 0,
+    "video_endcards": 0,
+    "code_creators": 0
+   },
+   "genre_tags": [
+    "3P多人",
+    "4K",
+    "69",
+    "ASMR",
+    "M字开腿",
+    "OL制服",
+    "VR",
+    "下垂乳",
+    "丝袜",
+    "中出内射",
+    "丰满",
+    "主观视角",
+    "乳交",
+    "人妻",
+    "传教士",
+    "伪娘",
+    "伴侣",
+    "体操服",
+    "修女",
+    "偶像艺人",
+    "偷拍偷窥",
+    "催眠剧情",
+    "傲娇",
+    "兔女郎",
+    "公主角色",
+    "公共场所",
+    "养女角色",
+    "冒险剧情",
+    "写真映像",
+    "凸乳晕",
+    "凹陷乳头",
+    "出轨",
+    "初拍",
+    "初次无码",
+    "制服",
+    "制服外套",
+    "剧情",
+    "办公室",
+    "动漫音",
+    "勃起乳头",
+    "医院",
+    "千金小姐",
+    "卷发",
+    "历史剧",
+    "原作改编",
+    "友情",
+    "双人性爱",
+    "双洞齐插",
+    "双马尾",
+    "反差",
+    "变态",
+    "口交",
+    "口爆",
+    "口球",
+    "可爱",
+    "合集",
+    "同事上司",
+    "名器",
+    "后入",
+    "吞精",
+    "呻吟",
+    "和服浴衣",
+    "啦啦队员",
+    "处女设定",
+    "处男",
+    "复古风格",
+    "外国人",
+    "多人",
+    "多毛",
+    "大乳头",
+    "大乳晕",
+    "大阴唇",
+    "女乘务员",
+    "女仆",
+    "女儿角色",
+    "女医生",
+    "女友",
+    "女忍者",
+    "女性主导",
+    "女性向",
+    "女战士",
+    "女搜查官",
+    "妄想剧情",
+    "妹妹角色",
+    "姐弟",
+    "娃娃音",
+    "娇小",
+    "婚纱",
+    "孕妇",
+    "学生",
+    "宅女宅男",
+    "宫颈",
+    "家庭教师",
+    "寡妇角色",
+    "导尿",
+    "射精",
+    "尖乳",
+    "局部特写",
+    "屁眼",
+    "展会女郎",
+    "巨乳",
+    "巨根",
+    "巨臀",
+    "强制剧情",
+    "御姐",
+    "微熟女",
+    "微胖",
+    "心理惊悚",
+    "怀旧风格",
+    "性教育",
+    "性玩具",
+    "性转·女体化",
+    "性骚扰剧情",
+    "恋乳",
+    "恋腿",
+    "恋足",
+    "恐怖剧情",
+    "恶作剧",
+    "恶搞",
+    "悬疑剧情",
+    "情侣",
+    "情趣内衣",
+    "户外",
+    "户外露出",
+    "手交",
+    "打扫口交",
+    "打桩",
+    "扶她",
+    "护士",
+    "拳交",
+    "按摩",
+    "挠痒",
+    "捆绑",
+    "换妻换夫",
+    "排泄",
+    "探花",
+    "接吻",
+    "搭讪",
+    "播音员",
+    "放尿",
+    "敏感乳头",
+    "敏感体质",
+    "教室学校",
+    "教师",
+    "教练",
+    "旅行",
+    "旗袍汉服",
+    "无内裤",
+    "无码",
+    "无胸罩",
+    "明星脸",
+    "晒黑肤色",
+    "有码",
+    "服务员",
+    "格斗选手",
+    "榨精",
+    "模特",
+    "正太",
+    "正太控",
+    "残虐表现",
+    "母乳",
+    "母亲的朋友",
+    "母亲角色",
+    "母子设定",
+    "毒龙",
+    "汗湿",
+    "油压",
+    "泄密流出",
+    "泡泡袜",
+    "泳装",
+    "洛丽塔",
+    "浴室",
+    "淫语",
+    "深喉",
+    "深色乳头",
+    "深色阴部",
+    "混血",
+    "清纯",
+    "温泉",
+    "湿身",
+    "潮吹",
+    "火箭乳",
+    "火车便当",
+    "火辣身材",
+    "热带度假",
+    "熟女",
+    "猫耳",
+    "瑜伽·健身",
+    "男同",
+    "痴女",
+    "痴汉",
+    "瘦巨乳",
+    "白人出演",
+    "白皙",
+    "白虎",
+    "百合",
+    "皮衣皮裙",
+    "直接进入",
+    "眼镜",
+    "短发",
+    "短裙",
+    "短裙女警",
+    "科幻剧情",
+    "秘书OL",
+    "空姐",
+    "站立性爱",
+    "素人",
+    "紧身衣",
+    "约会",
+    "纪录片",
+    "纯欲",
+    "纹身",
+    "细腰",
+    "经历讲述",
+    "综艺",
+    "绿帽NTR",
+    "美乳",
+    "美乳头",
+    "美乳晕",
+    "美巨臀",
+    "美熟女",
+    "美穴",
+    "美肌",
+    "美腿",
+    "美臀",
+    "美魔女",
+    "羞耻",
+    "翻白眼·失神",
+    "老年女性角色",
+    "老年男性角色",
+    "肌肉体型",
+    "肛交",
+    "肥胖体型",
+    "脱衣",
+    "腋",
+    "腹肌",
+    "自慰",
+    "自慰辅助",
+    "舔阴",
+    "舞蹈",
+    "色气乳头",
+    "色气乳房",
+    "色气身材",
+    "苗条",
+    "药物",
+    "萝莉",
+    "萝莉角色扮演",
+    "蒙面",
+    "薄码",
+    "裸体围裙",
+    "角色扮演",
+    "触手",
+    "讲师",
+    "调教",
+    "贫乳",
+    "赛车女郎",
+    "走光",
+    "足交",
+    "跨性别",
+    "身体柔软",
+    "车内",
+    "车震",
+    "辣妹",
+    "运动",
+    "运动服",
+    "运动短裤",
+    "近亲",
+    "迷你裙",
+    "逆搭讪",
+    "酒会联谊",
+    "酒店",
+    "醉酒",
+    "金发",
+    "长乳头",
+    "长垂乳",
+    "阿黑颜",
+    "陪酒女郎",
+    "隆胸",
+    "露脸",
+    "青梅竹马",
+    "靴子",
+    "颜射",
+    "颜面骑乘",
+    "风俗女郎",
+    "风俗店",
+    "饮尿",
+    "骑乘",
+    "高个",
+    "高潮",
+    "高跟",
+    "高颜值",
+    "黑人",
+    "黑发",
+    "鼻钩",
+    "龟头责"
+   ],
+   "queues": {
+    "later": {
+     "sections": {
+      "metadata_fields": [],
+      "creator_tags": [],
+      "studio_logos": [],
+      "performer_avatars": [],
+      "western_identity": [],
+      "cover_sources": [],
+      "fc2_markings": [],
+      "fc2_similarity": [],
+      "video_endcards": [],
+      "code_creators": []
+     },
+     "counts": {
+      "metadata_fields": 0,
+      "creator_tags": 0,
+      "studio_logos": 0,
+      "performer_avatars": 0,
+      "western_identity": 0,
+      "cover_sources": 0,
+      "fc2_markings": 0,
+      "fc2_similarity": 0,
+      "video_endcards": 0,
+      "code_creators": 0
+     }
+    },
+    "ignored": {
+     "sections": {
+      "metadata_fields": [],
+      "creator_tags": [],
+      "studio_logos": [],
+      "performer_avatars": [],
+      "western_identity": [],
+      "cover_sources": [],
+      "fc2_markings": [],
+      "fc2_similarity": [],
+      "video_endcards": [],
+      "code_creators": []
+     },
+     "counts": {
+      "metadata_fields": 0,
+      "creator_tags": 0,
+      "studio_logos": 0,
+      "performer_avatars": 0,
+      "western_identity": 0,
+      "cover_sources": 0,
+      "fc2_markings": 0,
+      "fc2_similarity": 0,
+      "video_endcards": 0,
+      "code_creators": 0
+     }
+    }
+   }
+  },
+  "/api/review?counts=1": {
+   "counts": {
+    "metadata_fields": 0,
+    "creator_tags": 0,
+    "studio_logos": 0,
+    "performer_avatars": 0,
+    "western_identity": 0,
+    "cover_sources": 0,
+    "fc2_markings": 0,
+    "fc2_similarity": 0,
+    "video_endcards": 0,
+    "code_creators": 0
+   },
+   "sources": {
+    "metadata_fields": "library-metadata-field-candidates.csv",
+    "creator_tags": null,
+    "studio_logos": null,
+    "performer_avatars": null,
+    "western_identity": null,
+    "cover_sources": null,
+    "fc2_markings": null,
+    "fc2_similarity": null,
+    "video_endcards": null,
+    "code_creators": "ledger"
+   },
+   "skipped_rows": {
+    "metadata_fields": 0,
+    "creator_tags": 0,
+    "studio_logos": 0,
+    "performer_avatars": 0,
+    "western_identity": 0,
+    "cover_sources": 0,
+    "fc2_markings": 0,
+    "fc2_similarity": 0,
+    "video_endcards": 0,
+    "code_creators": 0
+   }
+  },
+  "/api/duplicates?limit=120": {
+   "total": 0,
+   "files": 0,
+   "reclaimable": 0,
+   "groups": [],
+   "has_more": false
+  },
+  "/api/quality-goals?limit=200": {
+   "total": 0,
+   "items": [],
+   "offset": 0,
+   "has_more": false
+  },
+  "/api/organize": {
+   "status": "idle",
+   "locations": [],
+   "templates": {},
+   "presets": [
+    {
+     "label": "仅番号",
+     "file": "{code}",
+     "dir": "",
+     "example": "ABC-123.mp4"
+    },
+    {
+     "label": "番号和标题",
+     "file": "{code}[ {title}]",
+     "dir": "",
+     "example": "ABC-123 标题.mp4"
+    },
+    {
+     "label": "番号和画质",
+     "file": "{code}[ {definition}]",
+     "dir": "",
+     "example": "ABC-123 1080p.mp4"
+    },
+    {
+     "label": "番号和出演者",
+     "file": "{code}[ {actors}]",
+     "dir": "",
+     "example": "ABC-123 甲、乙.mp4"
+    },
+    {
+     "label": "按厂牌建文件夹",
+     "file": "{code}[ {title}]",
+     "dir": "{studio}",
+     "example": "厂牌/ABC-123 标题.mp4"
+    },
+    {
+     "label": "按系列建文件夹",
+     "file": "{code}[ {title}]",
+     "dir": "{series}",
+     "example": "系列/ABC-123 标题.mp4"
+    },
+    {
+     "label": "按出演者建文件夹",
+     "file": "{code}[ {title}]",
+     "dir": "{actors}",
+     "example": "甲、乙/ABC-123 标题.mp4"
+    },
+    {
+     "label": "按发行年建文件夹",
+     "file": "{code}[ {title}]",
+     "dir": "{year}",
+     "example": "2024/ABC-123 标题.mp4"
+    },
+    {
+     "label": "厂牌下按番号建文件夹",
+     "file": "{code}[ {title}][ CD{cd}]",
+     "dir": "{studio}/{code}",
+     "example": "厂牌/ABC-123/ABC-123 标题 CD2.mp4"
+    }
+   ],
+   "placeholders": [
+    {
+     "key": "code",
+     "label": "番号"
+    },
+    {
+     "key": "title",
+     "label": "标题"
+    },
+    {
+     "key": "studio",
+     "label": "厂牌"
+    },
+    {
+     "key": "series",
+     "label": "系列"
+    },
+    {
+     "key": "year",
+     "label": "发行年"
+    },
+    {
+     "key": "actors",
+     "label": "出演者"
+    },
+    {
+     "key": "cd",
+     "label": "分片号"
+    },
+    {
+     "key": "mosaic",
+     "label": "有码无码"
+    },
+    {
+     "key": "definition",
+     "label": "画质"
+    }
+   ],
+   "last_batch": ""
+  },
+  "/api/media-processing": {
+   "metadata_only": false,
+   "preview_acceleration": "auto",
+   "playback_acceleration": "auto"
+  },
+  "/api/media-repair": {
+   "ok": true,
+   "status": "idle",
+   "job_id": "",
+   "library": "",
+   "stage": "",
+   "checked": 0,
+   "total": 0,
+   "found": 0,
+   "repaired": 0,
+   "failed": 0,
+   "missing_tool": 0
+  },
+  "/api/entity/shapes": {
+   "ok": true,
+   "home": {
+    "feed": false
+   },
+   "entities": [
+    {
+     "id": 1,
+     "kind": "studio",
+     "names": [
+      "Blender Institute"
+     ],
+     "parts": [
+      "costars",
+      "jav"
+     ]
+    },
+    {
+     "id": 2,
+     "kind": "series",
+     "names": [
+      "Blender Open Movies"
+     ],
+     "parts": [
+      "costars"
+     ]
+    },
+    {
+     "id": 5,
+     "kind": "tag",
+     "names": [
+      "开放电影"
+     ],
+     "parts": [
+      "costars"
+     ]
+    },
+    {
+     "id": 8,
+     "kind": "performer",
+     "names": [
+      "Derek de Lint"
+     ],
+     "parts": [
+      "costars",
+      "jav"
+     ]
+    },
+    {
+     "id": 9,
+     "kind": "performer",
+     "names": [
+      "Sergio Hasselbaink"
+     ],
+     "parts": [
+      "costars",
+      "jav"
+     ]
+    },
+    {
+     "id": 10,
+     "kind": "tag",
+     "names": [
+      "科幻剧情"
+     ],
+     "parts": [
+      "costars"
+     ]
+    },
+    {
+     "id": 11,
+     "kind": "tag",
+     "names": [
+      "短片"
+     ],
+     "parts": [
+      "costars"
+     ]
+    },
+    {
+     "id": 12,
+     "kind": "studio",
+     "names": [
+      "Blender Foundation"
+     ],
+     "parts": [
+      "jav"
+     ]
+    },
+    {
+     "id": 13,
+     "kind": "studio",
+     "names": [
+      "Blender Studio"
+     ],
+     "parts": [
+      "jav"
+     ]
+    },
+    {
+     "id": 14,
+     "kind": "performer",
+     "names": [
+      "谢尔盖·米哈依洛维奇·爱森斯坦"
+     ],
+     "parts": [
+      "jav"
+     ]
+    },
+    {
+     "id": 15,
+     "kind": "studio",
+     "names": [
+      "莫斯科电影制片厂、国家影视委员会"
+     ],
+     "parts": [
+      "costars",
+      "jav"
+     ]
+    },
+    {
+     "id": 16,
+     "kind": "tag",
+     "names": [
+      "剧情片"
+     ],
+     "parts": [
+      "costars"
+     ]
+    },
+    {
+     "id": 17,
+     "kind": "tag",
+     "names": [
+      "无声电影"
+     ],
+     "parts": [
+      "costars"
+     ]
+    },
+    {
+     "id": 18,
+     "kind": "tag",
+     "names": [
+      "宣传片"
+     ],
+     "parts": [
+      "costars"
+     ]
+    },
+    {
+     "id": 19,
+     "kind": "tag",
+     "names": [
+      "時代劇"
+     ],
+     "parts": [
+      "costars"
+     ]
+    },
+    {
+     "id": 20,
+     "kind": "studio",
+     "names": [
+      "乌发电影公司"
+     ],
+     "parts": [
+      "jav"
+     ]
+    },
+    {
+     "id": 23,
+     "kind": "studio",
+     "names": [
+      "Prana Film"
+     ],
+     "parts": [
+      "jav"
+     ]
+    },
+    {
+     "id": 26,
+     "kind": "performer",
+     "names": [
+      "查理·卓别林"
+     ],
+     "parts": [
+      "jav"
+     ]
+    },
+    {
+     "id": 27,
+     "kind": "studio",
+     "names": [
+      "聯美"
+     ],
+     "parts": [
+      "costars",
+      "jav"
+     ]
+    },
+    {
+     "id": 28,
+     "kind": "tag",
+     "names": [
+      "喜剧电影"
+     ],
+     "parts": [
+      "costars"
+     ]
+    },
+    {
+     "id": 29,
+     "kind": "tag",
+     "names": [
+      "浪漫喜劇"
+     ],
+     "parts": [
+      "costars"
+     ]
+    },
+    {
+     "id": 30,
+     "kind": "tag",
+     "names": [
+      "social comedy film"
+     ],
+     "parts": [
+      "costars"
+     ]
+    },
+    {
+     "id": 31,
+     "kind": "studio",
+     "names": [
+      "Charles Chaplin Productions"
+     ],
+     "parts": [
+      "costars",
+      "jav"
+     ]
+    },
+    {
+     "id": 32,
+     "kind": "tag",
+     "names": [
+      "剧情喜剧片"
+     ],
+     "parts": [
+      "costars"
+     ]
+    },
+    {
+     "id": 33,
+     "kind": "performer",
+     "names": [
+      "賈利·古柏"
+     ],
+     "parts": [
+      "jav"
+     ]
+    },
+    {
+     "id": 34,
+     "kind": "studio",
+     "names": [
+      "派拉蒙电影公司"
+     ],
+     "parts": [
+      "costars",
+      "jav"
+     ]
+    },
+    {
+     "id": 35,
+     "kind": "tag",
+     "names": [
+      "动作片"
+     ],
+     "parts": [
+      "costars"
+     ]
+    },
+    {
+     "id": 36,
+     "kind": "tag",
+     "names": [
+      "战争片"
+     ],
+     "parts": [
+      "costars"
+     ]
+    },
+    {
+     "id": 37,
+     "kind": "studio",
+     "names": [
+      "米高梅公司"
+     ],
+     "parts": [
+      "jav"
+     ]
+    }
+   ],
+   "name_variants": [],
+   "name_glyphs": {
+    "並": "并",
+    "亜": "亚",
+    "亞": "亚",
+    "倉": "仓",
+    "児": "儿",
+    "凜": "凛",
+    "実": "实",
+    "實": "实",
+    "宮": "宫",
+    "島": "岛",
+    "嶋": "岛",
+    "嵐": "岚",
+    "塩": "盐",
+    "姫": "姬",
+    "尋": "寻",
+    "寧": "宁",
+    "恵": "惠",
+    "愛": "爱",
+    "斎": "斋",
+    "齋": "斋",
+    "斉": "齐",
+    "齊": "齐",
+    "桜": "樱",
+    "櫻": "樱",
+    "橋": "桥",
+    "歩": "步",
+    "満": "满",
+    "沢": "泽",
+    "澤": "泽",
+    "沖": "冲",
+    "浜": "滨",
+    "濱": "滨",
+    "渋": "涩",
+    "涼": "凉",
+    "湊": "凑",
+    "瀬": "濑",
+    "瀨": "濑",
+    "滝": "泷",
+    "瀧": "泷",
+    "稲": "稻",
+    "穂": "穗",
+    "紀": "纪",
+    "紗": "纱",
+    "結": "结",
+    "絵": "绘",
+    "絢": "绚",
+    "綾": "绫",
+    "緒": "绪",
+    "織": "织",
+    "聖": "圣",
+    "華": "华",
+    "葉": "叶",
+    "蔵": "藏",
+    "藍": "蓝",
+    "蘭": "兰",
+    "見": "见",
+    "遠": "远",
+    "鈴": "铃",
+    "鳥": "鸟",
+    "鳩": "鸠",
+    "須": "须",
+    "優": "优",
+    "飯": "饭",
+    "岡": "冈",
+    "時": "时",
+    "場": "场",
+    "圓": "圆",
+    "廣": "广",
+    "國": "国",
+    "學": "学",
+    "風": "风",
+    "樂": "乐",
+    "楽": "乐",
+    "榮": "荣",
+    "豐": "丰",
+    "龍": "龙",
+    "鶴": "鹤",
+    "蓮": "莲",
+    "東": "东",
+    "納": "纳",
+    "樹": "树",
+    "麗": "丽",
+    "靜": "静",
+    "貴": "贵",
+    "藝": "艺",
+    "歐": "欧",
+    "慶": "庆",
+    "遼": "辽",
+    "兒": "儿",
+    "園": "园",
+    "塚": "冢",
+    "広": "广",
+    "後": "后",
+    "栄": "荣",
+    "條": "条",
+    "楓": "枫",
+    "潤": "润",
+    "無": "无",
+    "環": "环",
+    "糸": "丝",
+    "紅": "红",
+    "純": "纯",
+    "繭": "茧",
+    "詩": "诗",
+    "達": "达",
+    "遙": "遥",
+    "郷": "乡",
+    "長": "长",
+    "響": "响",
+    "馬": "马",
+    "鳳": "凤",
+    "黒": "黑"
+   }
+  },
+  "/api/configuration": {
+   "editable": false,
+   "notice": "这个部署由配置文件管理服务；在本机编辑下方的设置文件。",
+   "revision": "988763d2ab7a746cca34693f57f48409a5c16eb12e5fa66fa4a3928fb32f920d",
+   "media_dirs": [
+    "R:\\Media"
+   ],
+   "library_count": 1,
+   "windows": true,
+   "port": 8795,
+   "port_editable": false,
+   "facts": [
+    {
+     "term": "版本",
+     "value": "0.53.0"
+    },
+    {
+     "term": "操作系统",
+     "value": "Windows"
+    },
+    {
+     "term": "数据目录",
+     "value": "C:\\Users\\peach\\peach-data"
+    },
+    {
+     "term": "设置文件",
+     "value": "C:\\Users\\peach\\peach-data\\config.toml"
+    },
+    {
+     "term": "日志目录",
+     "value": "C:\\Users\\peach\\peach-data\\logs"
+    },
+    {
+     "term": "untrunc",
+     "value": "未安装；缺索引的 MP4 需要它才修得了。解压到 C:\\Users\\peach\\peach-data\\tools\\untrunc。",
+     "download_url": "https://github.com/anthwlock/untrunc/releases",
+     "download_label": "下载 untrunc"
+    }
+   ],
+   "remote_reporting": {
+    "usage": true,
+    "errors": true,
+    "available": false,
+    "fields": {
+     "usage": "Peach 版本、分发方式（Windows／macOS 应用、Docker、wheel 或源码）、操作系统类型与版本、CPU 架构与核数、内存档位、Python 版本、运行环境与公开构建编号；每天最多一次，不含安装标识。",
+     "errors": "Peach 版本、分发方式、运行环境与公开构建编号、系统类型、Python 版本、CPU 架构、故障环节、异常链、Peach 与白名单框架的代码文件名/函数名/行号、结构化错误码、媒体工具故障类别、浏览器白名单异常类型与正式脚本构建映射、HTTP 方法/路由模板/关联错误编号、同类故障次数与统计日期；首次立即上传，重复次数每小时或退出时合并，每天最多 20 批。"
+    },
+    "notice": "发送至 Sentry。不上报错误原文、完整日志、诊断 ZIP、媒体名称、路径、网址、观看记录或凭据。接收服务会接触连接 IP；关闭后停止新发送，已发送的信息无法撤回。",
+    "delivery": {}
+   },
+   "library_sharing": {
+    "enabled": false,
+    "available": false,
+    "schema": 4,
+    "fields": [
+     "去重后的作品编号，以及评分、喜欢、不喜欢、已看、稍后看、播放次数、观看比例与手动添加的标签",
+     "出演者、创作者、厂牌、系列、手动标签、年代与时长分组的收藏、喜欢、不喜欢、观看数量和评分分布（有编号作品与无编号条目分开），以及主动收藏的实体名称",
+     "馆藏文件数量、有编号作品数量与无编号条目数量",
+     "Peach 版本、字段版本与 UTC 自然周"
+    ],
+    "notice": "匿名处理后上传馆藏与各类偏好明细。",
+    "last_attempt": {}
+   },
+   "startup": {
+    "available": true,
+    "enabled": false,
+    "silent": true,
+    "message": "",
+    "desktop": false,
+    "desktop_message": "桌面快捷方式属于另一份 Peach 安装"
+   },
+   "uninstall": {
+    "available": false,
+    "message": "源码安装请先关闭开机自启并退出托盘，再手动移除项目与数据目录",
+    "data_root": "C:\\Users\\peach\\peach-data",
+    "directories": [
+     "C:\\Users\\peach\\peach-data\\database",
+     "C:\\Users\\peach\\peach-data\\generated",
+     "C:\\Users\\peach\\peach-data\\sources",
+     "C:\\Users\\peach\\peach-data\\state",
+     "C:\\Users\\peach\\peach-data\\secrets",
+     "C:\\Users\\peach\\peach-data\\logs",
+     "C:\\Users\\peach\\peach-data\\tools",
+     "C:\\Users\\peach\\peach-data\\review"
+    ],
+    "full_available": false
+   },
+   "storage": {
+    "data_root": "C:\\Users\\peach\\peach-data",
+    "free_bytes": 142157856768,
+    "total_bytes": 2031179788288,
+    "system_drive": true,
+    "usage": null,
+    "job": {
+     "state": "idle",
+     "message": ""
+    },
+    "relocation": {
+     "available": false,
+     "message": "迁移要由托盘或无桌面服务（python -m peach.server）停止并重新启动 Peach，当前服务是直接启动的。请改用其中一种方式启动后再迁移；也可以退出 Peach，手动移动数据目录，再将 PEACH_DATA_ROOT 设为新位置",
+     "steps": [],
+     "last": null
+    }
+   },
+   "peach_proxy": {
+    "mode": "environment",
+    "proxy_saved": false,
+    "needs_selection": false
+   },
+   "entry_links": {
+    "sites": [
+     {
+      "key": "javdb",
+      "label": "JavDB",
+      "host": "",
+      "default_host": "javdb.com"
+     },
+     {
+      "key": "missav",
+      "label": "MISSAV",
+      "host": "",
+      "default_host": "missav.ws"
+     }
+    ]
+   },
+   "updates": {
+    "current_version": "0.53.0",
+    "latest_version": null,
+    "channel": "测试版",
+    "installation": "源码运行",
+    "in_app_update": false,
+    "state": "unchecked",
+    "message": "尚未检查",
+    "release_url": "https://github.com/peach-mitao/peach/releases"
+   },
+   "update_job": {
+    "state": "idle",
+    "progress": 0
+   },
+   "access": {
+    "mode": "legacy",
+    "revision": "legacy"
+   },
+   "media_sources": [
+    {
+     "location": "local",
+     "root": "R:\\Media",
+     "path": "R:\\Media",
+     "root_id": "3640ae4e-0d08-5b0a-93e0-e88eea541f4b",
+     "library_id": "81c37026-0dcb-5887-b745-756102ec24dd",
+     "library": "media",
+     "library_icon": "",
+     "library_color": "",
+     "library_policy": "auto",
+     "library_stages": "",
+     "cost": "free",
+     "transport": "filesystem",
+     "online": true
+    }
+   ],
+   "mount_dependencies": [
+    {
+     "name": "CloudDrive",
+     "available": true,
+     "download_url": "https://www.clouddrive2.com/download.html"
+    },
+    {
+     "name": "WinFsp",
+     "available": true,
+     "download_url": "https://winfsp.dev/rel/"
+    }
+   ],
+   "network": {
+    "editable": false,
+    "host": "127.0.0.1",
+    "mdns_name": "peach",
+    "scope": "local",
+    "local_url": "http://127.0.0.1/",
+    "lan_url": "",
+    "ip_url": ""
+   },
+   "ledger_read_only": false,
+   "tunnel": {
+    "enabled": false,
+    "state": "stopped",
+    "url": "",
+    "error": "",
+    "available": true,
+    "mode": "quick",
+    "hostname": "",
+    "token_set": false,
+    "named_available": true
+   },
+   "automatic_updates": {
+    "mode": "check",
+    "interval_hours": 24,
+    "available": false,
+    "download_available": false
+   },
+   "push_discovery": {
+    "enabled": true,
+    "watch_local": true,
+    "cloud": false,
+    "prefixes": [],
+    "available": true,
+    "secret": "",
+    "secret_set": false,
+    "endpoint": "/api/inbox/clouddrive",
+    "local_running": false,
+    "local_message": "",
+    "local_roots": [],
+    "queue": {
+     "pending": 0,
+     "submitted": 0,
+     "ingested": 0,
+     "missing": 0,
+     "dropped": 0,
+     "timed_out": 0,
+     "failed": 0,
+     "last_path": "",
+     "last_ingested_at": null,
+     "last_error": ""
+    },
+    "media_roots": [],
+    "origin": "",
+    "config_toml": ""
+   },
+   "downloads": {
+    "available": true,
+    "media_sources": [],
+    "config": {
+     "clouddrive_address": "",
+     "targets": {},
+     "pikpak_root": "",
+     "wait_hours": 168
+    },
+    "token_set": false,
+    "pikpak": {
+     "logged_in": false,
+     "username": "",
+     "remember": false,
+     "method": "password"
+    },
+    "pikpak_browser": {
+     "available": true,
+     "state": "idle",
+     "message": ""
+    },
+    "pikpak_roots": [],
+    "providers": [],
+    "problems": [],
+    "max_wait_hours": 1440
+   }
+  },
+  "/api/configuration/storage": {
+   "data_root": "C:\\Users\\peach\\peach-data",
+   "free_bytes": 142157672448,
+   "total_bytes": 2031179788288,
+   "system_drive": true,
+   "usage": null,
+   "job": {
+    "state": "idle",
+    "message": ""
+   },
+   "relocation": {
+    "available": false,
+    "message": "迁移要由托盘或无桌面服务（python -m peach.server）停止并重新启动 Peach，当前服务是直接启动的。请改用其中一种方式启动后再迁移；也可以退出 Peach，手动移动数据目录，再将 PEACH_DATA_ROOT 设为新位置",
+    "steps": [],
+    "last": null
+   }
+  },
+  "/api/client-updates": {
+   "runtime": {
+    "version": "0.53.0",
+    "build_id": "a1ff3d9495e6b1c619b8a905"
+   },
+   "release": {
+    "current_version": "0.53.0",
+    "latest_version": null,
+    "channel": "测试版",
+    "installation": "源码运行",
+    "in_app_update": false,
+    "state": "unchecked",
+    "message": "尚未检查",
+    "release_url": "https://github.com/peach-mitao/peach/releases"
+   },
+   "userscript": {
+    "version": "0.6.10",
+    "minimum_version": "0.5.1",
+    "install_url": "/integrations/peach-jav.user.js",
+    "release_url": "https://sleazyfork.org/zh-CN/scripts/600821"
+   },
+   "update_job": {
+    "state": "idle",
+    "progress": 0
+   },
+   "repairs": {
+    "state": "unavailable",
+    "items": [],
+    "available": false
+   }
+  },
+  "/api/ads?limit=1": {
+   "total": 0,
+   "all_total": 0,
+   "pending_total": 0,
+   "dismissed_total": 0,
+   "counts": {
+    "url": 0,
+    "audio": 0,
+    "other": 0,
+    "video": 0,
+    "archive": 0,
+    "image": 0
+   },
+   "kind": "",
+   "status": "pending",
+   "items": []
+  }
+ }
+}

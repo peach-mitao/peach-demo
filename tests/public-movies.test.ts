@@ -60,7 +60,9 @@ test('名册、搜索、推荐、关注和业务状态共享普通电影身份',
   assert.deepEqual(data.routes.get('/api/network-status'), { state: 'online', checked_at: null, demo: true });
   assert.deepEqual(data.routes.get('/api/background-issues').issues, []);
   assert.equal(data.routes.get('/api/feeds/schedule').enabled, false);
-  assert.deepEqual(data.routes.get('/api/review').sections, {});
+  // 复核各分类取自应用，演示馆藏没有待复核项。
+  const sections = data.routes.get('/api/review').sections;
+  assert.ok('metadata_fields' in sections && Object.values(sections).every(rows => Array.isArray(rows) && !rows.length));
   assert.ok(data.routes.get('/api/taste').analysis.headline.includes('演示'));
 });
 

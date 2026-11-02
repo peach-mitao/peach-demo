@@ -1,26 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import vm from 'node:vm';
-import { readFile } from 'node:fs/promises';
 import { configuration, cloudProxies, providers } from '../src/showcase.ts';
 import { downloadTasks } from './showcase-fixtures.ts';
 import * as tagManagement from '../src/tag-management.ts';
-const source = await readFile(new URL('../site/_demo/interactions.js', import.meta.url), 'utf8');
-function page(respond: (url:URL)=>unknown = () => ({ status: 'complete', id: 1, items: [] })) {
-    let now = Date.now();
-    const calls: { path: string; search: string; method: any; }[] = [], context: Record<string,any> = { Request, Response, Headers, URL, URLSearchParams, crypto, Blob, Date: class extends Date {
-            static now() { return now; }
-        },
-        location: { href: 'https://demo.example/', origin: 'https://demo.example', search: '' },
-        document: { readyState: 'loading', addEventListener() { } },
-        fetch: async (input: RequestInfo|URL, init?: RequestInit) => { const url = input instanceof Request ? new URL(input.url) : new URL(input, 'https://demo.example'); calls.push({ path: url.pathname, search: url.search, method: input instanceof Request?input.method:init?.method || 'GET' }); return new Response(JSON.stringify(respond(url)), { headers: { 'content-type': 'application/json' } }); } };
-    context.window = context;
-    context.peachDemoMedia = (value: any) => value;
-    context.peachDemoMediaJSON = (value: any) => value;
-    context.peachDemoTags = tagManagement;
-    vm.runInNewContext(source, context);
-    return { fetch: context.fetch, calls, advance: (ms: number) => { now += ms; } };
-}
+import { page } from './interaction-harness.ts';
 test('固定处理状态合并并发读取，重复轮询不产生网络请求', async () => {
     const p = page();
     await Promise.all([p.fetch('/api/library-processing'), p.fetch('/api/library-processing')]);
@@ -100,14 +83,20 @@ test('新版确认弹窗取得零成本的演示预估，不读取真实任务',
     assert.deepEqual({ ...estimate.traffic.disk }, { estimated_bytes: 0, temporary_bytes: 0, volumes: [], cache_unknown: false, can_fit: null });
 });
 test('视频预览设置只保存在页面草稿，扫描任务与设置使用同一策略', async () => {
-    const p = page();
+    const recorded = { metadata_only: false, preview_acceleration: 'auto', playback_acceleration: 'auto' };
+    const respond = (url: URL) => url.pathname === '/api/media-processing' ? recorded : { status: 'complete', id: 1, items: [] };
+    const p = page(respond);
     assert.equal((await (await p.fetch('/api/media-processing')).json()).metadata_only, false);
     const result = await p.fetch('/api/media-processing', { method: 'POST', body: JSON.stringify({ metadata_only: true }) });
     assert.equal((await result.json()).metadata_only, true);
     assert.equal((await (await p.fetch('/api/library-processing')).json()).metadata_only, true);
-    assert.equal((await (await page().fetch('/api/media-processing')).json()).metadata_only, false);
+    // 抽帧与转码方式按应用只送改了的那一项，回整份。
+    const decoding = await (await p.fetch('/api/media-processing', { method: 'POST', body: JSON.stringify({ preview_acceleration: 'vaapi' }) })).json();
+    assert.deepEqual([decoding.preview_acceleration, decoding.playback_acceleration, decoding.metadata_only], ['vaapi', 'auto', true]);
+    assert.equal((await (await page(respond).fetch('/api/media-processing')).json()).metadata_only, false);
     assert.equal((await p.fetch('/api/media-processing', { method: 'POST', body: '{}' })).status, 400);
-    assert.equal(p.calls.filter(call => call.path === '/api/media-processing').length, 0);
+    // 回放快照只读一次，之后都在页面状态里回答。
+    assert.equal(p.calls.filter(call => call.path === '/api/media-processing').length, 1);
 });
 test('整理示例支持新旧番号键、可选分组和目录，并返回明确的模板错误', async () => {
     const p = page(), example = async (file: string, dir = '') => (await p.fetch('/api/organize/example?' + new URLSearchParams({ file_template: file, dir_template: dir }))).json();
