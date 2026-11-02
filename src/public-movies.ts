@@ -176,7 +176,13 @@ export function publicMovies(films: readonly PublicMovie[] = FILMS, people: read
     ranking_score: 1 - i / (items.length + 1), score: 1 - i / (items.length + 1), taste_score: 1 - i / (items.length + 1), wanted: i === wantedIndex, rank: i + 1 }));
   for (const row of items) for (const limit of [20, 28]) put(query('/api/related', { id: row.id, limit }), { items: items.filter(item => item.id !== row.id).slice(0, limit), total: items.length - 1 });
   for (const scope of ['library', 'external']) put(query('/api/jav/discoveries', { scope, limit: 100, sort: 'taste', direction: 'desc' }), { scope, items: discovery, candidate_total: items.length, sort: 'taste', ranking_method: 'mmr', direction: 'desc', limited: false, source: scope });
-  put('/api/feeds/discoveries?limit=12', { ok: true, items: discovery.slice(0, 12).map(row => ({ ...row, read: false, ignored: false, source_name: '公开电影片目', scrape_error: null })), more: false, cover_network: 0 });
+  // 演示站特殊处理：应用的新作卡片只署演员。普通电影常没有列演员，有标识的厂牌代为署名，
+  // 只给图片地址、不带人物身份，卡片不会链到不存在的演员页。
+  const byline = (row: Row) => {
+    if (row.performers.length || !studios.some(studio => studio.name === row.studio)) return {};
+    return { performers: row.studio, performer_refs: [{ name: row.studio, has_image: false, has_avatar: false, source_avatar_url: query('/logo', { studio: row.studio, variant: 'icon' }) }] };
+  };
+  put('/api/feeds/discoveries?limit=12', { ok: true, items: discovery.slice(0, 12).map((row, index) => ({ ...row, ...byline(items[index]!), read: false, ignored: false, source_name: '公开电影片目', scrape_error: null })), more: false, cover_network: 0 });
   put('/api/feeds', { ok: true, sources: indexes.performers.items.map((row, i) => ({ id: i + 1, kind: 'demo-film', kind_label: '普通电影订阅',
     name: row.k, page_name: '', url: entities.find(entity => entity.id === row.entity_id)!.metadata.source_url, entity_id: row.entity_id, entity_name: row.k,
     enabled: true, interval_minutes: 360, last_fetched_at: now, next_fetch_at: now, last_error: null, last_seen_count: 1, last_new_count: 1,
@@ -219,7 +225,12 @@ export function publicMovies(films: readonly PublicMovie[] = FILMS, people: read
   const downloads = { available: true, tasks: items.slice(0, 3).map((row, i) => ({ id: 3 - i, provider: ['115', 'pikpak', 'clouddrive:pikpak:demo'][i],
     provider_label: ['115 收藏 · 115', 'PikPak 收藏 · PikPak', 'PikPak · CloudDrive2'][i], display_name: row.title, code: row.code,
     state: ['remote_running', 'ingested', 'failed'][i], progress: [0.64, 1, 0][i], asset_id: i === 1 ? row.id : null, source_uri: '',
-    postprocess_run_id: i === 1 ? 1 : null, cancellable: i === 0, resubmittable: i === 2, error: i === 2 ? '演示失败状态' : '', created_at: now, updated_at: now, demo: true })),
+    postprocess_run_id: i === 1 ? 1 : null, cancellable: i === 0, resubmittable: i === 2, error: i === 2 ? '演示失败状态' : '', created_at: now, updated_at: now,
+    // 任务卡片按应用契约读封面与署名：artwork 与馆藏卡片同一份身份。
+    title: row.title, display_code: row.code, display_title: row.title, target: ['/115/Peach', '/Peach', '/PikPak/Peach'][i], submitted_at: now,
+    artwork: { id: row.id, code: row.code, cover_key: row.cover_key, cover_version: row.cover_version, has_cover: true, is_jav: true,
+      performer_entities: row.performer_entities.map((ref: Row, index: number) => ({ ...ref, name: row.performers[index] })), performer_total: row.performer_total },
+    demo: true })),
     has_more: false, next_before_id: null, demo_notice: DEMO_DATA_NOTICE };
   const wanted = items[wantedIndex]!;
   const wants = { ok: true, items: [{ id: 1, code: wanted.code, title: wanted.title, state: 'searching', status: 'searching', has_cover: true, cover_version: wanted.cover_version, added_at: now, created_at: now, studio: wanted.studio, performers: wanted.performers.join('、'), asset_id: null, demo: true }],
