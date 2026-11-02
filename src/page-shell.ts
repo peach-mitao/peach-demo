@@ -23,14 +23,17 @@ const NOTICE = `<style>
 [data-demo-notice] a{display:inline}
 [data-demo-copy="compact"]{display:none}
 @media(max-width:560px){
- [data-demo-copy="full"]{display:none}
- [data-demo-copy="compact"]{display:inline}
  [data-demo-notice]{white-space:nowrap}
  #searchMenu{max-height:min(70vh,var(--demo-search-space,100vh))!important}
+}
+/* 完整写法在 390 宽手机上放得下，只有更窄的屏幕换精简写法。 */
+@media(max-width:370px){
+ [data-demo-copy="full"]{display:none}
+ [data-demo-copy="compact"]{display:inline}
 }
 </style><div role="note" data-demo-notice style="position:fixed;left:50%;transform:translateX(-50%);bottom:max(12px,env(safe-area-inset-bottom));z-index:2147483000;pointer-events:auto;user-select:text;
 padding:6px 10px;border-radius:12px;width:max-content;box-sizing:border-box;text-align:center;max-width:calc(100vw - 24px);font:12px/1.4 system-ui,sans-serif;
 background:var(--color-background-primary-default,#fff);color:var(--color-text-secondary,#555);
 border:1px solid var(--color-separator-border,#0002);box-shadow:0 2px 8px #0001">
-<span data-demo-copy="full">Peach 演示站 · </span><span data-demo-copy="compact">仅供演示 · 操作不保存 · </span><a href="/film-sources/" style="${NOTICE_LINK}">素材来源</a> · <a href="https://peach.video/copyright/" target="_blank" rel="noopener" style="${NOTICE_LINK}"><span data-demo-copy="full">DMCA</span><span data-demo-copy="compact">版权投诉</span></a> · <a href="https://peach.video/privacy/analytics" target="_blank" rel="noopener" style="${NOTICE_LINK}"><span data-demo-copy="full">统计偏好</span><span data-demo-copy="compact">统计</span></a></div>`;
+<span data-demo-copy="full">Peach 演示站 · </span><span data-demo-copy="compact">演示站 · </span><a href="https://peach.video/" target="_blank" rel="noopener" style="${NOTICE_LINK}">官网</a> · <a href="https://github.com/peach-mitao/peach" target="_blank" rel="noopener" style="${NOTICE_LINK}">GitHub</a> · <a href="/film-sources/" style="${NOTICE_LINK}">素材来源</a> · <a href="https://peach.video/copyright/" target="_blank" rel="noopener" style="${NOTICE_LINK}">DMCA</a> · <a href="https://peach.video/privacy/analytics" target="_blank" rel="noopener" style="${NOTICE_LINK}"><span data-demo-copy="full">统计偏好</span><span data-demo-copy="compact">统计</span></a></div>`;
 export { DEMO_SETTINGS, FOLLOW_IMAGES, NOTICE };

@@ -15,7 +15,7 @@ try {
         await page.getByRole('tooltip').waitFor();
         assert.match(await page.getByRole('tooltip').innerText(),/Alt \+ 点击/);
         await help.press('Escape');
-        const note=page.locator(`[data-demo-notice] [data-demo-copy="${width===390?'compact':'full'}"]`).first();
+        const note=page.locator('[data-demo-notice] [data-demo-copy="full"]').first();
         const footerPoint=await note.evaluate(element=>{const range=document.createRange();range.selectNodeContents(element);const rect=range.getClientRects()[0];return{x:rect.left+12,y:rect.top+rect.height/2}});
         await page.mouse.click(footerPoint.x,footerPoint.y);
         await page.locator('[data-copy-inline]').waitFor();
