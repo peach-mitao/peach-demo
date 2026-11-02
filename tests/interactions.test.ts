@@ -210,3 +210,9 @@ test('标签管理带分页参数时返回应用的分页契约', async () => {
     assert.deepEqual([data.items.map((row: { k: string }) => row.k), data.total, data.categories], [['旅行'], 2, { meta: 1, story: 1 }]);
     assert.equal((await p.fetch('/api/tag-management?limit=1&state=gone')).status, 400);
 });
+test('复核数据补齐稍后处理与已忽略队列，重复读取保持一致', async () => {
+    const p = page(() => ({ ok: true, items: [], total: 0, sections: {}, counts: {}, has_more: false }));
+    for (let round = 0; round < 2; round++)
+        assert.deepEqual((await (await p.fetch('/api/review')).json()).queues, { later: { sections: {}, counts: {} }, ignored: { sections: {}, counts: {} } });
+    assert.equal(p.calls.length, 1);
+});

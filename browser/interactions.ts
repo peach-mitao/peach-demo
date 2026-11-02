@@ -567,6 +567,12 @@
                 data.scraping.sources = snapshots.get('/api/scraping').sources;
             return result(data);
         }
+        if (request.method === 'GET' && path === '/api/review' && !url.search) {
+            // 演示馆藏没有待复核项，稍后处理与已忽略队列同样为空。
+            const data = await read('/api/review');
+            data.queues ||= { later: { sections: {}, counts: {} }, ignored: { sections: {}, counts: {} } };
+            return result(data);
+        }
         if (request.method === 'POST' && ['/api/follow/source', '/api/feeds/source', '/api/follow/credential'].includes(path)) {
             const body = await request.clone().json();
             if (path === '/api/follow/credential') {
