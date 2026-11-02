@@ -147,6 +147,7 @@
             if (fraction === 1) {
                 Object.assign(state, { status: 'complete', completed_at: Date.now() / 1000,
                     message: '演示操作已完成；未处理真实文件或连接外部来源。' });
+                delete state.trigger;
                 processingRun = null;
             }
         }
@@ -523,6 +524,13 @@
                     state.speed_mode = body.speed_mode || 'standard';
                     return result(state);
                 }
+                // 应用的归档与撤销只翻这一趟的 archived，问题记录原样保留。
+                if (body.action === 'archive' || body.action === 'unarchive') {
+                    if (active)
+                        return result({ message: '演示任务正在进行。' }, 409);
+                    state.archived = body.action === 'archive';
+                    return result(state);
+                }
                 if (!active || !processingRun)
                     return result({ message: '当前没有可控制的演示任务。' }, 409);
                 if (body.action === 'pause' && state.status === 'running') {
@@ -533,13 +541,20 @@
                     processingRun.started = Date.now();
                     state.status = 'running';
                 }
+                // 确认后的取消按应用 interrupted_state 收尾；发起方式只在进行中带出。
+                else if (body.action === 'cancel') {
+                    Object.assign(state, { status: 'cancelled', outcome: 'cancelled', stage: '已取消', error: '', completed_at: Date.now() / 1000,
+                        eta_seconds_min: null, eta_seconds_max: null });
+                    delete state.trigger;
+                    processingRun = null;
+                }
                 else
                     return result({ message: '演示任务状态与操作不匹配。' }, 409);
                 return result(state);
             }
             if (active)
                 return result({ message: '演示任务正在进行。' }, 409);
-            const next = { ...state, status: 'running', job_id: 'demo-' + crypto.randomUUID(), requested_stage: body.stage || 'scan',
+            const next = { ...state, status: 'running', trigger: 'manual', job_id: 'demo-' + crypto.randomUUID(), requested_stage: body.stage || 'scan',
                 stage: body.stage === 'previews' ? '生成视频预览' : body.stage === 'metadata' ? '补全资料' : '扫描文件',
                 speed_mode: body.speed_mode || state.speed_mode || 'standard', checked: 0, total: Math.max(1, Number(state.total) || 123),
                 eta_seconds_min: 30, eta_seconds_max: 30, eta_kind: 'measured', started_at: Date.now() / 1000, error: null, completed_at: null };

@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "app_commit": "9847efb8e63a01f7fb43bb1ec6ed82ea1f800747",
+ "app_commit": "ee69b8c854d7d7c5dfc9b5ccfbdfb5636b79ec1f",
  "app_version": "0.53.0",
  "routes": {
   "/api/sources": {
@@ -50,8 +50,8 @@
     "catalog": "243",
     "follow": "46",
     "discoveries": "0",
-    "review": "130:1793606773724117200",
-    "artwork": "1793606768552211200:None:None:None:None"
+    "review": "130:1793608527529380500",
+    "artwork": "1793608522300651100:None:None:None:None"
    },
    "running": [],
    "skipped": [],
@@ -1168,7 +1168,7 @@
    },
    "storage": {
     "data_root": "C:\\Users\\peach\\peach-data",
-    "free_bytes": 140721352704,
+    "free_bytes": 140980457472,
     "total_bytes": 2031179788288,
     "system_drive": true,
     "usage": null,
@@ -1350,7 +1350,7 @@
   },
   "/api/configuration/storage": {
    "data_root": "C:\\Users\\peach\\peach-data",
-   "free_bytes": 140721352704,
+   "free_bytes": 140980457472,
    "total_bytes": 2031179788288,
    "system_drive": true,
    "usage": null,
@@ -1368,7 +1368,7 @@
   "/api/client-updates": {
    "runtime": {
     "version": "0.53.0",
-    "build_id": "a1ff3d9495e6b1c619b8a905"
+    "build_id": "4e31833451852f7f53273a9e"
    },
    "release": {
     "current_version": "0.53.0",
@@ -1419,12 +1419,12 @@
    "pending_total": 0,
    "dismissed_total": 0,
    "counts": {
-    "image": 0,
     "url": 0,
+    "video": 0,
     "other": 0,
-    "archive": 0,
+    "image": 0,
     "audio": 0,
-    "video": 0
+    "archive": 0
    },
    "kind": "",
    "status": "pending",
@@ -1600,7 +1600,7 @@
       "truncated": false
      }
     },
-    "issue_at": "2026-11-02T08:05:48.176970+00:00"
+    "issue_at": "2026-11-02T08:34:59.117073+00:00"
    },
    "sources": [
     {

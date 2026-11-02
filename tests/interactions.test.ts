@@ -128,6 +128,19 @@ test('扫描任务可调速、暂停、继续并完成，刷新恢复录制值',
     assert.equal(p.calls.length, 1);
     assert.equal((await (await page().fetch('/api/library-processing')).json()).job_id, undefined);
 });
+test('扫描任务带出网页发起方式，确认后可取消，结束后的提示可归档与撤销', async () => {
+    const p = page(), post = async (body: { action?: string; job_id?: any; }) => p.fetch('/api/library-processing', { method: 'POST', body: JSON.stringify(body) });
+    const task = await (await post({})).json();
+    assert.equal(task.trigger, 'manual');
+    assert.equal((await post({ action: 'archive', job_id: task.job_id })).status, 409);
+    const cancelled = await (await post({ action: 'cancel', job_id: task.job_id })).json();
+    assert.deepEqual([cancelled.status, cancelled.outcome, cancelled.stage, cancelled.trigger], ['cancelled', 'cancelled', '已取消', undefined]);
+    p.advance(60000);
+    assert.equal((await (await p.fetch('/api/library-processing')).json()).status, 'cancelled');
+    assert.equal((await (await post({ action: 'archive', job_id: task.job_id })).json()).archived, true);
+    assert.equal((await (await post({ action: 'unarchive', job_id: task.job_id })).json()).archived, false);
+    assert.equal((await (await post({})).json()).status, 'running');
+});
 test('任务控制拒绝无效速度与不匹配的任务号', async () => {
     const p = page(), post = (body: { action?: string; speed_mode?: string; job_id?: string; }) => p.fetch('/api/library-processing', { method: 'POST', body: JSON.stringify(body) });
     assert.equal((await post({ action: 'set_speed', speed_mode: 'invalid' })).status, 400);
