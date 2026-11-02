@@ -4,14 +4,15 @@ import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { fixtureHash, fixtureKey } from '../src/key.ts';
 // 公开范围按已支持的读取契约列举，不遍历发布录制目录。
-const READS = `ads avatar-choices configuration configuration/automatic-updates configuration/cloud-proxies configuration/downloads configuration/downloads/check configuration/downloads/pikpak/browser-login configuration/entry-links configuration/indexers configuration/jav-browser configuration/library-sharing configuration/library-sharing/preview configuration/peach-proxy configuration/push-discovery configuration/remote-reporting configuration/startup configuration/tunnel configuration/update-status configuration/updates diagnostics downloads duplicates entity/shapes feeds follow follow/activity follow/check follow/credentials follow/image-dims follow/status follow/suggest items facets index jav/discoveries libraries library-processing library-shortcuts links media-processing media-repair organize orphan-records playlists post-setup-tutorial quality-goals resource-sync scraping scraping/amane-bridge scraping/amane-bridge/job scraping/cache scraping/sources settings sources stats subscriptions taste tasks timeline trash wants`.split(' ');
+const READS = `ads avatar-choices client-updates configuration configuration/automatic-updates configuration/cloud-proxies configuration/downloads configuration/downloads/check configuration/downloads/pikpak/browser-login configuration/entry-links configuration/indexers configuration/jav-browser configuration/library-sharing configuration/library-sharing/preview configuration/peach-proxy configuration/push-discovery configuration/remote-reporting configuration/startup configuration/tunnel configuration/update-status configuration/updates diagnostics downloads duplicates entity/shapes feeds follow follow/activity follow/check follow/credentials follow/image-dims follow/status follow/suggest items facets index jav/discoveries libraries library-processing library-shortcuts links media-processing media-repair organize orphan-records playlists post-setup-tutorial quality-goals resource-sync scraping scraping/amane-bridge scraping/amane-bridge/job scraping/cache scraping/sources settings sources stats subscriptions taste tasks timeline trash wants`.split(' ');
 export function publicValue(value: unknown, key = ''): unknown {
     if (/^(password|current_password|confirmation|token|secret|api_key|cookie|cookies|cookies_text|authorization|source_uri|magnet)$/i.test(key))
         return '';
     if (typeof value === 'string') {
         if (/magnet:\?|(?:https?:\/\/)[^/\s]+:[^/@\s]+@/i.test(value))
             return '';
-        if (/^(?:[A-Z]:[\\/]|\/Users\/|\/home\/)/i.test(value))
+        // 演示自己的占位路径（媒体库、网盘挂载、演示数据根）原样保留，其余本机路径一律收成同一个占位值。
+        if (/^(?:[A-Z]:[\\/]|\/Users\/|\/home\/)/i.test(value) && !/^(?:R:\\Media|A:\\115|B:\\PikPak|C:\\Users\\peach\\peach-data)(?:\\|$)/.test(value))
             return 'R:\\Media\\演示';
         return value;
     }

@@ -121,7 +121,11 @@ export function createReplay() {
                 for (const k of pick(it))
                     if (k)
                         counts.set(k, (counts.get(k) || 0) + 1); return [...counts].map(([k, n]) => ({ k, n })).sort((a, b) => b.n - a.n); };
-            return json(JSON.stringify({ locations: counts((it) => [it.location]), orientations: counts((it) => [it.ctx_orient]), regions: counts((it) => [it.effective_region || 'none']),
+            // 与 Peach 的筛选面板契约一致：来源带已看数，地区带显示名，年份按发行年倒序。
+            const locations = counts((it) => [it.location]).map(row => ({ ...row, played: items.filter(it => it.location === row.k && it.play_count).length }));
+            const regions = counts((it) => [it.effective_region || 'none']).map(row => ({ ...row, label: row.k === 'none' ? '未判定' : row.k }));
+            const years = counts((it) => [String(it.release_date || '').slice(0, 4) || undefined]).map(row => ({ k: row.k, label: row.k, n: row.n })).sort((a, b) => b.k.localeCompare(a.k));
+            return json(JSON.stringify({ locations, orientations: counts((it) => [it.ctx_orient]), regions, years,
                 creators: counts((it) => [it.creator]), tags: counts((it) => it.filter_tags || it.tags).filter(row => catalog.tag_categories?.[row.k] !== 'meta').map(row => ({ ...row, cat: catalog.tag_categories?.[row.k] || 'general' })),
                 tech: counts((it) => it.filter_tags || it.tags).filter(row => catalog.tag_categories?.[row.k] === 'meta'), tagperformers: counts((it) => it.performers || []), follow_tags: [],
                 stats: { total: items.length, bytes: sum('size'), duration: sum('duration'), played: items.filter((it) => it.play_count).length, flagged: items.filter((it) => it.feedback || it.rating || it.o_count).length, attributed: items.filter((it) => it.creator || it.code).length } }));
@@ -138,7 +142,8 @@ export function createReplay() {
         else
             items.sort((a, b) => rank(a.id) - rank(b.id));
         const offset = Math.max(0, Number(url.searchParams.get('offset')) || 0), limit = Math.min(1000, Math.max(1, Number(url.searchParams.get('limit')) || 60));
-        return json(JSON.stringify({ total: items.length, bytes: sum('size'), items: items.slice(offset, offset + limit), has_more: offset + limit < items.length }));
+        // 演示里每条都是独立作品，作品数与文件数相同。
+        return json(JSON.stringify({ total: items.length, work_total: items.length, bytes: sum('size'), items: items.slice(offset, offset + limit), has_more: offset + limit < items.length }));
     }
     // 联想从录制目录过滤与排序，遵循 Peach 的 q_suggest（src/peach/web_entity.py）。
     // 不到 3 个字符的拉丁输入比词首（整串开头或空格之后），其余比子串；同类里规范名前缀命中的在前，再按作品数、名字。

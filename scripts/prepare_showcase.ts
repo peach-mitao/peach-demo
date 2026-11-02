@@ -2,7 +2,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import path from 'node:path';
 import { fixtureKey, fixtureHash } from '../src/key.ts';
-import { configuration, downloads, downloadCheck, cloudProxies, providers, taskRuns } from '../src/showcase.ts';
+import { configuration, downloads, downloadCheck, cloudProxies, providers, taskRuns, clientUpdates } from '../src/showcase.ts';
 import { tagInventory } from '../src/tag-management.ts';
 export async function prepareShowcase(site = fileURLToPath(new URL('../site/', import.meta.url))) {
     const directory = path.join(site, '_fixtures');
@@ -59,6 +59,7 @@ export async function prepareShowcase(site = fileURLToPath(new URL('../site/', i
     await write('/api/downloads', snapshot);
     await write('/api/downloads?limit=50', snapshot);
     await write('/api/tasks', taskRuns(recorded['/api/tasks'], entry.constants));
+    await write('/api/client-updates', clientUpdates(info.version));
     for (const route of ['/api/wants', '/api/orphan-records'] as const)
         await write(route, recorded[route]);
     for (const [key, value] of Object.entries(config))

@@ -6,8 +6,9 @@ import { fixtureKey, fixtureHash } from '../src/key.ts';
 import { PUBLIC_CATALOG, MOVIE_READS, DEMO_DATA_NOTICE, publicMovies, responseShape } from '../src/public-movies.ts';
 import type { PublicCatalog, PublicImage } from '../src/public-movies.ts';
 import type { FixtureManifest } from '../src/types.ts';
-import { configuration, downloads, downloadCheck, cloudProxies, providers, taskRuns } from '../src/showcase.ts';
+import { configuration, downloads, downloadCheck, cloudProxies, providers, taskRuns, clientUpdates } from '../src/showcase.ts';
 import { tagInventory } from '../src/tag-management.ts';
+import { backendDefault, withBackend } from '../src/backend-defaults.ts';
 
 const digest = (value: string | Uint8Array) => createHash('sha256').update(value).digest('hex');
 const routeHash = (route: string) => fixtureHash(fixtureKey('GET', new URL(route, 'https://demo.example')));
@@ -31,6 +32,7 @@ export async function verifyPublicMovies(site: string, dataset: PublicCatalog = 
     const constants = JSON.parse(await readFile(path.join(fixtures, 'entry-pages.json'), 'utf8')).constants;
     const config = configuration(certificate.configuration, info.version, constants);
     derived.set('/api/tasks', taskRuns(expected.recorded['/api/tasks'], constants));
+    derived.set('/api/client-updates', clientUpdates(info.version));
     derived.set('/api/configuration', config);
     derived.set('/healthz', { ...certificate.health, version: info.version, build_commit: info.commit });
     derived.set('/api/configuration/downloads', downloads());
@@ -114,6 +116,9 @@ export async function preparePublicMovies(templateDirectory: string, imageDirect
     const own = await hash(route), key = original.alias?.[own] ?? own;
     let skeleton: any = { ok: true, items: [], total: 0 };
     if (original.fixtures[key] === 'json') skeleton = responseShape(JSON.parse(await readFile(path.join(templateDirectory, `${key}.json`), 'utf8')));
+    // 有后端参照取值的接口直接用应用的实际默认值，不再沿用旧录制包的空壳；名称形状的实体列表属于演示片目，不从参照带入。
+    if (backendDefault(route) !== undefined)
+      skeleton = route === '/api/entity/shapes' ? withBackend(route, { entities: [] }, ['ok', 'home', 'name_glyphs', 'name_variants']) : withBackend(route, {});
     if (route === '/api/configuration') configurationSeed = skeleton;
     if (route === '/healthz') healthSeed = skeleton;
     await write(route, skeleton);
