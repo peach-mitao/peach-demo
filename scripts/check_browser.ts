@@ -46,7 +46,7 @@ try {
             for (const [name, path] of routes) {
                 await page.goto(base + path, { waitUntil: 'networkidle' });
                 await page.waitForFunction(() => document.body.innerText.length > 100);
-                await page.waitForFunction(() => !Array.from((document.querySelectorAll('[data-skeleton]') as NodeListOf<HTMLElement>)).some(e => e.getBoundingClientRect().height > 0));
+                await page.waitForFunction(() => !Array.from((document.querySelectorAll('[data-skeleton]') as NodeListOf<HTMLElement>)).some(e => e.getBoundingClientRect().height > 0 && e.checkVisibility({ visibilityProperty: true })));
                 const images = await visibleImages(page);
                 const state: {overflow:boolean;text:string;images?:{naturalWidth:number}[]} = await page.evaluate(() => ({ overflow: document.documentElement.scrollWidth > innerWidth,
                     text: document.body.innerText.slice(0, 7000) }));
@@ -59,7 +59,7 @@ try {
                     assert.equal(visible, movies.catalog.items.length, '默认来源包含完整电影馆藏');
                 }
                 if (name === 'data') {
-                    assert.ok(await page.getByRole('button', { name: '同步媒体库', exact: true }).count());
+                    assert.ok(await page.getByRole('button', { name: '同步新增文件', exact: true }).count());
                     const links = page.locator('#link-manager');
                     if (await links.count()) {
                         await links.scrollIntoViewIfNeeded();
@@ -83,19 +83,19 @@ try {
                 report.push({ name, width, dpr, ...state, errors: [...errors], failed: [...failed] });
             }
             await page.goto(base + '/data-cleanup', { waitUntil: 'networkidle' });
-            const start = page.getByRole('button', { name: '同步媒体库', exact: true });
+            const start = page.getByRole('button', { name: '同步新增文件', exact: true });
             await start.scrollIntoViewIfNeeded();
-            await page.waitForFunction(() => { const button = Array.from((document.querySelectorAll('button') as NodeListOf<HTMLButtonElement>)).find(e => e.textContent.trim() === '同步媒体库'); if (!button)
+            await page.waitForFunction(() => { const button = Array.from((document.querySelectorAll('button') as NodeListOf<HTMLButtonElement>)).find(e => e.textContent.trim() === '同步新增文件'); if (!button)
                 return false; const r = button.getBoundingClientRect(); return button.contains(document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2)); });
             await start.click();
-            const dialog = page.getByRole('dialog', { name: '同步媒体库', exact: true });
+            const dialog = page.getByRole('dialog', { name: '同步新增文件', exact: true });
             await dialog.getByRole('region', { name: '磁盘预估', exact: true }).waitFor();
             const slider = dialog.getByRole('slider');
             await slider.focus();
             await slider.press('Home');
             await slider.press('Tab');
             assert.doesNotMatch(await dialog.innerText(), /流量预估未取得/);
-            await dialog.getByRole('button', { name: '同步媒体库', exact: true }).click();
+            await dialog.getByRole('button', { name: '同步新增文件', exact: true }).click();
             const controls = page.locator('[data-processing-controls]').first();
             await controls.getByRole('button', { name: '处理速度：低占用', exact: true }).waitFor();
             await controls.getByRole('button', { name: '暂停', exact: true }).click();
