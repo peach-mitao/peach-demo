@@ -88,6 +88,7 @@
     const folderPlans = new Map();
     let folderRevision = 0;
     let searchHistory: any[] = [];
+    let tutorial: any = null;
     // 每个访客的草稿只存在当前页面内存中，刷新即恢复夹具。
     const snapshots = new Map();
     const pending = new Map();
@@ -146,6 +147,7 @@
             if (fraction === 1) {
                 Object.assign(state, { status: 'complete', completed_at: Date.now() / 1000,
                     message: '演示操作已完成；未处理真实文件或连接外部来源。' });
+                delete state.trigger;
                 processingRun = null;
             }
         }
@@ -156,6 +158,8 @@
         const key = path.slice('/api/configuration/'.length);
         if (key === 'downloads/check' || key === 'downloads/folder')
             return read('/api/configuration/downloads/check');
+        if (key === 'storage' || key.startsWith('storage/'))
+            return Object.keys(body).length ? { ...config.storage, job: { state: 'idle', message: '演示站不会统计、清理或迁移本机数据。' } } : config.storage;
         if (key === 'downloads') {
             const { token: _token, ...safe } = body;
             config.downloads.config = { ...config.downloads.config, ...safe };
@@ -243,8 +247,16 @@
             const body = request.method === 'GET' ? {} : await request.clone().json();
             const scope = body.scope || url.searchParams.get('scope') || 'local', key = '/api/tag-management' + (scope === 'online' ? '?scope=online' : '');
             const inventory = await read(key);
-            if (request.method === 'GET')
-                return result(inventory);
+            if (request.method === 'GET') {
+                if (!url.searchParams.has('limit'))
+                    return result(inventory);
+                try {
+                    return result(globalThis.peachDemoTags.tagPage(inventory, url.searchParams));
+                }
+                catch (error) {
+                    return result({ message: (error instanceof Error ? error.message : String(error)) }, 400);
+                }
+            }
             try {
                 if (path.endsWith('/preview')) {
                     const catalog = await read('/api/items?limit=1000');
@@ -359,17 +371,64 @@
         }
         if (path.startsWith('/api/configuration/') && request.method === 'GET' && snapshots.has(path))
             return result(snapshots.get(path));
-        if (path === '/api/subtitles/memory') {
-            const key = path + url.search, state = await read(key);
+        if (path === '/api/player/memory' && ['GET', 'PUT'].includes(request.method)) {
+            // 字幕、旋转、倍速与字幕外观只记在当前页面，刷新恢复默认。
+            const key = path + url.search;
+            if (!snapshots.has(key))
+                snapshots.set(key, { selected: null, tracks: [] });
+            const state = snapshots.get(key);
             if (request.method === 'PUT') {
-                const body = await request.clone().json();
-                state.selected = body.selected;
-                if (body.track) {
-                    const track = { key: body.track.key, name: body.track.name, src: URL.createObjectURL(new Blob([body.track.text], { type: 'text/vtt' })) };
-                    state.tracks = [...state.tracks.filter((row: { key: any; }) => row.key !== track.key), track];
+                const { track, caption_style, ...patch } = await request.clone().json();
+                Object.assign(state, patch);
+                if (caption_style)
+                    state.caption_style = { ...state.caption_style, ...caption_style };
+                if (track) {
+                    const row = { key: track.key, name: track.name, src: URL.createObjectURL(new Blob([track.text], { type: 'text/vtt' })) };
+                    state.tracks = [...state.tracks.filter((item: { key: any; }) => item.key !== row.key), row];
                 }
             }
             return result(state);
+        }
+        if (path === '/api/client-updates' && request.method === 'GET') {
+            // 应用的更新提示快照打底，运行版本、发布状态与脚本版本按当前演示配置覆盖。
+            const [base, config, browser, health] = await Promise.all(['/api/client-updates', '/api/configuration', '/api/configuration/jav-browser', '/healthz'].map(read));
+            return result({ ...base, runtime: { version: health.version, build_id: String(health.build_commit).slice(0, 24) }, release: { ...base.release, ...config.updates },
+                update_job: config.update_job || { state: 'idle', progress: 0 }, userscript: { ...base.userscript, ...browser.userscript },
+                repairs: { state: 'complete', available: true, message: '', items: [
+                    { id: 'catalog', label: '更新已有资料', state: 'complete', changed: {}, review_count: 0 },
+                    { id: 'background', label: '后台更新进度', state: 'complete', pending: 0, failed: 0, queued: 0 }] } });
+        }
+        if (path === '/api/tutorial-progress' && ['GET', 'POST'].includes(request.method)) {
+            // 与应用同一套动作语义；进度只留在当前页面。
+            tutorial ||= { version: 1, campaign: 'tutorial-center-1', invited: true, completed: false, chapters: {} };
+            if (request.method === 'POST') {
+                const body = await request.clone().json();
+                if (body.action === 'dismiss')
+                    tutorial.invited = true;
+                else if (body.action === 'reopen')
+                    Object.assign(tutorial, { invited: true, completed: false });
+                else if (body.action === 'complete')
+                    Object.assign(tutorial, { invited: true, completed: true });
+                else if (['position', 'step'].includes(body.action)) {
+                    const row = tutorial.chapters[body.chapter] ||= { next: 0, read: [], skipped: [] };
+                    row.next = body.next;
+                    if (body.action === 'step') {
+                        row.read = row.read.filter((step: string) => step !== body.step);
+                        row.skipped = row.skipped.filter((step: string) => step !== body.step);
+                        row[body.skipped ? 'skipped' : 'read'].push(body.step);
+                    }
+                }
+            }
+            return result(tutorial);
+        }
+        if (path === '/api/local-players' && request.method === 'GET')
+            return result({ players: [{ id: 'default', label: '系统默认播放器' }] });
+        if (request.method === 'POST' && ['/api/local-playback', '/api/external-playback'].includes(path))
+            return result({ error: '仅提供演示，不会打开外部播放器。' }, 400);
+        if (path === '/api/diagnostics/exports') {
+            if (request.method === 'POST')
+                return result({ error: '演示站不会生成诊断报告或刮削记录。' }, 400);
+            return result({ status: 'idle' });
         }
         if (path === '/api/folders' && request.method === 'GET') {
             const response = await originalFetch(input, init);
@@ -430,12 +489,16 @@
         if (request.method === 'POST' && ['/api/activity', '/api/play'].includes(path))
             return result({ ok: true });
         if (path === '/api/media-processing' && ['GET', 'POST'].includes(request.method)) {
-            const policy = snapshots.get(path) || { metadata_only: false };
+            // 读回放快照（以应用默认值打底）；写入与应用一样只送改了的那一项，回整份。
+            const policy = snapshots.get(path) || await read(path).catch(() => ({ metadata_only: false, preview_acceleration: 'auto', playback_acceleration: 'auto' }));
             if (request.method === 'POST') {
                 const body = await request.clone().json().catch(() => ({}));
-                if (typeof body.metadata_only !== 'boolean')
+                const keys = ['metadata_only', 'preview_acceleration', 'playback_acceleration'].filter(key => key in body);
+                if (!keys.length || ('metadata_only' in body && typeof body.metadata_only !== 'boolean')
+                    || keys.some(key => key !== 'metadata_only' && typeof body[key] !== 'string'))
                     return result({ message: '视频预览设置无效。' }, 400);
-                policy.metadata_only = body.metadata_only;
+                for (const key of keys)
+                    policy[key] = body[key];
             }
             snapshots.set(path, policy);
             return result(policy);
@@ -461,6 +524,13 @@
                     state.speed_mode = body.speed_mode || 'standard';
                     return result(state);
                 }
+                // 应用的归档与撤销只翻这一趟的 archived，问题记录原样保留。
+                if (body.action === 'archive' || body.action === 'unarchive') {
+                    if (active)
+                        return result({ message: '演示任务正在进行。' }, 409);
+                    state.archived = body.action === 'archive';
+                    return result(state);
+                }
                 if (!active || !processingRun)
                     return result({ message: '当前没有可控制的演示任务。' }, 409);
                 if (body.action === 'pause' && state.status === 'running') {
@@ -471,13 +541,20 @@
                     processingRun.started = Date.now();
                     state.status = 'running';
                 }
+                // 确认后的取消按应用 interrupted_state 收尾；发起方式只在进行中带出。
+                else if (body.action === 'cancel') {
+                    Object.assign(state, { status: 'cancelled', outcome: 'cancelled', stage: '已取消', error: '', completed_at: Date.now() / 1000,
+                        eta_seconds_min: null, eta_seconds_max: null });
+                    delete state.trigger;
+                    processingRun = null;
+                }
                 else
                     return result({ message: '演示任务状态与操作不匹配。' }, 409);
                 return result(state);
             }
             if (active)
                 return result({ message: '演示任务正在进行。' }, 409);
-            const next = { ...state, status: 'running', job_id: 'demo-' + crypto.randomUUID(), requested_stage: body.stage || 'scan',
+            const next = { ...state, status: 'running', trigger: 'manual', job_id: 'demo-' + crypto.randomUUID(), requested_stage: body.stage || 'scan',
                 stage: body.stage === 'previews' ? '生成视频预览' : body.stage === 'metadata' ? '补全资料' : '扫描文件',
                 speed_mode: body.speed_mode || state.speed_mode || 'standard', checked: 0, total: Math.max(1, Number(state.total) || 123),
                 eta_seconds_min: 30, eta_seconds_max: 30, eta_kind: 'measured', started_at: Date.now() / 1000, error: null, completed_at: null };
@@ -510,6 +587,12 @@
             const data = await (await originalFetch(request)).json();
             if (snapshots.has('/api/scraping'))
                 data.scraping.sources = snapshots.get('/api/scraping').sources;
+            return result(data);
+        }
+        if (request.method === 'GET' && path === '/api/review' && !url.search) {
+            // 演示馆藏没有待复核项，稍后处理与已忽略队列同样为空。
+            const data = await read('/api/review');
+            data.queues ||= { later: { sections: {}, counts: {} }, ignored: { sections: {}, counts: {} } };
             return result(data);
         }
         if (request.method === 'POST' && ['/api/follow/source', '/api/feeds/source', '/api/follow/credential'].includes(path)) {
@@ -609,7 +692,7 @@
             Object.assign(data, { status: 'complete', [path.endsWith('rollback') ? 'restored' : 'moved']: 0, last_batch: path.endsWith('rollback') ? '' : 'demo', message: '演示站未移动真实文件。' });
             return result(data);
         }
-        if (path.startsWith('/api/configuration/') && (request.method !== 'GET' || ['updates', 'update-status', 'automatic-updates'].includes(path.split('/').at(-1)!))) {
+        if (path.startsWith('/api/configuration/') && (request.method !== 'GET' || ['updates', 'update-status', 'automatic-updates', 'storage'].includes(path.split('/').at(-1)!))) {
             let body = {};
             try {
                 body = await request.clone().json();
@@ -689,7 +772,7 @@
         if (feedbackResult.error || feedbackResult.ok === false)
             return response;
         if (path === '/api/watch-later')
-            item.watch_later = !item.watch_later;
+            item.watch_later = item.watch_later ? 0 : 1;
         else if (path === '/api/preference') {
             item.liked = body.liked;
             item.like_reason = body.reason || '';

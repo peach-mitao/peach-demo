@@ -59,7 +59,7 @@ try {
             assert.equal(state.copyright, 'https://peach.video/copyright/');
             assert.equal(state.sources, base + '/film-sources/');
             if (width < 761) {
-                assert.equal(state.noticeText.replace(/\s+/g, ' '), '仅供演示 · 操作不保存 · 素材来源 · 版权投诉 · 统计');
+                assert.equal(state.noticeText.replace(/\s+/g, ' '), width > 370 ? 'Peach 演示站 · 官网 · GitHub · 素材来源 · DMCA · 统计偏好' : '演示站 · 官网 · GitHub · 素材来源 · DMCA · 统计');
                 assert.ok(state.notice.height <= state.noticeLineHeight + state.noticePadding + 1);
             }
             phases.push({ phase, height: nextHeight, ...state });

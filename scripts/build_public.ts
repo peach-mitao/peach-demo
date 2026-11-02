@@ -11,7 +11,7 @@ import { bundlePlayer } from './bundle_player.ts';
 import { pageRoutes } from './demo_pages.ts';
 import { movieHTML, movieScript } from './public_copy.ts';
 import { verifyPublicMovies } from './prepare_public_movies.ts';
-import { FILMS, PEOPLE, DEMO_DATA_NOTICE } from '../src/public-movies.ts';
+import { FILMS, PEOPLE, DEMO_DATA_NOTICE, STUDIOS } from '../src/public-movies.ts';
 import { MOVIE_RIGHTS } from '../src/movie-rights.ts';
 const root = fileURLToPath(new URL('../', import.meta.url));
 export async function buildPublic(site = path.join(root, 'site'), out = path.join(root, 'public')) {
@@ -57,7 +57,7 @@ export async function buildPublic(site = path.join(root, 'site'), out = path.joi
         throw Error('应用入口构建未取得');
     const appURL = '/' + path.relative(out, path.resolve(appOutput)).split(path.sep).join('/');
     const decorate = (html:string) => movieHTML(html).replace('<head>', '<head><meta http-equiv="Content-Security-Policy" content="media-src \'none\'">').replace('</head>', DEMO_SETTINGS + FOLLOW_IMAGES + `<script src="${runtime}"></script><script src="${interaction}"></script>` + tourGate + '</head>').replace('src="/dist/peach-app.js"', `src="${appURL}"`).replace('</body>', NOTICE + editorGate + `<script defer src="${behavior}"></script></body>`);
-    const rights = [...FILMS.map(film => ({ ...film.poster, ...MOVIE_RIGHTS[film.slug], title: film.title, kind: '电影图片' })), ...PEOPLE.map(person => ({ ...person.portrait, title: person.name, kind: '人物肖像' }))];
+    const rights = [...FILMS.map(film => ({ ...film.poster, ...MOVIE_RIGHTS[film.slug], title: film.title, kind: '电影图片' })), ...PEOPLE.map(person => ({ ...person.portrait, title: person.name, kind: '人物肖像' })), ...STUDIOS.map(studio => ({ ...studio.logo, title: studio.name, kind: '厂牌标识' }))];
     const escape = (value: unknown) => String(value || '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]!);
     await mkdir(path.join(out, 'film-sources'), { recursive: true });
     await writeFile(path.join(out, 'film-sources.json'), JSON.stringify({ notice: DEMO_DATA_NOTICE, images: '官方电影代表图；按容器缩放或裁切显示。', films: rights }, null, 2));

@@ -78,7 +78,7 @@ try {
                 if (mode === 'tag-management'&&!loadError) {
                     const manager = page.locator('[data-tag-manager]');
                     for (const name of ['已隐藏', '使用中'] as const) {
-                        await manager.getByRole('button', { name, exact: true }).click();
+                        await page.getByRole('group', { name: '标签状态' }).getByRole('button', { name, exact: true }).click();
                         await page.waitForFunction(contentReady, null, { timeout: 12000 });
                         await page.screenshot({ path: fileURLToPath(new URL(`${prefix}-${name === '已隐藏' ? 'hidden' : 'active'}.png`, out)), fullPage: false });
                         states.push(name);

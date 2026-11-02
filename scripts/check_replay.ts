@@ -18,7 +18,7 @@ try {
             requests.length = 0;
             errors.length = 0;
             await page.goto(base + route, { waitUntil: 'networkidle' });
-            await page.waitForFunction(() => ![...(document.querySelectorAll('[data-skeleton],[aria-busy="true"]') as NodeListOf<HTMLElement>)].some(node => node.checkVisibility() && node.getBoundingClientRect().bottom > 0 && node.getBoundingClientRect().top < innerHeight), undefined, { timeout: 15000 });
+            await page.waitForFunction(() => ![...(document.querySelectorAll('[data-skeleton],[aria-busy="true"]') as NodeListOf<HTMLElement>)].some(node => node.checkVisibility({ visibilityProperty: true }) && node.getBoundingClientRect().bottom > 0 && node.getBoundingClientRect().top < innerHeight), undefined, { timeout: 15000 });
             const first = [...requests], before = requests.length;
             if (route === '/')
                 await page.waitForTimeout(60000);

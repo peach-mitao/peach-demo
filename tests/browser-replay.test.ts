@@ -53,6 +53,9 @@ test('Worker 回放不等待其他请求未完成的快照且复用已完成的�
 });
 test('公开快照删除凭据与私人路径并保留已保存标记', () => {
     assert.deepEqual(publicValue({ password: 'private', cookie: 'secret', token: 'secret', password_set: true, path: 'C:\\Users\\private\\media', image: '/cover?id=1' }), { password: '', cookie: '', token: '', password_set: true, path: 'R:\\Media\\演示', image: '/cover?id=1' });
+    const own = ['R:\\Media', 'B:\\PikPak', 'C:\\Users\\peach\\peach-data\\config.toml'];
+    assert.deepEqual(own.map(path => publicValue(path)), own);
+    assert.equal(publicValue('C:\\Users\\peach\\peach-data-private\\x'), 'R:\\Media\\演示');
 });
 test('图片按用途选择缩略图并保留版本帮助函数的查询分隔符', async () => {
     const hash = await fixtureHash('GET /cover?code=one&thumb=1');

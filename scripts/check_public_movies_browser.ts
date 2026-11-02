@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
-import { FILMS, PEOPLE } from '../src/public-movies.ts';
+import { FILMS, PEOPLE, STUDIOS } from '../src/public-movies.ts';
 const base = process.env.BASE || 'http://127.0.0.1:58891';
 const out = new URL('../evidence/public-movies/', import.meta.url);
 await mkdir(out, { recursive: true });
@@ -31,14 +31,14 @@ try {
         assert.ok(await page.getByRole('button', { name: /精彩片段/ }).count());
         await page.screenshot({ path: fileURLToPath(new URL(`detail-${width}.png`, out)), animations: 'disabled' });
         await page.goto(base + '/film-sources/', { waitUntil: 'networkidle' });
-        assert.equal(await page.getByRole('heading', { level: 2 }).count(), FILMS.length + PEOPLE.length);
+        assert.equal(await page.getByRole('heading', { level: 2 }).count(), FILMS.length + PEOPLE.length + STUDIOS.length);
         assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
         await page.goto(base + '/?edit', { waitUntil: 'networkidle' });
         await page.locator('[data-copy-bar]').waitFor();
         assert.match(await page.locator('[data-copy-bar]').innerText(), /改字模式/);
         assert.deepEqual(media, []);
         assert.deepEqual(errors, []);
-        report.push({ width, cover: state.poster, controls: true, prompt: '仅提供演示', videoRequests: media.length, sources: FILMS.length + PEOPLE.length, errors });
+        report.push({ width, cover: state.poster, controls: true, prompt: '仅提供演示', videoRequests: media.length, sources: FILMS.length + PEOPLE.length + STUDIOS.length, errors });
         await context.close();
         console.log(`PASS ${width}：普通电影封面、详情、播放提示、来源和编辑预览，无视频请求`);
     }

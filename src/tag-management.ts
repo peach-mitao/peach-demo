@@ -65,6 +65,24 @@ export function applyTagPlan(inventory: TagInventory, plan: TagPlan, command: Ta
     next.revision++;
     return next;
 }
+// 管理页按应用同一契约分页：先按状态和搜索计类别，再按类别筛选，云图按数量、字母按名称排序。
+export function tagPage(inventory: TagInventory, params: URLSearchParams) {
+    const state = params.get('state') || 'active', view = params.get('view') || 'cloud', key = (name: string) => name.trim().toLocaleLowerCase();
+    if (!['active', 'hidden', 'blocked'].includes(state))
+        throw Error('未知的标签状态');
+    if (!['cloud', 'alphabet'].includes(view))
+        throw Error('未知的标签视图');
+    const limit = Math.max(1, Math.min(600, Number(params.get('limit')) || 20)), offset = Math.max(0, Number(params.get('offset')) || 0);
+    const query = key(params.get('q') || ''), category = params.get('category') || 'all', categories: Record<string,number> = {};
+    let rows = inventory.items.filter(row => (row.hidden ? 'hidden' : 'active') === state && (!query || [row.k, ...row.aliases].some(name => key(name).includes(query))));
+    for (const row of rows)
+        categories[row.cat || 'general'] = (categories[row.cat || 'general'] || 0) + 1;
+    if (category !== 'all')
+        rows = rows.filter(row => (row.cat || 'general') === category);
+    rows = [...rows].sort((a, b) => (view === 'cloud' ? b.n - a.n : 0) || key(a.k).localeCompare(key(b.k)) || a.k.localeCompare(b.k) || String(tagId(a)).localeCompare(String(tagId(b))));
+    return { items: structuredClone(rows.slice(offset, offset + limit)), total: rows.length, has_more: offset + limit < rows.length, limit, offset,
+        categories, duplicate_groups: structuredClone(inventory.duplicate_groups || []) };
+}
 export function tagDirectory(inventory: TagInventory, params: URLSearchParams) {
     const query = (params.get('q') || '').toLocaleLowerCase(), category = params.get('category') || params.get('type') || 'all';
     const available = inventory.items.filter((row) => !row.hidden && (!query || [row.k, ...row.aliases].some(name => name.toLocaleLowerCase().includes(query))));

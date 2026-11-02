@@ -39,11 +39,11 @@ try {
                 await page.getByRole('button', { name: '隐藏', exact: true }).click();
                 await confirm('隐藏标签');
                 assert.equal((await inventory()).items.find((row: { id: any; entity_id: any; }) => (row.id ?? row.entity_id) === id).hidden, true);
-                await page.locator('[data-tag-manager]').getByRole('button', { name: '已隐藏', exact: true }).click();
+                await page.getByRole('group', { name: '标签状态' }).getByRole('button', { name: '已隐藏', exact: true }).click();
                 await select(name);
                 await page.getByRole('button', { name: '恢复', exact: true }).click();
                 await confirm('恢复标签');
-                await page.locator('[data-tag-manager]').getByRole('button', { name: '使用中', exact: true }).click();
+                await page.getByRole('group', { name: '标签状态' }).getByRole('button', { name: '使用中', exact: true }).click();
                 current = await inventory();
                 const pair = current.items.filter((row: { cat: any; hidden: any; }) => row.cat === renamed.cat && !row.hidden).slice(0, 2);
                 for (const row of pair)

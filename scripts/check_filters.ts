@@ -27,7 +27,7 @@ try {
             const selected = await style(page.locator('[data-catalog-tag][aria-pressed="true"]').first());
             assert.equal(selected.borderStyle, 'solid');
             assert.notEqual(selected.background, normal.background);
-            await page.waitForFunction(() => !Array.from((document.querySelectorAll('[data-skeleton]') as NodeListOf<HTMLElement>)).some(e => e.getBoundingClientRect().height > 0));
+            await page.waitForFunction(() => !Array.from((document.querySelectorAll('[data-skeleton]') as NodeListOf<HTMLElement>)).some(e => e.getBoundingClientRect().height > 0 && e.checkVisibility({ visibilityProperty: true })));
             assert.equal(await page.locator('html').getAttribute('data-theme'), theme);
             await page.screenshot({ path: fileURLToPath(new URL(`filters-${width}-${theme}.png`, out)) });
             const overflow = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth);

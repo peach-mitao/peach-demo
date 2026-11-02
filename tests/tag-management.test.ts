@@ -1,7 +1,7 @@
 import type {TagInventory} from '../src/tag-management.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { tagInventory, previewTags, applyTagPlan, tagDirectory } from '../src/tag-management.ts';
+import { tagInventory, previewTags, applyTagPlan, tagDirectory, tagPage } from '../src/tag-management.ts';
 const indexes = { tags: { items: [{ entity_id: 1, k: '旅行', n: 2, cat: 'general' }, { entity_id: 2, k: '风景', n: 1, cat: 'general' }] },
     onlineTags: { items: [{ k: 'landscape', n: 2, cat: 'general' }, { k: 'portrait', n: 1, cat: 'general' }, { k: 'artist', n: 1, cat: 'artist' }] } };
 const items = [{ tags: ['旅行', '风景'] }, { tags: ['旅行'] }];
@@ -41,4 +41,14 @@ test('在线标签保持稳定来源身份并拒绝跨类型合并', () => {
     const next = applyTagPlan(state, previewTags(state, command, [], 'token'), { ...command, token: 'token' });
     assert.equal(next.items[0].id, ids[0]);
     assert.deepEqual(next.items[0].aliases, ['portrait']);
+});
+test('管理页分页按状态计类别，按类别筛选并按视图排序', () => {
+    const online = tagInventory(indexes, 'online'), page = (state: TagInventory, query: Record<string, string>) => tagPage(state, new URLSearchParams({ limit: '1', ...query }));
+    const cloud = page(online, {});
+    assert.deepEqual([cloud.items.map(row => row.k), cloud.total, cloud.has_more, cloud.categories], [['landscape'], 3, true, { general: 2, artist: 1 }]);
+    assert.deepEqual(page(online, { view: 'alphabet', offset: '1' }).items.map(row => row.k), ['landscape']);
+    assert.deepEqual(page(online, { category: 'artist' }).items.map(row => row.k), ['artist']);
+    const hidden = applyTagPlan(tagInventory(indexes), previewTags(tagInventory(indexes), { operation: 'hide', ids: [2] }, items, 'token'), { operation: 'hide', ids: [2], token: 'token' });
+    assert.deepEqual([page(hidden, { state: 'hidden' }).items.map(row => row.k), page(hidden, {}).total], [['风景'], 1]);
+    assert.throws(() => page(online, { state: 'deleted' }));
 });

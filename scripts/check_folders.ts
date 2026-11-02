@@ -42,7 +42,7 @@ try {
             assert.ok(matchIndex >= 0, '目录搜索保留完整身份');
             await navigation.getByRole('button', { name: leaf.name, exact: true }).nth(matchIndex).click();
             await page.waitForFunction(id => new URLSearchParams(location.search).get('folder') === id, leaf.id);
-            await page.waitForFunction(() => !(document.querySelector('#grid [data-skeleton]') as HTMLElement));
+            await page.waitForFunction(() => ![...document.querySelectorAll<HTMLElement>('#grid [data-skeleton]')].some(node => node.checkVisibility({ visibilityProperty: true })));
             const items = await read('/api/items?' + new URLSearchParams({ folder: leaf.id, limit: '1000' }));
             assert.equal(items.total, leaf.files);
             assert.ok(items.total > 0 && items.total < root.files);

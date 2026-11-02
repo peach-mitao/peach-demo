@@ -1,26 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import vm from 'node:vm';
-import { readFile } from 'node:fs/promises';
 import { configuration, cloudProxies, providers } from '../src/showcase.ts';
 import { downloadTasks } from './showcase-fixtures.ts';
 import * as tagManagement from '../src/tag-management.ts';
-const source = await readFile(new URL('../site/_demo/interactions.js', import.meta.url), 'utf8');
-function page(respond: (url:URL)=>unknown = () => ({ status: 'complete', id: 1, items: [] })) {
-    let now = Date.now();
-    const calls: { path: string; search: string; method: any; }[] = [], context: Record<string,any> = { Request, Response, Headers, URL, URLSearchParams, crypto, Blob, Date: class extends Date {
-            static now() { return now; }
-        },
-        location: { href: 'https://demo.example/', origin: 'https://demo.example', search: '' },
-        document: { readyState: 'loading', addEventListener() { } },
-        fetch: async (input: RequestInfo|URL, init?: RequestInit) => { const url = input instanceof Request ? new URL(input.url) : new URL(input, 'https://demo.example'); calls.push({ path: url.pathname, search: url.search, method: input instanceof Request?input.method:init?.method || 'GET' }); return new Response(JSON.stringify(respond(url)), { headers: { 'content-type': 'application/json' } }); } };
-    context.window = context;
-    context.peachDemoMedia = (value: any) => value;
-    context.peachDemoMediaJSON = (value: any) => value;
-    context.peachDemoTags = tagManagement;
-    vm.runInNewContext(source, context);
-    return { fetch: context.fetch, calls, advance: (ms: number) => { now += ms; } };
-}
+import { page } from './interaction-harness.ts';
 test('固定处理状态合并并发读取，重复轮询不产生网络请求', async () => {
     const p = page();
     await Promise.all([p.fetch('/api/library-processing'), p.fetch('/api/library-processing')]);
@@ -100,14 +83,20 @@ test('新版确认弹窗取得零成本的演示预估，不读取真实任务',
     assert.deepEqual({ ...estimate.traffic.disk }, { estimated_bytes: 0, temporary_bytes: 0, volumes: [], cache_unknown: false, can_fit: null });
 });
 test('视频预览设置只保存在页面草稿，扫描任务与设置使用同一策略', async () => {
-    const p = page();
+    const recorded = { metadata_only: false, preview_acceleration: 'auto', playback_acceleration: 'auto' };
+    const respond = (url: URL) => url.pathname === '/api/media-processing' ? recorded : { status: 'complete', id: 1, items: [] };
+    const p = page(respond);
     assert.equal((await (await p.fetch('/api/media-processing')).json()).metadata_only, false);
     const result = await p.fetch('/api/media-processing', { method: 'POST', body: JSON.stringify({ metadata_only: true }) });
     assert.equal((await result.json()).metadata_only, true);
     assert.equal((await (await p.fetch('/api/library-processing')).json()).metadata_only, true);
-    assert.equal((await (await page().fetch('/api/media-processing')).json()).metadata_only, false);
+    // 抽帧与转码方式按应用只送改了的那一项，回整份。
+    const decoding = await (await p.fetch('/api/media-processing', { method: 'POST', body: JSON.stringify({ preview_acceleration: 'vaapi' }) })).json();
+    assert.deepEqual([decoding.preview_acceleration, decoding.playback_acceleration, decoding.metadata_only], ['vaapi', 'auto', true]);
+    assert.equal((await (await page(respond).fetch('/api/media-processing')).json()).metadata_only, false);
     assert.equal((await p.fetch('/api/media-processing', { method: 'POST', body: '{}' })).status, 400);
-    assert.equal(p.calls.filter(call => call.path === '/api/media-processing').length, 0);
+    // 回放快照只读一次，之后都在页面状态里回答。
+    assert.equal(p.calls.filter(call => call.path === '/api/media-processing').length, 1);
 });
 test('整理示例支持新旧番号键、可选分组和目录，并返回明确的模板错误', async () => {
     const p = page(), example = async (file: string, dir = '') => (await p.fetch('/api/organize/example?' + new URLSearchParams({ file_template: file, dir_template: dir }))).json();
@@ -138,6 +127,19 @@ test('扫描任务可调速、暂停、继续并完成，刷新恢复录制值',
     assert.equal(done.checked, done.total);
     assert.equal(p.calls.length, 1);
     assert.equal((await (await page().fetch('/api/library-processing')).json()).job_id, undefined);
+});
+test('扫描任务带出网页发起方式，确认后可取消，结束后的提示可归档与撤销', async () => {
+    const p = page(), post = async (body: { action?: string; job_id?: any; }) => p.fetch('/api/library-processing', { method: 'POST', body: JSON.stringify(body) });
+    const task = await (await post({})).json();
+    assert.equal(task.trigger, 'manual');
+    assert.equal((await post({ action: 'archive', job_id: task.job_id })).status, 409);
+    const cancelled = await (await post({ action: 'cancel', job_id: task.job_id })).json();
+    assert.deepEqual([cancelled.status, cancelled.outcome, cancelled.stage, cancelled.trigger], ['cancelled', 'cancelled', '已取消', undefined]);
+    p.advance(60000);
+    assert.equal((await (await p.fetch('/api/library-processing')).json()).status, 'cancelled');
+    assert.equal((await (await post({ action: 'archive', job_id: task.job_id })).json()).archived, true);
+    assert.equal((await (await post({ action: 'unarchive', job_id: task.job_id })).json()).archived, false);
+    assert.equal((await (await post({})).json()).status, 'running');
 });
 test('任务控制拒绝无效速度与不匹配的任务号', async () => {
     const p = page(), post = (body: { action?: string; speed_mode?: string; job_id?: string; }) => p.fetch('/api/library-processing', { method: 'POST', body: JSON.stringify(body) });
@@ -184,4 +186,35 @@ test('目录用途可预览、保存和移除，刷新恢复录制状态且不�
     assert.equal((await (await p.fetch('/api/folders?folder=demo-root')).json()).rule, null);
     assert.equal((await (await page(respond).fetch('/api/folders?folder=demo-root')).json()).rules_revision, 0);
     assert.ok(p.calls.every(call => call.method === 'GET'));
+});
+test('教程进度、播放记忆与外部播放只改变当前页面，不产生写请求', async () => {
+    const p = page(() => ({}));
+    const progress = async (body?: object) => (await p.fetch('/api/tutorial-progress', body ? { method: 'POST', body: JSON.stringify(body) } : undefined)).json();
+    assert.deepEqual(await progress(), { version: 1, campaign: 'tutorial-center-1', invited: true, completed: false, chapters: {} });
+    await progress({ campaign: 'tutorial-center-1', action: 'step', chapter: 'basics', step: 'search', next: 1, skipped: false });
+    await progress({ campaign: 'tutorial-center-1', action: 'step', chapter: 'basics', step: 'search', next: 1, skipped: true });
+    assert.deepEqual((await progress()).chapters.basics, { next: 1, read: [], skipped: ['search'] });
+    assert.equal((await progress({ campaign: 'tutorial-center-1', action: 'complete' })).completed, true);
+    const memory = '/api/player/memory?video=item%3A1';
+    assert.deepEqual(await (await p.fetch(memory)).json(), { selected: null, tracks: [] });
+    await p.fetch(memory, { method: 'PUT', body: JSON.stringify({ rotation: 90, caption_style: { size: 2 } }) });
+    await p.fetch(memory, { method: 'PUT', body: JSON.stringify({ rate: 1.5, caption_style: { color: 'white' } }) });
+    assert.deepEqual(await (await p.fetch(memory)).json(), { selected: null, tracks: [], rotation: 90, rate: 1.5, caption_style: { size: 2, color: 'white' } });
+    assert.deepEqual((await (await p.fetch('/api/local-players')).json()).players.map((row: { id: string }) => row.id), ['default']);
+    assert.equal((await p.fetch('/api/local-playback?id=1&player=default', { method: 'POST', body: '{}' })).status, 400);
+    assert.equal((await p.fetch('/api/diagnostics/exports', { method: 'POST', body: '{}' })).status, 400);
+    assert.equal((await (await p.fetch('/api/diagnostics/exports')).json()).status, 'idle');
+    assert.deepEqual(p.calls, []);
+});
+test('标签管理带分页参数时返回应用的分页契约', async () => {
+    const p = page(() => tagManagement.tagInventory({ tags: { items: [{ entity_id: 1, k: '旅行', n: 2, cat: 'meta' }, { entity_id: 2, k: '风景', n: 1, cat: 'story' }] }, onlineTags: { items: [] } }));
+    const data = await (await p.fetch('/api/tag-management?limit=1&offset=0&category=all&view=cloud&state=active&scope=local')).json();
+    assert.deepEqual([data.items.map((row: { k: string }) => row.k), data.total, data.categories], [['旅行'], 2, { meta: 1, story: 1 }]);
+    assert.equal((await p.fetch('/api/tag-management?limit=1&state=gone')).status, 400);
+});
+test('复核数据补齐稍后处理与已忽略队列，重复读取保持一致', async () => {
+    const p = page(() => ({ ok: true, items: [], total: 0, sections: {}, counts: {}, has_more: false }));
+    for (let round = 0; round < 2; round++)
+        assert.deepEqual((await (await p.fetch('/api/review')).json()).queues, { later: { sections: {}, counts: {} }, ignored: { sections: {}, counts: {} } });
+    assert.equal(p.calls.length, 1);
 });

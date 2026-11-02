@@ -7,6 +7,12 @@ export const demoRules:Rule[]=[
  {...rule('history.import','导入历史文件','button'),text:'导入历史文件'},
  rule('pagination.page','跳页','button[aria-label^="第 "][aria-label$=" 页"]'),
  rule('library.icon','选择媒体库图标','button[aria-label$=" 图标"]'),
+ rule('playback.external','使用外部播放器打开','button[aria-label="使用外部播放器打开"]'),
+ rule('storage.reveal','在资源管理器中显示','button[aria-label="在资源管理器中显示"]'),
+ rule('network.copy','复制访问地址','button[aria-label^="复制"][aria-label$="地址"]'),
+ ...[['storage.clean','清理所选'],['storage.clean','全部清理'],['storage.relocate','更改位置'],['storage.measure','重新统计'],['item.remove','移除']].map(([id,label])=>({...rule(id!,label!,'button'),text:label})),
+ ...[['tool.organize','整理文件'],['tool.resource-sync','资源同步'],['tool.orphans','文件已丢失的记录'],['tool.media-repair','媒体修复'],['tool.links','链接管理'],['tool.bulk-delete','批量删除']]
+  .map(([id,label])=>({...rule(id!,label!,'button'),textPrefix:label})),
  ...[
   ['pagination.previous','上一页'],['pagination.next','下一页'],['task.copy','复制磁力'],
   ['task.retry','重新提交'],['action.cancel','取消'],['title.expand','展开标题'],['title.collapse','收起标题'],
@@ -53,17 +59,17 @@ export const demoRules:Rule[]=[
  rule('subscription.select','选择来源','button[aria-label^="全选 "]'),rule('subscription.collapse','收起来源','button[aria-label^="收起 "]'),rule('subscription.all','全部来源','button[aria-label="全部来源"]'),rule('subscription.collapse-all','全部收起','button[aria-label="全部收起"]'),
  ...['number','title','studio','series','year','actors','cd','mosaic','definition'].map(id=>rule('template.token.'+id,'整理模板字段',`button[aria-label$="{${id}}"]`)),
  ...[
-  ['entity.avatar','更换'],['source.check','检查'],['source.pull','拉取'],['item.remove','移除'],['browser.remove','删除'],['browser.stop','停止读取'],['asset.preview','预览'],['asset.open','打开'],['tag.edit','编辑标签'],
+  ['entity.avatar','更换'],['source.check','检查'],['source.pull','拉取'],['item.remove','移除'],['browser.remove','删除'],['browser.stop','停止读取'],['asset.preview','预览'],['asset.open','打开'],['tag.edit','编辑标签'],['tag.edit','修改标签'],
  ].map(([id,label])=>rule(id!,label!,`button[aria-label^="${label}"]`)),
  ...['开启字幕','设置','媒体库图标 1','分析范围','连接方式','检查频率','更多取得浏览记录的方式','更多同步方式','表格视图','默认视图','选择整理路径'].map(label=>rule('control.'+({设置:'settings','开启字幕':'subtitles','媒体库图标 1':'library-icon','分析范围':'scope','连接方式':'connection','检查频率':'frequency','更多取得浏览记录的方式':'browser-methods','更多同步方式':'sync-methods','表格视图':'table','默认视图':'default','选择整理路径':'folder'}[label]||'option'),label,`button[aria-label="${label}"]`)),
  ...[
-  ['setup.existing','使用已有数据目录'],['setup.add','添加媒体库'],['source.search','查找资源'],['wishlist.toggle','想要'],['wishlist.toggle','已想要'],
+  ['setup.existing','使用已有数据'],['setup.add','添加媒体库'],['source.search','查找资源'],['wishlist.toggle','想要'],['wishlist.toggle','已想要'],
   ['library.status','已入库'],['item.add','添加'],['asset.add','添加作品'],['filter.all','全部'],['filter.performer','女优'],['filter.creator','动画作者'],['filter.clear','清除筛选'],['app.install','安装'],['alias.save','保存别名'],['settings.save','保存配置'],['app.version','查看版本'],['source.search','查找'],
   ['template.studio','厂牌 / 番号目录'],['template.studio','厂牌分目录'],['template.title','番号 标题'],['source.credentials','打开来源和凭证'],['asset.original','打开原视频'],['account.logout','登出'],['browser.read','读取浏览器记录'],['settings.token','更新渠道与令牌'],['browser.close','关闭浏览器添加'],['browser.credentials','获取凭据'],
   ['app.update','检查更新'],['source.check','检查连接'],['source.check','检查全部'],['app.upstream','检查上游版本'],['review.reject','拒绝'],['cleanup.repair','开始修复'],['source.pull','立即拉取'],['duplicates.largest','留最大'],['duplicates.longest','留最长'],['network.public','启动公网入口'],['app.update','去看更新'],['follow.seen','全部标记已看'],['follow.ignore','全部忽略'],['view.collapse','全部收起'],['selection.page','全选本页'],
-  ['alias.add','添加别名'],['source.add','添加来源'],['browser.add','添加浏览器'],['prefix.add','添加前缀'],['source.add','添加索引器'],['folder.add','添加文件夹'],['review.skip','跳过'],['review.approve','通过'],['library.sync','同步媒体库'],['diagnostics.download','下载诊断报告'],['table.columns','显示列'],['app.uninstall','卸载 Peach'],['source.remove','移除索引器 1'],['asset.preview','预览'],['cover.preview','预览上传内容'],['duplicates.recycle','整组回收'],['cover.retry','重试样图'],['tutorial.open','重新打开教程'],['source.reload','重新读取'],['source.check','重新检测'],['source.check','重新检查'],['table.reset','重置列宽'],
+  ['alias.add','添加别名'],['source.add','添加来源'],['browser.add','添加浏览器'],['prefix.add','添加前缀'],['source.add','添加索引器'],['folder.add','添加文件夹'],['review.skip','跳过'],['review.approve','通过'],['library.sync','同步新增文件'],['diagnostics.download','下载诊断报告'],['diagnostics.export','导出刮削记录'],['table.columns','显示列'],['app.uninstall','卸载 Peach'],['source.remove','移除索引器 1'],['asset.preview','预览'],['cover.preview','预览上传内容'],['duplicates.recycle','整组回收'],['cover.retry','重试样图'],['tutorial.open','重新打开教程'],['source.reload','重新读取'],['source.check','重新检测'],['source.check','重新检查'],['table.reset','重置列宽'],
   ['tags.repair','整理重复标签'],['selection.results','选择当前结果'],['selection.clear','清空选择'],['selection.clear','清空'],['selection.apply','显示结果'],['item.rename','重命名'],['tags.merge','合并'],['item.restore','恢复'],['item.hide','隐藏'],['source.retry','立即重试'],
-  ['settings.configure','Peach 配置'],['library.select','本地演示库'],
+  ['settings.configure','Peach 配置'],['library.select','本地演示库'],['repairs.retry','重试失败项'],['bridge.rebuild','重新安装'],['tutorial.open','重新打开'],
  ].map(([id,label])=>({...rule(id!,label!,'button'),text:label})),
 ];
 export function demoState(){

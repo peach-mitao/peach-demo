@@ -6,8 +6,9 @@ import { fixtureKey, fixtureHash } from '../src/key.ts';
 import { PUBLIC_CATALOG, MOVIE_READS, DEMO_DATA_NOTICE, publicMovies, responseShape } from '../src/public-movies.ts';
 import type { PublicCatalog, PublicImage } from '../src/public-movies.ts';
 import type { FixtureManifest } from '../src/types.ts';
-import { configuration, downloads, downloadCheck, cloudProxies, providers } from '../src/showcase.ts';
+import { configuration, downloads, downloadCheck, cloudProxies, providers, taskRuns, clientUpdates } from '../src/showcase.ts';
 import { tagInventory } from '../src/tag-management.ts';
+import { backendDefault, withBackend } from '../src/backend-defaults.ts';
 
 const digest = (value: string | Uint8Array) => createHash('sha256').update(value).digest('hex');
 const routeHash = (route: string) => fixtureHash(fixtureKey('GET', new URL(route, 'https://demo.example')));
@@ -17,8 +18,8 @@ export async function verifyPublicMovies(site: string, dataset: PublicCatalog = 
   const fixtures = path.join(site, '_fixtures');
   const read = async (name: string) => JSON.parse(await readFile(path.join(fixtures, name), 'utf8'));
   const certificate = await read('public-movie-sources.json');
-  const { films, people } = dataset, expected = publicMovies(films, people);
-  if (certificate.schema !== 1 || JSON.stringify(certificate.films) !== JSON.stringify(films) || JSON.stringify(certificate.people) !== JSON.stringify(people)) throw Error('普通电影来源证明无效');
+  const { films, people } = dataset, studios = dataset.studios || [], expected = publicMovies(films, people, studios);
+  if (certificate.schema !== 1 || JSON.stringify(certificate.films) !== JSON.stringify(films) || JSON.stringify(certificate.people) !== JSON.stringify(people) || JSON.stringify(certificate.studios || []) !== JSON.stringify(studios)) throw Error('普通电影来源证明无效');
   for (const [key, image] of imageSources(dataset)) if (certificate.images[key] !== image.sha256) throw Error(`普通电影图片来源证明无效：${key}`);
   for (const [file, data] of Object.entries({ 'catalog.json': expected.catalog, 'indexes.json': expected.indexes, 'suggest.json': expected.suggestion, 'recorded-state.json': expected.recorded }))
     if (JSON.stringify(await read(file)) !== JSON.stringify(data)) throw Error(`普通电影数据不匹配：${file}`);
@@ -28,7 +29,10 @@ export async function verifyPublicMovies(site: string, dataset: PublicCatalog = 
     const info = JSON.parse(await readFile(path.join(site, '_demo/frontend-source.json'), 'utf8'));
     const release = JSON.parse(await readFile(path.join(site, 'integrations/jav-userscript-release.json'), 'utf8'));
     const sites = JSON.parse(await readFile(path.join(site, 'integrations/jav-sites.json'), 'utf8')).sites;
-    const config = configuration(certificate.configuration, info.version);
+    const constants = JSON.parse(await readFile(path.join(fixtures, 'entry-pages.json'), 'utf8')).constants;
+    const config = configuration(certificate.configuration, info.version, constants);
+    derived.set('/api/tasks', taskRuns(expected.recorded['/api/tasks'], constants));
+    derived.set('/api/client-updates', clientUpdates(info.version));
     derived.set('/api/configuration', config);
     derived.set('/healthz', { ...certificate.health, version: info.version, build_commit: info.commit });
     derived.set('/api/configuration/downloads', downloads());
@@ -71,11 +75,12 @@ export async function verifyPublicMovies(site: string, dataset: PublicCatalog = 
 }
 
 function imageSources(dataset: PublicCatalog): Map<string, PublicImage> {
-  return new Map([...dataset.films.map(film => [film.slug, film.poster] as const), ...dataset.people.map(person => [person.id, person.portrait] as const)]);
+  return new Map([...dataset.films.map(film => [film.slug, film.poster] as const), ...dataset.people.map(person => [person.id, person.portrait] as const),
+    ...(dataset.studios || []).map(studio => [studio.id, studio.logo] as const)]);
 }
 
 export async function preparePublicMovies(templateDirectory: string, imageDirectory: string, site: string, dataset: PublicCatalog = PUBLIC_CATALOG) {
-  const { films, people } = dataset;
+  const { films, people } = dataset, studios = dataset.studios || [];
   const fixtures = path.join(site, '_fixtures');
   if (path.resolve(templateDirectory) === path.resolve(fixtures)) throw Error('结构模板必须与输出目录分开');
   const original: FixtureManifest = JSON.parse(await readFile(path.join(templateDirectory, 'manifest.json'), 'utf8'));
@@ -111,16 +116,19 @@ export async function preparePublicMovies(templateDirectory: string, imageDirect
     const own = await hash(route), key = original.alias?.[own] ?? own;
     let skeleton: any = { ok: true, items: [], total: 0 };
     if (original.fixtures[key] === 'json') skeleton = responseShape(JSON.parse(await readFile(path.join(templateDirectory, `${key}.json`), 'utf8')));
+    // 有后端参照取值的接口直接用应用的实际默认值，不再沿用旧录制包的空壳；名称形状的实体列表属于演示片目，不从参照带入。
+    if (backendDefault(route) !== undefined)
+      skeleton = route === '/api/entity/shapes' ? withBackend(route, { entities: [] }, ['ok', 'home', 'name_glyphs', 'name_variants']) : withBackend(route, {});
     if (route === '/api/configuration') configurationSeed = skeleton;
     if (route === '/healthz') healthSeed = skeleton;
     await write(route, skeleton);
   }
-  const data = publicMovies(films, people);
+  const data = publicMovies(films, people, studios);
   for (const [route, value] of data.routes) await write(route, value);
   const imageKeys = new Map<string, string>();
   for (const [identifier, source] of imageSources(dataset)) {
     const index = films.findIndex(film => film.slug === identifier);
-    const route = index >= 0 ? `/cover?code=FILM-${String(index + 1).padStart(3, '0')}` : `/entity-image?person=${encodeURIComponent(identifier)}`;
+    const route = index >= 0 ? `/cover?code=FILM-${String(index + 1).padStart(3, '0')}` : studios.some(studio => studio.id === identifier) ? `/logo?studio-id=${encodeURIComponent(identifier)}` : `/entity-image?person=${encodeURIComponent(identifier)}`;
     const key = await hash(route); manifest.fixtures[key] = 'webp'; imageKeys.set(identifier, key);
     images[identifier] = source.sha256;
     hashes[`${key}.webp`] = source.sha256;
@@ -132,7 +140,7 @@ export async function preparePublicMovies(templateDirectory: string, imageDirect
     if (own !== key) manifest.alias[own] = key;
   }
   for (const [name, value] of Object.entries({ 'catalog.json': data.catalog, 'indexes.json': data.indexes, 'suggest.json': data.suggestion,
-    'recorded-state.json': data.recorded, 'manifest.json': manifest, 'public-movie-sources.json': { schema: 1, notice: DEMO_DATA_NOTICE, films, people, hashes, images, aliases: manifest.alias, routes: routeNames, configuration: configurationSeed, health: healthSeed } }))
+    'recorded-state.json': data.recorded, 'manifest.json': manifest, 'public-movie-sources.json': { schema: 1, notice: DEMO_DATA_NOTICE, films, people, studios, hashes, images, aliases: manifest.alias, routes: routeNames, configuration: configurationSeed, health: healthSeed } }))
     await writeFile(path.join(fixtures, name), JSON.stringify(value));
   await writeFile(path.join(media, 'index.json'), JSON.stringify({ version: 1, videos: {} }));
   console.log(`普通电影演示数据：${films.length} 部影片、${people.length} 位人物、${data.routes.size} 个响应、${data.imageRoutes.size} 个图片地址；无视频。`);

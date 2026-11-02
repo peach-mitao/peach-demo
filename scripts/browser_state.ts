@@ -3,5 +3,5 @@ export function contentReady(){
  const immerse=document.querySelector<HTMLElement>('[data-immerse]:not([hidden])');
  if(immerse)return document.documentElement.dataset.demoPlayback==='stub'?Boolean(immerse.querySelector('video')):Boolean((immerse.querySelector<HTMLVideoElement>('video')?.readyState||0)>=2);
  const scope=[...document.querySelectorAll<HTMLElement>('dialog[open],[role="dialog"][aria-modal="true"]')].find(element=>element.checkVisibility())||document;
- return ![...scope.querySelectorAll<HTMLElement>('[data-skeleton],[aria-busy="true"]')].some(element=>{const rect=element.getBoundingClientRect();return element.checkVisibility({opacityProperty:true})&&rect.bottom>0&&rect.top<innerHeight&&rect.right>0&&rect.left<innerWidth});
+ return ![...scope.querySelectorAll<HTMLElement>('[data-skeleton],[aria-busy="true"]')].some(element=>{const rect=element.getBoundingClientRect();return element.checkVisibility({opacityProperty:true,visibilityProperty:true})&&rect.bottom>0&&rect.top<innerHeight&&rect.right>0&&rect.left<innerWidth});
 }
