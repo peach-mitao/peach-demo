@@ -233,8 +233,12 @@ export function publicMovies(films: readonly PublicMovie[] = FILMS, people: read
     demo: true })),
     has_more: false, next_before_id: null, demo_notice: DEMO_DATA_NOTICE };
   const wanted = items[wantedIndex]!;
-  const wants = { ok: true, items: [{ id: 1, code: wanted.code, title: wanted.title, state: 'searching', status: 'searching', has_cover: true, cover_version: wanted.cover_version, added_at: now, created_at: now, studio: wanted.studio, performers: wanted.performers.join('、'), asset_id: null, demo: true }],
-    counts: { searching: 1, unreleased: 0, given_up: 0, acquired: 0 }, scraping: false, demo_notice: DEMO_DATA_NOTICE };
+  // 按应用的 Want 契约：馆藏已有的作品记为已入库并关联馆藏条目，与后端判定一致。
+  const wants = { ok: true, items: [{ id: 1, code: wanted.code, has_magnets: null, origin: 'feed', title: wanted.title, link: wanted.source_url, release_date: wanted.release_date,
+    studio: wanted.studio, performers: wanted.performers.join('、'), phase: 'acquired', fresh: false, search_count: 1, last_search_at: now, last_search_outcome: 'found',
+    given_up_at: null, acquired_asset_id: wanted.id, acquired_at: now, follow_item_id: null, follow_provider: null, cover: query('/cover', { code: wanted.code }),
+    remote_cover: false, scraped: true, scrape_error: null, created_at: now, demo: true }],
+    counts: { searching: 0, unreleased: 0, given_up: 0, acquired: 1 }, scraping: false, demo_notice: DEMO_DATA_NOTICE };
   const recorded = { '/api/tasks': tasks, '/api/downloads': downloads, '/api/wants': wants, '/api/orphan-records': { total: 0, items: [] } };
   for (const [route, value] of Object.entries(recorded)) put(route, value);
   put('/api/downloads?limit=50', downloads);

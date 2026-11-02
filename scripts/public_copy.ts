@@ -4,7 +4,9 @@ import { walk } from './ast.ts';
 export function movieText(text: string): string {
     if (text === 'sperm') return 'star';
     if (text === '番') return '影';
-    return text.replaceAll('女优', '演员').replaceAll('番号', '编号').replaceAll('记一次高潮', '标记精彩片段').replaceAll('已记录一次高潮', '已标记精彩片段').replaceAll('高潮', '精彩片段').replace(/\bJAV\b/g, '影片');
+    return text.replaceAll('女优', '演员').replaceAll('番号', '编号').replaceAll('记一次高潮', '标记精彩片段').replaceAll('已记录一次高潮', '已标记精彩片段').replaceAll('高潮', '精彩片段').replace(/\bJAV\b/g, '影片')
+        // 输入提示里的示例番号换成演示片目的编号。
+        .replaceAll('SSIS-950', 'FILM-001').replaceAll('ABF-087、SYKH-145', 'FILM-001、FILM-002');
 }
 export function movieScript(source: string): string {
     const tree = parse(source, { ecmaVersion: 'latest', sourceType: 'module' });

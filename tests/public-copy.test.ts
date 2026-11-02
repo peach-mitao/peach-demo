@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
-import { movieScript, movieHTML } from '../scripts/public_copy.ts';
+import { movieScript, movieHTML, movieText } from '../scripts/public_copy.ts';
 test('普通电影展示投影只改字串而保留协议和表达式', () => {
     const source = 'const JAV=3;globalThis.result=["女优",`番号 ${JAV} 高潮`,"/api/jav/detail",/JAV/];';
     const context: Record<string, any> = {};
@@ -12,4 +12,8 @@ test('普通电影展示投影只改字串而保留协议和表达式', () => {
 test('页面可见文本使用普通电影术语且保留脚本与路径', () => {
     const html = '<script>const JAV=1</script><a href="/jav" aria-label="搜索女优">JAV</a><style>.JAV{}</style>';
     assert.equal(movieHTML(html), '<script>const JAV=1</script><a href="/jav" aria-label="搜索演员">影片</a><style>.JAV{}</style>');
+});
+test('输入提示里的示例番号换成演示编号', () => {
+    assert.equal(movieText('输入番号，例如 SSIS-950'), '输入编号，例如 FILM-001');
+    assert.equal(movieText('例如 ABF-087、SYKH-145…'), '例如 FILM-001、FILM-002…');
 });
