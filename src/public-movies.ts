@@ -225,16 +225,23 @@ export function publicMovies(films: readonly PublicMovie[] = FILMS, people: read
     avatar_url: author.avatar || null, official_avatar_url: author.avatar || null,
     url: entities.find(row => row.id === author.entity_id)!.metadata.source_url }));
   if (items.some(row => !row.creator_entity)) sources.push({ ...source, official_avatar_url: null });
-  const groups = items.slice(0, 36).map((row, i) => ({ release_key: films[i]!.slug, primary: { id: row.id, provider: 'demo', provider_label: '公开电影片目',
+  // 电影本身记成视频帖：卡片带时长，进「视频」；演示站不放片，详情只显示海报。另取一批片子的海报记成图片帖，
+  // 「图片」页才有真正的图片可排（应用默认瀑布流）。
+  const post = (row: Row, i: number, video: boolean) => {
+    const slug = films[i]!.slug, thumb = `/_demo/follow/${slug}.webp`;
+    return { release_key: video ? slug : `${slug}-poster`, primary: { id: row.id, provider: 'demo', provider_label: '公开电影片目',
     resource_provider: 'demo', source_id: row.creator_entity ? authors.findIndex(author => author.entity_id === row.creator_entity.id) + 1 : 0,
     source_label: sources.find(author => author.entity_id === row.creator_entity?.id)?.label || source.label, author_key: row.creator_entity ? `entity:${row.creator_entity.id}` : source.author_key,
-    external_id: films[i]!.slug, title: row.title, author: row.creator, credit: row.creator, audio: null, summary: DEMO_DATA_NOTICE,
-    url: row.source_url, thumb_url: `/_demo/follow/${films[i]!.slug}.webp`, published_at: `${row.release_date}-01-01T00:00:00Z`, published_precision: 'year',
-    version: null, duration: row.duration, variant_kind: 'main', variant_label: null, status: ['new', 'seen', 'saved'][i % 3], asset_id: row.id,
-    media_needs_credential: false, media_error: null, has_media: true, media_kind: 'image', playable: false,
-    media_items: [{ index: 0, name: `${films[i]!.slug}.webp`, media_kind: 'image', media_type: 'image/webp', resource_provider: 'demo', thumb_url: `/_demo/follow/${films[i]!.slug}.webp` }],
+    external_id: video ? slug : `${slug}-poster`, title: video ? row.title : `${row.title} 海报`, author: row.creator, credit: row.creator, audio: null, summary: DEMO_DATA_NOTICE,
+    url: row.source_url, thumb_url: thumb, published_at: `${row.release_date}-01-01T00:00:00Z`, published_precision: 'year',
+    version: null, duration: video ? row.duration : null, variant_kind: 'main', variant_label: null, status: ['new', 'seen', 'saved'][i % 3], asset_id: row.id,
+    media_needs_credential: false, media_error: null, has_media: true, media_kind: video ? 'video' : 'image', playable: false,
+    media_items: [video ? { index: 0, name: `${slug}.mp4`, media_kind: 'video', media_type: 'video/mp4', resource_provider: 'demo', thumb_url: thumb }
+      : { index: 0, name: `${slug}.webp`, media_kind: 'image', media_type: 'image/webp', resource_provider: 'demo', thumb_url: thumb }],
     hidden_media: [], resource_urls: [], tags: row.tags, detail_tags: row.tags, custom_tags: [], blocked_tags: [], tag_types: Object.fromEntries(row.tags.map((tag: string) => [tag, 'general'])) },
-    variants: [], duplicates: [], providers: ['demo'], has_wip: false, is_release: true, newest_at: now, stack: null }));
+    variants: [], duplicates: [], providers: ['demo'], has_wip: false, is_release: true, newest_at: now, stack: null };
+  };
+  const groups = [...items.slice(0, 36).map((row, i) => post(row, i, true)), ...items.slice(36, 60).map((row, i) => post(row, i + 36, false))];
   const follow = { ok: true, sources, author_aliases: [], alias_suggestions: [], suggestions: [], groups, counts: { new: groups.filter(row => row.primary.status === 'new').length, seen: groups.filter(row => row.primary.status === 'seen').length, saved: groups.filter(row => row.primary.status === 'saved').length, ignored: 0 },
     sort: 'new', dir: 'desc', seed: 1, facets: followFacets(groups), author_facets: {}, offset: 0, limit: 100, has_more: false, providers: ['demo'], demo_notice: DEMO_DATA_NOTICE };
   put('/api/follow', follow); put('/api/follow?limit=100&offset=0', follow); put('/api/follow?summary=1', { ...follow, groups: [] });

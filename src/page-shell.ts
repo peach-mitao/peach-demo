@@ -1,17 +1,8 @@
-// 演示馆藏首页默认开大图（竖版封面），保留访客已选择的布局。
+// 演示馆藏首页默认开大图（竖版封面）；关注页的图片默认瀑布流、只看图片不带文字。保留访客已选择的布局。
 const DEMO_SETTINGS = `<script>try{const k='peach.settings.v1',s=JSON.parse(localStorage.getItem(k)||'{}');
 if(!('homeLayout' in s))s.homeLayout='big';if(!('detailAutoplay' in s))s.detailAutoplay=false;
+if(!('photoLayout' in s))s.photoLayout='masonry';if(!('followImagesOnly' in s))s.followImagesOnly=true;
 localStorage.setItem(k,JSON.stringify(s))}catch(_e){}</script>`;
-// 演示数据里的关注更新全是图片帖，而关注页默认是视频模式（只认地址栏的 media 参数），直接进去是空的。
-// 从别处进关注页、或直接打开 /follow 时补上 media=images；已经在关注页里切回视频的不拦。
-const FOLLOW_IMAGES = `<script>(()=>{const fix=u=>{try{const url=new URL(u,location.href);
-if(url.pathname==='/follow'&&!url.searchParams.has('media')&&location.pathname!=='/follow'){
-url.searchParams.set('media','images');return url.pathname+url.search+url.hash}}catch(_e){}return u};
-for(const name of ['pushState','replaceState']){const original=history[name].bind(history);
-history[name]=(state,title,u)=>original(state,title,u==null?u:fix(u))}
-if(location.pathname==='/follow'&&!new URLSearchParams(location.search).has('media')){
-const url=new URL(location.href);url.searchParams.set('media','images');history.replaceState(null,'',url.pathname+url.search)}
-})()</script>`;
 // 页脚链接共用一套下划线：应用外链样式只给新窗口链接加 3px 偏移，站内链接也写明同值，三条线才对齐。
 const NOTICE_LINK = 'display:inline;line-height:inherit;pointer-events:auto;color:inherit;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px';
 // 底部居中的说明跟随主题，在窄屏和安全区内换行。
@@ -36,4 +27,4 @@ padding:6px 10px;border-radius:12px;width:max-content;box-sizing:border-box;text
 background:var(--color-background-primary-default,#fff);color:var(--color-text-secondary,#555);
 border:1px solid var(--color-separator-border,#0002);box-shadow:0 2px 8px #0001">
 <span data-demo-copy="full">Peach 演示站 · </span><span data-demo-copy="compact">演示站 · </span><a href="https://peach.video/" target="_blank" rel="noopener" style="${NOTICE_LINK}">官网</a> · <a href="https://github.com/peach-mitao/peach" target="_blank" rel="noopener" style="${NOTICE_LINK}">GitHub</a> · <a href="/film-sources/" style="${NOTICE_LINK}">素材来源</a> · <a href="https://peach.video/copyright/" target="_blank" rel="noopener" style="${NOTICE_LINK}">DMCA</a> · <a href="https://peach.video/privacy/analytics" target="_blank" rel="noopener" style="${NOTICE_LINK}"><span data-demo-copy="full">统计偏好</span><span data-demo-copy="compact">统计</span></a></div>`;
-export { DEMO_SETTINGS, FOLLOW_IMAGES, NOTICE };
+export { DEMO_SETTINGS, NOTICE };
