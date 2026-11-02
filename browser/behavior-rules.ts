@@ -9,7 +9,7 @@ export const demoRules:Rule[]=[
  rule('library.icon','选择媒体库图标','button[aria-label$=" 图标"]'),
  rule('playback.external','使用外部播放器打开','button[aria-label="使用外部播放器打开"]'),
  rule('storage.reveal','在资源管理器中显示','button[aria-label="在资源管理器中显示"]'),
- ...[['storage.clean','清理所选'],['storage.clean','全部清理'],['storage.relocate','更改位置'],['storage.measure','重新统计']].map(([id,label])=>({...rule(id!,label!,'button'),text:label})),
+ ...[['storage.clean','清理所选'],['storage.clean','全部清理'],['storage.relocate','更改位置'],['storage.measure','重新统计'],['item.remove','移除']].map(([id,label])=>({...rule(id!,label!,'button'),text:label})),
  ...[['tool.organize','整理文件'],['tool.resource-sync','资源同步'],['tool.orphans','文件已丢失的记录'],['tool.media-repair','媒体修复'],['tool.links','链接管理'],['tool.bulk-delete','批量删除']]
   .map(([id,label])=>({...rule(id!,label!,'button'),textPrefix:label})),
  ...[
