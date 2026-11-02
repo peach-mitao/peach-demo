@@ -66,7 +66,7 @@ export const demoRules:Rule[]=[
   ['app.update','检查更新'],['source.check','检查连接'],['source.check','检查全部'],['app.upstream','检查上游版本'],['review.reject','拒绝'],['cleanup.repair','开始修复'],['source.pull','立即拉取'],['duplicates.largest','留最大'],['duplicates.longest','留最长'],['network.public','启动公网入口'],['app.update','去看更新'],['follow.seen','全部标记已看'],['follow.ignore','全部忽略'],['view.collapse','全部收起'],['selection.page','全选本页'],
   ['alias.add','添加别名'],['source.add','添加来源'],['browser.add','添加浏览器'],['prefix.add','添加前缀'],['source.add','添加索引器'],['folder.add','添加文件夹'],['review.skip','跳过'],['review.approve','通过'],['library.sync','同步新增文件'],['diagnostics.download','下载诊断报告'],['diagnostics.export','导出刮削记录'],['table.columns','显示列'],['app.uninstall','卸载 Peach'],['source.remove','移除索引器 1'],['asset.preview','预览'],['cover.preview','预览上传内容'],['duplicates.recycle','整组回收'],['cover.retry','重试样图'],['tutorial.open','重新打开教程'],['source.reload','重新读取'],['source.check','重新检测'],['source.check','重新检查'],['table.reset','重置列宽'],
   ['tags.repair','整理重复标签'],['selection.results','选择当前结果'],['selection.clear','清空选择'],['selection.clear','清空'],['selection.apply','显示结果'],['item.rename','重命名'],['tags.merge','合并'],['item.restore','恢复'],['item.hide','隐藏'],['source.retry','立即重试'],
-  ['settings.configure','Peach 配置'],['library.select','本地演示库'],['repairs.retry','重试失败项'],['tutorial.open','重新打开'],
+  ['settings.configure','Peach 配置'],['library.select','本地演示库'],['repairs.retry','重试失败项'],['bridge.rebuild','重新安装'],['tutorial.open','重新打开'],
  ].map(([id,label])=>({...rule(id!,label!,'button'),text:label})),
 ];
 export function demoState(){
