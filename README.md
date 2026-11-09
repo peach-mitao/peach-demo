@@ -26,7 +26,7 @@ The application frontend comes from the Peach repository. This repository mainta
 
 ## Related projects
 
-[Peach application](https://github.com/peach-mitao/peach) · [Website source](https://github.com/peach-mitao/peach-site) · [Roadmap](https://github.com/peach-mitao/peach-roadmap)
+[Peach application](https://github.com/peach-mitao/peach) · [Website source](https://github.com/peach-mitao/peach-site) · [Roadmap](https://github.com/orgs/peach-mitao/projects/7)
 
 ## License
 
