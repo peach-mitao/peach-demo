@@ -26,7 +26,7 @@
 
 ## 关联项目
 
-[Peach 应用](https://github.com/peach-mitao/peach) · [官网源码](https://github.com/peach-mitao/peach-site) · [路线图](https://github.com/peach-mitao/peach-roadmap)
+[Peach 应用](https://github.com/peach-mitao/peach) · [官网源码](https://github.com/peach-mitao/peach-site) · [路线图](https://github.com/orgs/peach-mitao/projects/7)
 
 ## 许可证
 
