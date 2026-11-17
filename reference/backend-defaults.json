@@ -1,7 +1,7 @@
 {
  "schema": 1,
- "app_commit": "ee69b8c854d7d7c5dfc9b5ccfbdfb5636b79ec1f",
- "app_version": "0.53.0",
+ "app_commit": "2f0706fe03c790ead192569d2c0cc9de3182aca2",
+ "app_version": "0.58.0",
  "routes": {
   "/api/sources": {
    "ok": true,
@@ -40,23 +40,39 @@
    "feedHideSoloCompilations": false,
    "feedHideExcerpts": true,
    "searchHistoryLimit": null,
-   "performerNameLanguage": "zh-CN"
+   "performerNameLanguage": "zh-CN",
+   "interfaceLanguage": "auto",
+   "systemLanguage": "zh-CN",
+   "taskSpeedMode": "standard",
+   "javBrowserWantOnNoMatch": true,
+   "javdbCoverFallback": false,
+   "wantStaleSearchDays": 7,
+   "wantStaleAttemptLimit": 3,
+   "sourceBudgetRequests": 6000,
+   "sourceBudgetHours": 4,
+   "sourceBudgetGigabytes": 1
   },
   "/api/tasks": {
    "ok": true,
    "filtered": false,
    "available": true,
    "result_versions": {
-    "catalog": "243",
-    "follow": "46",
-    "discoveries": "0",
-    "review": "130:1793608527529380500",
-    "artwork": "1793608522300651100:None:None:None:None"
+    "catalog": "327:0",
+    "follow": "46:0",
+    "discoveries": "0:0",
+    "review": "130:0:1794913242024410100",
+    "artwork": "1794913236873076400:None:None:None:None"
+   },
+   "ingest_notices": {
+    "epoch": "30bdb080",
+    "items": []
    },
    "running": [],
    "skipped": [],
    "finished": [],
    "finished_has_more": false,
+   "finished_total": 0,
+   "finished_page": 1,
    "working_parents": [],
    "followup_counts": {},
    "statuses": {
@@ -78,7 +94,10 @@
    "problems": [],
    "tasks": [],
    "has_more": false,
-   "next_before_id": null
+   "total": 0,
+   "page": 1,
+   "next_before_id": null,
+   "channel_alerts": []
   },
   "/api/review": {
    "sections": {
@@ -131,7 +150,6 @@
    },
    "genre_tags": [
     "3P多人",
-    "4K",
     "69",
     "ASMR",
     "M字开腿",
@@ -524,7 +542,8 @@
    "files": 0,
    "reclaimable": 0,
    "groups": [],
-   "has_more": false
+   "has_more": false,
+   "kept": 0
   },
   "/api/quality-goals?limit=200": {
    "total": 0,
@@ -546,55 +565,73 @@
    "templates": {},
    "presets": [
     {
+     "id": "codeOnly",
      "label": "仅番号",
+     "label_code": "labels.organize.preset.codeOnly",
      "file": "{code}",
      "dir": "",
      "example": "ABC-123.mp4"
     },
     {
+     "id": "codeTitle",
      "label": "番号和标题",
+     "label_code": "labels.organize.preset.codeTitle",
      "file": "{code}[ {title}]",
      "dir": "",
      "example": "ABC-123 标题.mp4"
     },
     {
+     "id": "codeDefinition",
      "label": "番号和画质",
+     "label_code": "labels.organize.preset.codeDefinition",
      "file": "{code}[ {definition}]",
      "dir": "",
      "example": "ABC-123 1080p.mp4"
     },
     {
+     "id": "codeActors",
      "label": "番号和出演者",
+     "label_code": "labels.organize.preset.codeActors",
      "file": "{code}[ {actors}]",
      "dir": "",
      "example": "ABC-123 甲、乙.mp4"
     },
     {
+     "id": "byStudio",
      "label": "按厂牌建文件夹",
+     "label_code": "labels.organize.preset.byStudio",
      "file": "{code}[ {title}]",
      "dir": "{studio}",
      "example": "厂牌/ABC-123 标题.mp4"
     },
     {
+     "id": "bySeries",
      "label": "按系列建文件夹",
+     "label_code": "labels.organize.preset.bySeries",
      "file": "{code}[ {title}]",
      "dir": "{series}",
      "example": "系列/ABC-123 标题.mp4"
     },
     {
+     "id": "byActors",
      "label": "按出演者建文件夹",
+     "label_code": "labels.organize.preset.byActors",
      "file": "{code}[ {title}]",
      "dir": "{actors}",
      "example": "甲、乙/ABC-123 标题.mp4"
     },
     {
+     "id": "byYear",
      "label": "按发行年建文件夹",
+     "label_code": "labels.organize.preset.byYear",
      "file": "{code}[ {title}]",
      "dir": "{year}",
      "example": "2024/ABC-123 标题.mp4"
     },
     {
+     "id": "studioThenCode",
      "label": "厂牌下按番号建文件夹",
+     "label_code": "labels.organize.preset.studioThenCode",
      "file": "{code}[ {title}][ CD{cd}]",
      "dir": "{studio}/{code}",
      "example": "厂牌/ABC-123/ABC-123 标题 CD2.mp4"
@@ -643,7 +680,8 @@
   "/api/media-processing": {
    "metadata_only": false,
    "preview_acceleration": "auto",
-   "playback_acceleration": "auto"
+   "playback_acceleration": "auto",
+   "playback_max_height": 0
   },
   "/api/media-repair": {
    "ok": true,
@@ -1081,7 +1119,8 @@
   "/api/configuration": {
    "editable": false,
    "notice": "这个部署由配置文件管理服务；在本机编辑下方的设置文件。",
-   "revision": "b1ba74b924d0ad97cf779359716871e7067218c0b9dd2909ef014906c616a7a3",
+   "notice_code": "labels.configuration.fileManagedNotice",
+   "revision": "f1bb2ca84cda999f88925bc55c956d72f141cfd8a420f8861f54d2a0655b793a",
    "media_dirs": [
     "R:\\Media",
     "R:\\Media2"
@@ -1092,30 +1131,41 @@
    "port_editable": false,
    "facts": [
     {
+     "value": "0.58.0",
      "term": "版本",
-     "value": "0.53.0"
+     "term_code": "labels.runtimeFacts.version",
+     "term_params": {}
     },
     {
+     "value": "Windows",
      "term": "操作系统",
-     "value": "Windows"
+     "term_code": "labels.runtimeFacts.os",
+     "term_params": {}
     },
     {
+     "value": "C:\\Users\\peach\\peach-data",
      "term": "数据目录",
-     "value": "C:\\Users\\peach\\peach-data"
+     "term_code": "labels.runtimeFacts.dataRoot",
+     "term_params": {}
     },
     {
+     "value": "C:\\Users\\peach\\peach-data\\config.toml",
      "term": "设置文件",
-     "value": "C:\\Users\\peach\\peach-data\\config.toml"
+     "term_code": "labels.runtimeFacts.settingsFile",
+     "term_params": {}
     },
     {
+     "value": "C:\\Users\\peach\\peach-data\\logs",
      "term": "日志目录",
-     "value": "C:\\Users\\peach\\peach-data\\logs"
+     "term_code": "labels.runtimeFacts.logs",
+     "term_params": {}
     },
     {
      "term": "untrunc",
-     "value": "未安装；缺索引的 MP4 需要它才修得了。解压到 C:\\Users\\peach\\peach-data\\tools\\untrunc。",
-     "download_url": "https://github.com/anthwlock/untrunc/releases",
-     "download_label": "下载 untrunc"
+     "value": "未安装；缺索引的 MP4 需要它才修得了。",
+     "value_code": "labels.runtimeFacts.untruncNotInstalled",
+     "value_params": {},
+     "install_tool": "untrunc"
     }
    ],
    "remote_reporting": {
@@ -1123,36 +1173,67 @@
     "errors": true,
     "available": false,
     "fields": {
-     "usage": "Peach 版本、分发方式（Windows／macOS 应用、Docker、wheel 或源码）、操作系统类型与版本、CPU 架构与核数、内存档位、Python 版本、运行环境与公开构建编号；每天最多一次，不含安装标识。",
-     "errors": "Peach 版本、分发方式、运行环境与公开构建编号、系统类型、Python 版本、CPU 架构、故障环节、异常链、Peach 与白名单框架的代码文件名/函数名/行号、结构化错误码、媒体工具故障类别、浏览器白名单异常类型与正式脚本构建映射、HTTP 方法/路由模板/关联错误编号、同类故障次数与统计日期；首次立即上传，重复次数每小时或退出时合并，每天最多 20 批。"
+     "usage": "Peach 版本、分发方式（Windows／macOS 应用、Docker、wheel 或源码）、操作系统类型与版本、CPU 架构与核数、内存档位、Python 版本、运行环境与公开构建编号；每天最多一条活跃日志和一条日联系会话汇总。开启后自动生成随机技术实例标识，用于统计受影响实例和升级路径，与研究标识独立；关闭后移除本机标识，再开启生成新值。连续运行时按 UTC 日统计，代表运行中的实例，不代表人数、真实会话或当天有人操作。",
+     "errors": "诊断补充：故障环节、异常链、Peach 与白名单框架的代码文件名/函数名/行号、结构化错误码、媒体工具故障类别、浏览器白名单异常类型与正式脚本构建映射、客户端浏览器品牌及主要版本与系统大类、HTTP 方法/路由模板/关联错误编号、同类故障次数与统计日期；同一版本的同类故障只上传一次完整诊断，每天最多 5 条，全部发生次数每 6 小时或退出时合并为计数日志。盘掉线、媒体缺失或损坏、磁盘满、超时与数据库忙等环境条件只统计类别、代码位置与次数，不上传完整诊断。"
+    },
+    "field_codes": {
+     "usage": "labels.remoteReporting.field.usage",
+     "errors": "labels.remoteReporting.field.errors"
     },
     "notice": "发送至 Sentry。不上报错误原文、完整日志、诊断 ZIP、媒体名称、路径、网址、观看记录或凭据。接收服务会接触连接 IP；关闭后停止新发送，已发送的信息无法撤回。",
+    "notice_code": "labels.remoteReporting.notice",
     "delivery": {}
    },
    "library_sharing": {
     "enabled": false,
+    "consent_state": "not-selected",
     "available": false,
-    "schema": 4,
+    "schema": 6,
     "fields": [
-     "去重后的作品编号，以及评分、喜欢、不喜欢、已看、稍后看、播放次数、观看比例与手动添加的标签",
+     "去重后的作品编号，以及评分、喜欢、不喜欢、已看、稍后看、播放次数、观看比例与手动添加的受控内容标签；自定义备注标签不上传",
      "出演者、创作者、厂牌、系列、手动标签、年代与时长分组的收藏、喜欢、不喜欢、观看数量和评分分布（有编号作品与无编号条目分开），以及主动收藏的实体名称",
      "馆藏文件数量、有编号作品数量与无编号条目数量",
+     "近 7 天与 30 天已观测的容量天数、播放活跃天数及其记录覆盖天数；数据与缓存的当前占用、峰值、已观测正增长量、缓存清理量（自动与手动合计，不含备份和日志）。未取得的值为空，不补足 30 天记录",
+     "同意后随机生成的研究实例标识，用于关联本实例的馆藏、容量和参与状态；重新开启时更换，不使用机器指纹或诊断标识",
+     "启用及每日最多一次的联系状态、版本和最近联系时间，以及快照编号、字段版本、原始与压缩字节数和准备／投递状态；关闭时后台只尝试一次最小关闭状态，不附快照信息。离线、卸载和发送失败不视为关闭，实例数不等于人数",
      "Peach 版本、字段版本与 UTC 自然周"
     ],
-    "notice": "匿名处理后上传馆藏与各类偏好明细。",
+    "field_codes": [
+     "labels.librarySharing.field.works",
+     "labels.librarySharing.field.preferences",
+     "labels.librarySharing.field.counts",
+     "labels.librarySharing.field.capacity",
+     "labels.librarySharing.field.instance",
+     "labels.librarySharing.field.participation",
+     "labels.librarySharing.field.version"
+    ],
+    "notice": "上传移除直接身份信息的馆藏、偏好和容量聚合，并使用随机研究实例标识关联参与状态。启用后每日最多联系一次；关闭时后台仅尝试一次最小关闭状态，之后停发。播放活跃天数不代表全部日常使用；容量和参与状态不含新增路径、作品或账号信息。",
+    "notice_code": "labels.librarySharing.notice",
+    "participation": {
+     "status": "not-attempted",
+     "attempted": false,
+     "pending_state": null
+    },
+    "last_sent_at": null,
     "last_attempt": {}
    },
    "startup": {
     "available": true,
-    "enabled": true,
+    "enabled": false,
     "silent": true,
     "message": "",
-    "desktop": true,
-    "desktop_message": ""
+    "message_code": "",
+    "message_params": {},
+    "desktop": false,
+    "desktop_message": "桌面快捷方式属于另一份 Peach 安装",
+    "desktop_message_code": "errors.desktopStartup.desktopShortcutForeign",
+    "desktop_message_params": {}
    },
    "uninstall": {
     "available": false,
     "message": "源码安装请先关闭开机自启并退出托盘，再手动移除项目与数据目录",
+    "message_code": "errors.desktopUninstall.sourceInstallStartup",
+    "message_params": {},
     "data_root": "C:\\Users\\peach\\peach-data",
     "directories": [
      "C:\\Users\\peach\\peach-data\\database",
@@ -1168,9 +1249,155 @@
    },
    "storage": {
     "data_root": "C:\\Users\\peach\\peach-data",
-    "free_bytes": 140980457472,
+    "free_bytes": 248057933824,
     "total_bytes": 2031179788288,
     "system_drive": true,
+    "budget": {
+     "policy": {
+      "enabled": true,
+      "minimum_free_gib": 0,
+      "data_max_gib": 0,
+      "cache_max_gib": 0,
+      "auto_clean": true,
+      "external_cache_path": "",
+      "external_cache_max_gib": 0
+     },
+     "last_check": {
+      "cache_bytes": null,
+      "data_bytes": null,
+      "external_cache_bytes": null,
+      "measured_at": null,
+      "errors": {},
+      "checked_at": 1794913230.3489199,
+      "reasons": [],
+      "reason_codes": [],
+      "freed_bytes": 0,
+      "paused": false,
+      "required_bytes": 0,
+      "volumes": [
+       {
+        "path": "C:\\",
+        "free_bytes": 248044937216,
+        "reserve_bytes": 42949672960
+       }
+      ],
+      "layout": {
+       "version": 1,
+       "paths": {
+        "data": [
+         "C:\\Users\\peach\\peach-data",
+         "C:\\Users\\peach\\peach-data",
+         17168867184031664651,
+         8444249313394249
+        ],
+        "database": [
+         "C:\\Users\\peach\\peach-data\\database",
+         "C:\\Users\\peach\\peach-data\\database",
+         17168867184031664651,
+         35465847077625579
+        ],
+        "generated": [
+         "C:\\Users\\peach\\peach-data\\generated",
+         "C:\\Users\\peach\\peach-data\\generated",
+         17168867184031664651,
+         8162774336772332
+        ],
+        "sources": [
+         "C:\\Users\\peach\\peach-data\\sources",
+         "C:\\Users\\peach\\peach-data\\sources",
+         17168867184031664651,
+         5629499546376164
+        ],
+        "state": [
+         "C:\\Users\\peach\\peach-data\\state",
+         "C:\\Users\\peach\\peach-data\\state",
+         17168867184031664651,
+         1125899919005835
+        ],
+        "secrets": [
+         "C:\\Users\\peach\\peach-data\\secrets",
+         "C:\\Users\\peach\\peach-data",
+         17168867184031664651,
+         8444249313394249
+        ],
+        "logs": [
+         "C:\\Users\\peach\\peach-data\\logs",
+         "C:\\Users\\peach\\peach-data",
+         17168867184031664651,
+         8444249313394249
+        ],
+        "tools": [
+         "C:\\Users\\peach\\peach-data\\tools",
+         "C:\\Users\\peach\\peach-data",
+         17168867184031664651,
+         8444249313394249
+        ],
+        "review": [
+         "C:\\Users\\peach\\peach-data\\review",
+         "C:\\Users\\peach\\peach-data",
+         17168867184031664651,
+         8444249313394249
+        ],
+        "temporary": [
+         "C:\\Users\\peach\\peach-data\\temporary",
+         "C:\\Users\\peach\\peach-data\\temporary",
+         17168867184031664651,
+         4503599631252381
+        ]
+       }
+      }
+     },
+     "recommendation_state": "population_model_not_available",
+     "history": {
+      "state": "unavailable",
+      "activity_basis": "playback",
+      "windows": {
+       "7d": {
+        "days": 7,
+        "observed_days": 0,
+        "activity_observed_days": 0,
+        "active_days": null,
+        "data": {
+         "observed_days": 0,
+         "current_bytes": null,
+         "peak_bytes": null,
+         "positive_growth_bytes": null,
+         "growth_observations": 0
+        },
+        "cache": {
+         "observed_days": 0,
+         "current_bytes": null,
+         "peak_bytes": null,
+         "positive_growth_bytes": null,
+         "growth_observations": 0
+        },
+        "cleaned_bytes": null
+       },
+       "30d": {
+        "days": 30,
+        "observed_days": 0,
+        "activity_observed_days": 0,
+        "active_days": null,
+        "data": {
+         "observed_days": 0,
+         "current_bytes": null,
+         "peak_bytes": null,
+         "positive_growth_bytes": null,
+         "growth_observations": 0
+        },
+        "cache": {
+         "observed_days": 0,
+         "current_bytes": null,
+         "peak_bytes": null,
+         "positive_growth_bytes": null,
+         "growth_observations": 0
+        },
+        "cleaned_bytes": null
+       }
+      }
+     },
+     "error": ""
+    },
     "usage": null,
     "job": {
      "state": "idle",
@@ -1179,6 +1406,8 @@
     "relocation": {
      "available": false,
      "message": "迁移要由托盘或无桌面服务（python -m peach.server）停止并重新启动 Peach，当前服务是直接启动的。请改用其中一种方式启动后再迁移；也可以退出 Peach，手动移动数据目录，再将 PEACH_DATA_ROOT 设为新位置",
+     "message_code": "labels.dataStorage.relocation.unmanaged",
+     "message_params": {},
      "steps": [],
      "last": null
     }
@@ -1205,13 +1434,18 @@
     ]
    },
    "updates": {
-    "current_version": "0.53.0",
+    "current_version": "0.58.0",
     "latest_version": null,
     "channel": "测试版",
+    "channel_code": "test",
     "installation": "源码运行",
+    "installation_code": "source",
     "in_app_update": false,
+    "steps": [],
     "state": "unchecked",
     "message": "尚未检查",
+    "message_code": "release.message.unchecked",
+    "message_params": {},
     "release_url": "https://github.com/peach-mitao/peach/releases"
    },
    "update_job": {
@@ -1227,8 +1461,8 @@
      "location": "local",
      "root": "R:\\Media",
      "path": "R:\\Media",
-     "root_id": "3640ae4e-0d08-5b0a-93e0-e88eea541f4b",
-     "library_id": "81c37026-0dcb-5887-b745-756102ec24dd",
+     "root_id": "96a8d387-2255-5926-8167-bbc6e6763566",
+     "library_id": "06c9aa68-5b12-5c98-abd3-5cf542282eca",
      "library": "media",
      "library_icon": "",
      "library_color": "",
@@ -1242,8 +1476,8 @@
      "location": "local",
      "root": "R:\\Media2",
      "path": "R:\\Media2",
-     "root_id": "af6c80b1-dc6d-5ad1-903e-b022b8dacd74",
-     "library_id": "55ce12d3-9ed9-5304-bb01-31950e15d178",
+     "root_id": "a28d945a-a7e6-5788-b344-5ff3cd76954c",
+     "library_id": "12453e99-50de-549b-94f9-fbea8607deb1",
      "library": "media2",
      "library_icon": "",
      "library_color": "",
@@ -1276,11 +1510,20 @@
     "ip_url": ""
    },
    "ledger_read_only": false,
+   "api_token": {
+    "rotatable": false,
+    "reason": "这次启动没有使用访问口令。",
+    "reason_code": "api.configuration.tokenNotUsed",
+    "paired": false
+   },
+   "certificate": null,
    "tunnel": {
     "enabled": false,
     "state": "stopped",
     "url": "",
     "error": "",
+    "error_code": "",
+    "error_params": {},
     "available": true,
     "mode": "quick",
     "hostname": "",
@@ -1304,6 +1547,8 @@
     "endpoint": "/api/inbox/clouddrive",
     "local_running": false,
     "local_message": "",
+    "local_message_code": "",
+    "local_message_params": {},
     "local_roots": [],
     "queue": {
      "pending": 0,
@@ -1345,14 +1590,161 @@
     "pikpak_roots": [],
     "providers": [],
     "problems": [],
+    "problem_codes": [],
     "max_wait_hours": 1440
    }
   },
   "/api/configuration/storage": {
    "data_root": "C:\\Users\\peach\\peach-data",
-   "free_bytes": 140980457472,
+   "free_bytes": 248057933824,
    "total_bytes": 2031179788288,
    "system_drive": true,
+   "budget": {
+    "policy": {
+     "enabled": true,
+     "minimum_free_gib": 0,
+     "data_max_gib": 0,
+     "cache_max_gib": 0,
+     "auto_clean": true,
+     "external_cache_path": "",
+     "external_cache_max_gib": 0
+    },
+    "last_check": {
+     "cache_bytes": null,
+     "data_bytes": null,
+     "external_cache_bytes": null,
+     "measured_at": null,
+     "errors": {},
+     "checked_at": 1794913230.3489199,
+     "reasons": [],
+     "reason_codes": [],
+     "freed_bytes": 0,
+     "paused": false,
+     "required_bytes": 0,
+     "volumes": [
+      {
+       "path": "C:\\",
+       "free_bytes": 248044937216,
+       "reserve_bytes": 42949672960
+      }
+     ],
+     "layout": {
+      "version": 1,
+      "paths": {
+       "data": [
+        "C:\\Users\\peach\\peach-data",
+        "C:\\Users\\peach\\peach-data",
+        17168867184031664651,
+        8444249313394249
+       ],
+       "database": [
+        "C:\\Users\\peach\\peach-data\\database",
+        "C:\\Users\\peach\\peach-data\\database",
+        17168867184031664651,
+        35465847077625579
+       ],
+       "generated": [
+        "C:\\Users\\peach\\peach-data\\generated",
+        "C:\\Users\\peach\\peach-data\\generated",
+        17168867184031664651,
+        8162774336772332
+       ],
+       "sources": [
+        "C:\\Users\\peach\\peach-data\\sources",
+        "C:\\Users\\peach\\peach-data\\sources",
+        17168867184031664651,
+        5629499546376164
+       ],
+       "state": [
+        "C:\\Users\\peach\\peach-data\\state",
+        "C:\\Users\\peach\\peach-data\\state",
+        17168867184031664651,
+        1125899919005835
+       ],
+       "secrets": [
+        "C:\\Users\\peach\\peach-data\\secrets",
+        "C:\\Users\\peach\\peach-data",
+        17168867184031664651,
+        8444249313394249
+       ],
+       "logs": [
+        "C:\\Users\\peach\\peach-data\\logs",
+        "C:\\Users\\peach\\peach-data",
+        17168867184031664651,
+        8444249313394249
+       ],
+       "tools": [
+        "C:\\Users\\peach\\peach-data\\tools",
+        "C:\\Users\\peach\\peach-data",
+        17168867184031664651,
+        8444249313394249
+       ],
+       "review": [
+        "C:\\Users\\peach\\peach-data\\review",
+        "C:\\Users\\peach\\peach-data",
+        17168867184031664651,
+        8444249313394249
+       ],
+       "temporary": [
+        "C:\\Users\\peach\\peach-data\\temporary",
+        "C:\\Users\\peach\\peach-data\\temporary",
+        17168867184031664651,
+        4503599631252381
+       ]
+      }
+     }
+    },
+    "recommendation_state": "population_model_not_available",
+    "history": {
+     "state": "unavailable",
+     "activity_basis": "playback",
+     "windows": {
+      "7d": {
+       "days": 7,
+       "observed_days": 0,
+       "activity_observed_days": 0,
+       "active_days": null,
+       "data": {
+        "observed_days": 0,
+        "current_bytes": null,
+        "peak_bytes": null,
+        "positive_growth_bytes": null,
+        "growth_observations": 0
+       },
+       "cache": {
+        "observed_days": 0,
+        "current_bytes": null,
+        "peak_bytes": null,
+        "positive_growth_bytes": null,
+        "growth_observations": 0
+       },
+       "cleaned_bytes": null
+      },
+      "30d": {
+       "days": 30,
+       "observed_days": 0,
+       "activity_observed_days": 0,
+       "active_days": null,
+       "data": {
+        "observed_days": 0,
+        "current_bytes": null,
+        "peak_bytes": null,
+        "positive_growth_bytes": null,
+        "growth_observations": 0
+       },
+       "cache": {
+        "observed_days": 0,
+        "current_bytes": null,
+        "peak_bytes": null,
+        "positive_growth_bytes": null,
+        "growth_observations": 0
+       },
+       "cleaned_bytes": null
+      }
+     }
+    },
+    "error": ""
+   },
    "usage": null,
    "job": {
     "state": "idle",
@@ -1361,27 +1753,34 @@
    "relocation": {
     "available": false,
     "message": "迁移要由托盘或无桌面服务（python -m peach.server）停止并重新启动 Peach，当前服务是直接启动的。请改用其中一种方式启动后再迁移；也可以退出 Peach，手动移动数据目录，再将 PEACH_DATA_ROOT 设为新位置",
+    "message_code": "labels.dataStorage.relocation.unmanaged",
+    "message_params": {},
     "steps": [],
     "last": null
    }
   },
   "/api/client-updates": {
    "runtime": {
-    "version": "0.53.0",
-    "build_id": "4e31833451852f7f53273a9e"
+    "version": "0.58.0",
+    "build_id": "8321fb6d7b2f1adfe09a408c"
    },
    "release": {
-    "current_version": "0.53.0",
+    "current_version": "0.58.0",
     "latest_version": null,
     "channel": "测试版",
+    "channel_code": "test",
     "installation": "源码运行",
+    "installation_code": "source",
     "in_app_update": false,
+    "steps": [],
     "state": "unchecked",
     "message": "尚未检查",
+    "message_code": "release.message.unchecked",
+    "message_params": {},
     "release_url": "https://github.com/peach-mitao/peach/releases"
    },
    "userscript": {
-    "version": "0.6.10",
+    "version": "0.7.20",
     "minimum_version": "0.5.1",
     "install_url": "/integrations/peach-jav.user.js",
     "release_url": "https://sleazyfork.org/zh-CN/scripts/600821"
@@ -1390,12 +1789,17 @@
     "state": "idle",
     "progress": 0
    },
+   "ledger_migration": {
+    "state": "idle"
+   },
    "repairs": {
     "state": "pending",
     "items": [
      {
-      "id": "catalog-v2:previews-v2:processing-v2:2:2:text-3",
+      "id": "catalog-v4:previews-v2:processing-v2:2:2:text-5",
       "label": "更新已有资料",
+      "label_code": "labels.upgradeRepairs.item.existing",
+      "label_params": {},
       "state": "pending",
       "changed": {},
       "review_count": 0
@@ -1403,9 +1807,12 @@
      {
       "id": "background",
       "label": "后台更新进度",
+      "label_code": "labels.upgradeRepairs.item.background",
+      "label_params": {},
       "state": "pending",
       "pending": 0,
       "failed": 0,
+      "deferred": 0,
       "queued": 0
      }
     ],
@@ -1419,12 +1826,12 @@
    "pending_total": 0,
    "dismissed_total": 0,
    "counts": {
-    "url": 0,
-    "video": 0,
-    "other": 0,
     "image": 0,
-    "audio": 0,
-    "archive": 0
+    "url": 0,
+    "other": 0,
+    "archive": 0,
+    "video": 0,
+    "audio": 0
    },
    "kind": "",
    "status": "pending",
@@ -1441,20 +1848,26 @@
    "last_finished_at": null,
    "last_skipped_at": null,
    "last_error": null,
+   "last_error_code": null,
+   "last_error_params": null,
    "last_checked": 0,
    "last_added": 0,
    "consecutive_failures": 0,
    "failing_since": null
   },
   "/api/diagnostics": {
-   "version": "0.53.0",
+   "version": "0.58.0",
    "status": "ok",
    "checks": {
     "database": {
      "label": "数据库",
+     "label_code": "labels.diagnostics.label.database",
      "status": "ok",
      "reason": "数据库可读取",
+     "reason_code": "labels.diagnostics.reason.databaseReadable",
+     "reason_params": {},
      "action": "",
+     "action_code": null,
      "target": null,
      "details": {
       "state": "available"
@@ -1462,13 +1875,17 @@
     },
     "schema": {
      "label": "数据库迁移",
+     "label_code": "labels.diagnostics.label.schema",
      "status": "ok",
      "reason": "迁移校验通过",
+     "reason_code": "labels.diagnostics.reason.schemaCurrent",
+     "reason_params": {},
      "action": "",
+     "action_code": null,
      "target": null,
      "details": {
       "schema": "current",
-      "version": "0050",
+      "version": "0058",
       "pending": [],
       "mismatched": [],
       "unknown_versions": 0
@@ -1476,25 +1893,37 @@
     },
     "configured": {
      "label": "配置",
+     "label_code": "labels.diagnostics.label.configuration",
      "status": "ok",
      "reason": "配置可读取",
+     "reason_code": "labels.diagnostics.reason.configurationReadable",
+     "reason_params": {},
      "action": "",
+     "action_code": null,
      "target": null,
      "details": {}
     },
     "media_mounts": {
      "label": "媒体挂载",
+     "label_code": "labels.diagnostics.label.mediaMounts",
      "status": "disabled",
      "reason": "没有已配置的本地来源",
+     "reason_code": "labels.diagnostics.reason.noLocalSources",
+     "reason_params": {},
      "action": "",
+     "action_code": null,
      "target": null,
      "details": {}
     },
     "security": {
      "label": "访问安全",
+     "label_code": "labels.diagnostics.label.security",
      "status": "ok",
      "reason": "仅监听本机",
+     "reason_code": "labels.diagnostics.reason.loopbackOnly",
+     "reason_params": {},
      "action": "",
+     "action_code": null,
      "target": null,
      "details": {
       "exposed": false,
@@ -1503,9 +1932,13 @@
     },
     "ffmpeg": {
      "label": "FFmpeg／OpenSSL",
+     "label_code": "labels.diagnostics.label.tools",
      "status": "ok",
      "reason": "媒体工具可执行，AV1 软件解码器可用",
+     "reason_code": "labels.diagnostics.reason.toolsUsable",
+     "reason_params": {},
      "action": "",
+     "action_code": null,
      "target": null,
      "details": {
       "ffmpeg": {
@@ -1532,17 +1965,25 @@
     },
     "data_root": {
      "label": "数据目录",
+     "label_code": "labels.diagnostics.label.dataRoot",
      "status": "ok",
      "reason": "临时写入与清理通过",
+     "reason_code": "labels.diagnostics.reason.dataRootWritable",
+     "reason_params": {},
      "action": "",
+     "action_code": null,
      "target": null,
      "details": {}
     },
     "port": {
      "label": "服务端口",
+     "label_code": "labels.diagnostics.label.port",
      "status": "ok",
      "reason": "端口当前可用",
+     "reason_code": "labels.diagnostics.reason.portAvailable",
+     "reason_params": {},
      "action": "",
+     "action_code": null,
      "target": null,
      "details": {
       "port": 8900,
@@ -1551,20 +1992,31 @@
     },
     "tasks": {
      "label": "后台任务",
+     "label_code": "labels.diagnostics.label.tasks",
      "status": "ok",
      "reason": "没有已记录的任务失败",
+     "reason_code": "labels.diagnostics.reason.noTaskFailures",
+     "reason_params": {},
      "action": "",
+     "action_code": null,
      "target": null,
      "details": {}
     },
     "version": {
      "label": "版本",
+     "label_code": "labels.diagnostics.label.version",
      "status": "ok",
-     "reason": "Peach 0.53.0 · Python 3.14.7",
+     "reason": "Peach 0.58.0 · Python 3.14.7",
+     "reason_code": "labels.diagnostics.reason.versions",
+     "reason_params": {
+      "peach": "0.58.0",
+      "python": "3.14.7"
+     },
      "action": "",
+     "action_code": null,
      "target": null,
      "details": {
-      "peach": "0.53.0",
+      "peach": "0.58.0",
       "python": "3.14.7"
      }
     }
@@ -1573,6 +2025,7 @@
     "groups": {
      "identification": {
       "label": "识别失败",
+      "label_code": "labels.libraryDiagnostics.group.identification",
       "status": "ok",
       "count": 0,
       "items": [],
@@ -1580,6 +2033,7 @@
      },
      "metadata": {
       "label": "补资料失败",
+      "label_code": "labels.libraryDiagnostics.group.metadata",
       "status": "ok",
       "count": 0,
       "items": [],
@@ -1587,6 +2041,7 @@
      },
      "cover": {
       "label": "缺封面",
+      "label_code": "labels.libraryDiagnostics.group.cover",
       "status": "ok",
       "count": 0,
       "items": [],
@@ -1594,13 +2049,14 @@
      },
      "duration": {
       "label": "缺时长",
+      "label_code": "labels.libraryDiagnostics.group.duration",
       "status": "ok",
       "count": 0,
       "items": [],
       "truncated": false
      }
     },
-    "issue_at": "2026-11-02T08:34:59.117073+00:00"
+    "issue_at": "2026-11-17T11:00:11.300678+00:00"
    },
    "sources": [
     {
@@ -1608,6 +2064,7 @@
      "label": "みんなのAV",
      "status": "unchecked",
      "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "reason_code": "labels.libraryDiagnostics.source.unchecked",
      "last_check_at": null,
      "elapsed_s": null,
      "last_success_at": null,
@@ -1618,6 +2075,7 @@
      "label": "JavDB",
      "status": "unchecked",
      "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "reason_code": "labels.libraryDiagnostics.source.unchecked",
      "last_check_at": null,
      "elapsed_s": null,
      "last_success_at": null,
@@ -1628,6 +2086,7 @@
      "label": "R18.dev",
      "status": "unchecked",
      "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "reason_code": "labels.libraryDiagnostics.source.unchecked",
      "last_check_at": null,
      "elapsed_s": null,
      "last_success_at": null,
@@ -1638,6 +2097,7 @@
      "label": "DMM / FANZA",
      "status": "unchecked",
      "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "reason_code": "labels.libraryDiagnostics.source.unchecked",
      "last_check_at": null,
      "elapsed_s": null,
      "last_success_at": null,
@@ -1648,6 +2108,7 @@
      "label": "MGStage",
      "status": "unchecked",
      "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "reason_code": "labels.libraryDiagnostics.source.unchecked",
      "last_check_at": null,
      "elapsed_s": null,
      "last_success_at": null,
@@ -1658,6 +2119,7 @@
      "label": "AVSOX",
      "status": "unchecked",
      "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "reason_code": "labels.libraryDiagnostics.source.unchecked",
      "last_check_at": null,
      "elapsed_s": null,
      "last_success_at": null,
@@ -1668,6 +2130,7 @@
      "label": "FC2",
      "status": "unchecked",
      "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "reason_code": "labels.libraryDiagnostics.source.unchecked",
      "last_check_at": null,
      "elapsed_s": null,
      "last_success_at": null,
@@ -1678,6 +2141,7 @@
      "label": "FC2CMADB",
      "status": "unchecked",
      "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "reason_code": "labels.libraryDiagnostics.source.unchecked",
      "last_check_at": null,
      "elapsed_s": null,
      "last_success_at": null,
@@ -1688,6 +2152,7 @@
      "label": "FC2PPV-DB",
      "status": "unchecked",
      "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "reason_code": "labels.libraryDiagnostics.source.unchecked",
      "last_check_at": null,
      "elapsed_s": null,
      "last_success_at": null,
@@ -1698,6 +2163,7 @@
      "label": "JAVten",
      "status": "unchecked",
      "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "reason_code": "labels.libraryDiagnostics.source.unchecked",
      "last_check_at": null,
      "elapsed_s": null,
      "last_success_at": null,
@@ -1708,6 +2174,7 @@
      "label": "JavArchive",
      "status": "unchecked",
      "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "reason_code": "labels.libraryDiagnostics.source.unchecked",
      "last_check_at": null,
      "elapsed_s": null,
      "last_success_at": null,
@@ -1718,6 +2185,7 @@
      "label": "一本道",
      "status": "unchecked",
      "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "reason_code": "labels.libraryDiagnostics.source.unchecked",
      "last_check_at": null,
      "elapsed_s": null,
      "last_success_at": null,
@@ -1728,6 +2196,7 @@
      "label": "JavBus",
      "status": "unchecked",
      "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "reason_code": "labels.libraryDiagnostics.source.unchecked",
      "last_check_at": null,
      "elapsed_s": null,
      "last_success_at": null,
@@ -1738,6 +2207,7 @@
      "label": "manko.fun",
      "status": "unchecked",
      "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "reason_code": "labels.libraryDiagnostics.source.unchecked",
      "last_check_at": null,
      "elapsed_s": null,
      "last_success_at": null,
@@ -1748,6 +2218,7 @@
      "label": "sukebei",
      "status": "unchecked",
      "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "reason_code": "labels.libraryDiagnostics.source.unchecked",
      "last_check_at": null,
      "elapsed_s": null,
      "last_success_at": null,
@@ -1758,6 +2229,7 @@
      "label": "AVBase",
      "status": "unchecked",
      "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "reason_code": "labels.libraryDiagnostics.source.unchecked",
      "last_check_at": null,
      "elapsed_s": null,
      "last_success_at": null,
@@ -1768,6 +2240,7 @@
      "label": "AVWikiDB",
      "status": "unchecked",
      "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "reason_code": "labels.libraryDiagnostics.source.unchecked",
      "last_check_at": null,
      "elapsed_s": null,
      "last_success_at": null,

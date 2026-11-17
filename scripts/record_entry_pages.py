@@ -18,6 +18,7 @@ def main():
     from peach.routes_jav_browser import userscript_bridge
     from peach.routes_pages import setup_shell, _question_view, _CLOUD_HELP, _CLOUD_HELP_URL, _CLOUD_HELP_LABEL
     from peach.media_configuration import SOURCE_OPTIONS
+    from starlette.requests import Request
 
     target = Path(__file__).resolve().parents[1] / "site" / "_fixtures"
     config = SimpleNamespace(data_root=Path("C:/Users/peach/peach-data"), server=SimpleNamespace(port=8900, mdns_name="peach"))
@@ -41,13 +42,13 @@ def main():
     payload["remote_reporting"] = {"usage": False, "errors": False, "available": True,
                                    "fields": {"usage": "版本与系统信息", "errors": "故障类型与代码位置"}, "notice": ""}
     commit = subprocess.check_output(["git", "-C", str(source), "rev-parse", "HEAD"], text=True).strip()
-    bridge = userscript_bridge()
+    bridge = userscript_bridge(Request({"type": "http", "headers": [(b"accept-language", b"zh-CN")]}))
     # 演示数据里与后端同名的分类和任务名直接取自同一检出，后端改名或增删时随同步更新。
     from peach.data_storage import CATEGORIES
-    from peach.task_runs import TASK_LABELS
+    from peach.task_runs import TASK_KEYS, task_label
     constants = {"storage_categories": [{"key": item.key, "label": item.label, "description": item.description,
                                          "note": item.note, "cleanable": item.cleanable} for item in CATEGORIES],
-                 "task_labels": TASK_LABELS}
+                 "task_labels": {key: task_label(key) for key in TASK_KEYS}}
     pages = {"commit": commit, "login": login_html("/"), "setup": setup_shell(), "questions": payload,
              "userscript_bridge": {"html": bytes(bridge.body).decode('utf-8'), "headers": dict(bridge.headers)},
              "constants": constants}

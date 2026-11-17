@@ -21,10 +21,10 @@ try {
         await page.locator('#q').focus();
         const menu = page.locator('#searchMenu');
         await menu.waitFor({ state: 'visible' });
-        const avatar = menu.locator(`[data-search-value="${recommendedCreator}"] img.favatar`);
+        const avatar = menu.locator(`[data-search-value="${recommendedCreator}"] img`).first();
         await avatar.waitFor();
         await avatar.scrollIntoViewIfNeeded();
-        await page.waitForFunction(name => { const img = document.querySelector(`#searchMenu [data-search-value="${name}"] img.favatar`) as HTMLImageElement; return img?.complete && img.naturalWidth > 0; }, recommendedCreator);
+        await page.waitForFunction(name => { const img = document.querySelector(`#searchMenu [data-search-value="${name}"] img`) as HTMLImageElement; return img?.complete && img.naturalWidth > 0; }, recommendedCreator);
         const phases = [];
         const phaseSizes:[string,number,number?][]=[['open',height],...(width<761?[['keyboard-sized',440],['restored',height],['visual-keyboard-sized',height,440],['visual-restored',height]] as [string,number,number?][]:[])];
         for (const [phase, nextHeight, visibleHeight] of phaseSizes) {

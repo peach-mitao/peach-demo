@@ -10,12 +10,12 @@ const browser = await chromium.launch({ headless: true });
 const report = [];
 try {
     for (const width of [1440, 390]) {
-        const context = await browser.newContext({ viewport: { width, height: width === 390 ? 844 : 960 }, reducedMotion: 'reduce' });
+        const context = await browser.newContext({ viewport: { width, height: width === 390 ? 844 : 960 }, locale: 'zh-CN', reducedMotion: 'reduce' });
         const page = await context.newPage(), errors: string[] = [], media: string[] = [];
         page.on('pageerror', error => errors.push(error.message));
         page.on('request', request => { if (request.resourceType() === 'media' || /(?:\/stream(?:\?|$)|\/follow-stream(?:\?|$)|\.mp4(?:\?|$))/.test(request.url())) media.push(request.url()); });
-        await page.goto(base + '/?sort=release&dir=desc', { waitUntil: 'networkidle' });
-        await page.locator('[aria-label="打开 FILM-001 Big Buck Bunny详情"]').waitFor();
+        await page.goto(base + '/?q=FILM-001', { waitUntil: 'networkidle' });
+        await page.locator('[data-media-card][data-id="1"]').waitFor();
         assert.equal(await page.locator('[aria-label="进入播放墙"]').count(), 1);
         assert.equal(await page.locator('[aria-label="进入沉浸模式"]').count(), 1);
         await page.screenshot({ path: fileURLToPath(new URL(`home-${width}.png`, out)), animations: 'disabled' });

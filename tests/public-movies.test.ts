@@ -46,6 +46,13 @@ test('名册、搜索、推荐、关注和业务状态共享普通电影身份',
     assert.ok(data.routes.has(`/api/entity?kind=${row.entity_kind}&id=${row.entity_id}`));
   }
   const follow = data.routes.get('/api/follow?limit=100&offset=0');
+  const recommendations = data.routes.get('/api/search/recommendations');
+  assert.ok(recommendations.items.items.length > 0);
+  assert.ok(recommendations.items.items.every((item: { id: number }) => ids.has(item.id)));
+  assert.deepEqual(recommendations.authors.items[0], data.indexes.onlineAuthors.items[0]);
+  assert.deepEqual(recommendations.follow, follow);
+  assert.ok(recommendations.words.every((word: string) => data.catalog.items.some(item =>
+    item.code === word || item.creator === word || item.performers.includes(word))));
   assert.equal(follow.groups.length, Math.min(FILMS.length, 60));
   assert.ok(follow.groups.every((group: any) => ids.has(group.primary.asset_id) && group.primary.playable === false));
   // 电影是视频帖、带时长；海报是图片帖、不带时长。两种媒体页都有内容。

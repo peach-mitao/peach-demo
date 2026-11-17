@@ -58,6 +58,7 @@
 !/scripts/ci_plan.ts
 !/scripts/media_storage.ts
 !/scripts/check_browser.ts
+!/scripts/check_cleanup.ts
 !/scripts/check_filters.ts
 !/scripts/check_search_recommendations.ts
 !/scripts/check_tour.ts

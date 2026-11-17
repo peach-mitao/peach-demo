@@ -395,8 +395,8 @@
             return result({ ...base, runtime: { version: health.version, build_id: String(health.build_commit).slice(0, 24) }, release: { ...base.release, ...config.updates },
                 update_job: config.update_job || { state: 'idle', progress: 0 }, userscript: { ...base.userscript, ...browser.userscript },
                 repairs: { state: 'complete', available: true, message: '', items: [
-                    { id: 'catalog', label: '更新已有资料', state: 'complete', changed: {}, review_count: 0 },
-                    { id: 'background', label: '后台更新进度', state: 'complete', pending: 0, failed: 0, queued: 0 }] } });
+                    { id: 'catalog', label: '更新已有资料', label_code: '', label_params: {}, deferred: 0, state: 'complete', changed: {}, review_count: 0 },
+                    { id: 'background', label: '后台更新进度', label_code: '', label_params: {}, deferred: 0, state: 'complete', pending: 0, failed: 0, queued: 0 }] } });
         }
         if (path === '/api/tutorial-progress' && ['GET', 'POST'].includes(request.method)) {
             // 与应用同一套动作语义；进度只留在当前页面。

@@ -123,7 +123,7 @@ export function createReplay() {
                         counts.set(k, (counts.get(k) || 0) + 1); return [...counts].map(([k, n]) => ({ k, n })).sort((a, b) => b.n - a.n); };
             // 与 Peach 的筛选面板契约一致：来源带已看数，地区带显示名，年份按发行年倒序。
             const locations = counts((it) => [it.location]).map(row => ({ ...row, played: items.filter(it => it.location === row.k && it.play_count).length }));
-            const regions = counts((it) => [it.effective_region || 'none']).map(row => ({ ...row, label: row.k === 'none' ? '未判定' : row.k }));
+            const regions = counts((it) => [it.effective_region || 'none']).map(row => ({ ...row, label: row.k === 'none' ? '未判定' : row.k, label_code: '' }));
             const years = counts((it) => [String(it.release_date || '').slice(0, 4) || undefined]).map(row => ({ k: row.k, label: row.k, n: row.n })).sort((a, b) => b.k.localeCompare(a.k));
             return json(JSON.stringify({ locations, orientations: counts((it) => [it.ctx_orient]), regions, years,
                 creators: counts((it) => [it.creator]), tags: counts((it) => it.filter_tags || it.tags).filter(row => catalog.tag_categories?.[row.k] !== 'meta').map(row => ({ ...row, cat: catalog.tag_categories?.[row.k] || 'general' })),

@@ -24,6 +24,7 @@ import shutil
 import socket
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -145,7 +146,8 @@ def scrub(value, roots: tuple[Path, Path], data: Path, route: str = ""):
             if tool.get("path"):
                 tool["path"] = f"{DEMO_DATA}\\tools\\{name}.exe"
     text = json.dumps(value, ensure_ascii=False)
-    for real, demo in ((roots[1], DEMO_MEDIA + "2"), (roots[0], DEMO_MEDIA), (data, DEMO_DATA)):
+    for real, demo in ((roots[1], DEMO_MEDIA + "2"), (roots[0], DEMO_MEDIA), (data, DEMO_DATA),
+                       (Path(tempfile.gettempdir()), DEMO_DATA + "\\temporary")):
         for form in (str(real), str(real).replace("\\", "/")):
             text = text.replace(json.dumps(form)[1:-1], json.dumps(demo)[1:-1])
     forms = {json.dumps(str(path))[1:-1].casefold() for path in (Path.home(), ROOT)} | {str(path).replace("\\", "/").casefold() for path in (Path.home(), ROOT)}
