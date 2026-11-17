@@ -3,6 +3,15 @@ const rule=(id:string,label:string,selector:string,region=false):Rule=>({id,labe
 const pages=['unseen','watch-later','flagged','jav','performers','creators','studios','agencies','tags','follow','playlists','wall','immerse','stats','taste','review','data-cleanup','duplicates','quality-goals','sources','tasks','subscriptions','junk-files','trash','settings'];
 export const demoRules:Rule[]=[
  rule('source.credits','素材来源','a[href="/film-sources/"]'),
+ rule('sort.settings','自定义排序项','[data-sort-settings]'),
+ rule('appearance.order','调整分区顺序','[data-order-step]'),
+ rule('wall.thumbnails','显示视频缩略图','[data-wall-image]'),
+ rule('asset.edit','编辑资料','[data-item-edit-open]'),rule('asset.recollect','重新采集资料','[data-recollect]'),
+ rule('tag.edit','编辑标签','[data-follow-tags-edit]'),
+ rule('source.section','切换来源分区','a[href="#check-all"],a[href="#hd-cover"],a[href="#custom-sources"],a[href="#source-amane"]'),
+ rule('task.speed','处理速度','button[aria-label^="处理速度："]'),
+ rule('storage.reveal','查看文件位置','button[aria-label="查看文件位置"]'),
+ {...rule('duplicates.kept','查看已保留','button'),textPrefix:'已保留 '},
  rule('setup.data-folder','选择数据目录','button[aria-label="选择数据目录"]'),
  {...rule('history.import','导入历史文件','button'),text:'导入历史文件'},
  rule('pagination.page','跳页','button[aria-label^="第 "][aria-label$=" 页"]'),
@@ -70,6 +79,7 @@ export const demoRules:Rule[]=[
   ['alias.add','添加别名'],['source.add','添加来源'],['browser.add','添加浏览器'],['prefix.add','添加前缀'],['source.add','添加索引器'],['folder.add','添加文件夹'],['review.skip','跳过'],['review.approve','通过'],['library.sync','同步新增文件'],['diagnostics.download','下载诊断报告'],['diagnostics.export','导出刮削记录'],['table.columns','显示列'],['app.uninstall','卸载 Peach'],['source.remove','移除索引器 1'],['asset.preview','预览'],['cover.preview','预览上传内容'],['duplicates.recycle','整组回收'],['cover.retry','重试样图'],['tutorial.open','重新打开教程'],['source.reload','重新读取'],['source.check','重新检测'],['source.check','重新检查'],['table.reset','重置列宽'],
   ['tags.repair','整理重复标签'],['selection.results','选择当前结果'],['selection.clear','清空选择'],['selection.clear','清空'],['selection.apply','显示结果'],['item.rename','重命名'],['tags.merge','合并'],['item.restore','恢复'],['item.hide','隐藏'],['source.retry','立即重试'],
   ['settings.configure','Peach 配置'],['library.select','本地演示库'],['repairs.retry','重试失败项'],['bridge.rebuild','重新安装'],['tutorial.open','重新打开'],
+  ['settings.change','更改'],['app.release-notes','本版更新说明'],['reporting.refresh','刷新发送状态'],['tags.block','添加屏蔽标签'],
  ].map(([id,label])=>({...rule(id!,label!,'button'),text:label})),
 ];
 export function demoState(){
