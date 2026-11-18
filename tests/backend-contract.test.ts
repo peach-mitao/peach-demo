@@ -54,6 +54,7 @@ test('演示数据覆盖后端参照里的字段，演示特化逐条写明原�
         const env = { ASSETS: { async fetch(input: string | URL | Request) {
             const name = new URL(input instanceof Request ? input.url : input).pathname;
             if (name === '/_demo/replay-files.json') return Response.json(Object.fromEntries(names.map(file => [file, file])));
+            if (name === '/_demo/catalog-original-names.json') return Response.json({});
             try { return new Response(await readFile(path.join(site, name))); } catch { return new Response('not found', { status: 404 }); }
         } } };
         // 实体类接口在参照里写成 `{performer}` 模板，两侧各取自己的第一位演员。

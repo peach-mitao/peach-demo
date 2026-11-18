@@ -5,7 +5,7 @@ const browser = await chromium.launch({ channel: 'chrome' });
 try {
     for (const width of [1440, 390] as const)
         for (const scope of ['local', 'online'] as const) {
-            const context = await browser.newContext({ viewport: { width, height: width === 390 ? 844 : 960 }, reducedMotion: 'reduce' });
+            const context = await browser.newContext({ viewport: { width, height: width === 390 ? 844 : 960 }, locale: 'zh-CN', reducedMotion: 'reduce' });
             const page = await context.newPage(), failed: string[] = [], errors: string[] = [], writes: string[] = [];
             page.on('pageerror', error => errors.push((error instanceof Error ? error.message : String(error))));
             page.on('response', response => { if (response.status() >= 400)
@@ -39,7 +39,7 @@ try {
                 await page.getByRole('button', { name: '隐藏', exact: true }).click();
                 await confirm('隐藏标签');
                 assert.equal((await inventory()).items.find((row: { id: any; entity_id: any; }) => (row.id ?? row.entity_id) === id).hidden, true);
-                await page.getByRole('group', { name: '标签状态' }).getByRole('button', { name: '已隐藏', exact: true }).click();
+                await page.getByRole('group', { name: '标签状态' }).getByRole('button', { name: /^已隐藏/ }).click();
                 await select(name);
                 await page.getByRole('button', { name: '恢复', exact: true }).click();
                 await confirm('恢复标签');

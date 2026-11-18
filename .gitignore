@@ -38,6 +38,7 @@
 !/scripts/check_stream.ts
 !/scripts/build_static.ts
 !/scripts/build_public.ts
+!/scripts/catalog_names.ts
 !/scripts/public_copy.ts
 !/scripts/prepare_public_movies.ts
 !/scripts/check_public_movies_browser.ts

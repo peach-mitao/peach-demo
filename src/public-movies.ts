@@ -205,9 +205,13 @@ export function publicMovies(films: readonly PublicMovie[] = FILMS, people: read
     ranking_score: 1 - i / (items.length + 1), score: 1 - i / (items.length + 1), taste_score: 1 - i / (items.length + 1), wanted: i === wantedIndex, rank: i + 1 }));
   // 相关推荐按应用契约带推荐理由与得分；演示按片目顺序给出递减的示例得分。
   const related = (row: Row, limit: number) => items.filter(item => item.id !== row.id).slice(0, limit)
-    .map((item, rank) => ({ ...item, why: item.series && item.series === row.series ? '同系列 · 标签接近' : '标签接近',
-      why_codes: [], why_tags: item.tags.filter((tag: string) => row.tags.includes(tag)),
-      related_score: Number((0.9 - rank * 0.02).toFixed(4)), ranking_score: Number((0.9 - rank * 0.02).toFixed(4)) }));
+    .map((item, rank) => {
+      const whyTags = item.tags.filter((tag: string) => row.tags.includes(tag));
+      const sameSeries = item.series && item.series === row.series;
+      return { ...item, why: sameSeries ? '同系列' : '',
+        why_codes: sameSeries ? ['labels.related.sameSeries'] : [], why_tags: whyTags,
+        related_score: Number((0.9 - rank * 0.02).toFixed(4)), ranking_score: Number((0.9 - rank * 0.02).toFixed(4)) };
+    });
   for (const row of items) for (const limit of [20, 28]) put(query('/api/related', { id: row.id, limit }), { items: related(row, limit), total: items.length - 1 });
   for (const scope of ['library', 'external']) put(query('/api/jav/discoveries', { scope, limit: 100, sort: 'taste', direction: 'desc' }), { scope, items: discovery, candidate_total: items.length, sort: 'taste', ranking_method: 'mmr', direction: 'desc', limited: false, source: scope });
   // 演示站特殊处理：应用的新作卡片只署演员。普通电影常没有列演员，有标识的厂牌代为署名，

@@ -481,9 +481,10 @@
             return result(tutorial);
         }
         if (path === '/api/local-players' && request.method === 'GET')
-            return result({ players: [{ id: 'default', label: '系统默认播放器' }] });
+            return result({ players: [{ id: 'default', label: '系统默认播放器', label_code: 'labels.routesMedia.defaultPlayer' }] });
         if (request.method === 'POST' && ['/api/local-playback', '/api/external-playback'].includes(path))
-            return result({ error: '仅提供演示，不会打开外部播放器。' }, 400);
+            return result({ error: document.documentElement.lang === 'en'
+                ? 'The demo does not open external players.' : '仅提供演示，不会打开外部播放器。' }, 400);
         if (path === '/api/diagnostics/exports') {
             if (request.method === 'POST')
                 return result({ error: '演示站不会生成诊断报告或刮削记录。' }, 400);
