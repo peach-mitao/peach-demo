@@ -223,11 +223,11 @@ export function publicMovies(films: readonly PublicMovie[] = FILMS, people: read
     seen: 0, has_image: row.has_image, image_version: row.image_version, avatar_focus: null, demo: true })), unread: indexes.performers.items.length, demo_notice: DEMO_DATA_NOTICE });
   const source = { id: 0, provider: 'demo', provider_label: '公开电影片目', ref: 'public-movies', label: '电影资料（演示）', author_name: '电影资料',
     author_key: 'demo:catalog', url: films[0]!.credit, semantics: 'work', enabled: true,
-    entity_id: null as number | null, entity_name: '电影资料', avatar_url: null as string | null,
+    entity_id: null as number | null, entity_name: '电影资料', avatar_url: null as string | null, cached_avatar_url: '',
     can_backfill: true, backfill_page: 0, created_at: now, last_checked_at: now, last_status: 'ok', last_error: null, history_exhausted: true };
   const sources: Row[] = authors.map((author, index) => ({ ...source, id: index + 1, ref: `creator-${author.entity_id}`,
     label: `${author.k} · 电影资料`, author_name: author.k, author_key: author.key, entity_id: author.entity_id, entity_name: author.k,
-    avatar_url: author.avatar || null, official_avatar_url: author.avatar || null,
+    avatar_url: author.avatar || null, official_avatar_url: author.avatar || null, cached_avatar_url: author.avatar || '',
     url: entities.find(row => row.id === author.entity_id)!.metadata.source_url }));
   if (items.some(row => !row.creator_entity)) sources.push({ ...source, official_avatar_url: null });
   // 电影本身记成视频帖：卡片带时长，进「视频」；演示站不放片，详情只显示海报。另取一批片子的海报记成图片帖，
