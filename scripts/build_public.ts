@@ -13,6 +13,8 @@ import { movieHTML, movieScript } from './public_copy.ts';
 import { verifyPublicMovies } from './prepare_public_movies.ts';
 import { FILMS, PEOPLE, DEMO_DATA_NOTICE, STUDIOS } from '../src/public-movies.ts';
 import { MOVIE_RIGHTS } from '../src/movie-rights.ts';
+import { englishCatalog, originalEntityNames } from './catalog_names.ts';
+import { catalogName } from '../src/catalog-language.ts';
 const root = fileURLToPath(new URL('../', import.meta.url));
 export async function buildPublic(site = path.join(root, 'site'), out = path.join(root, 'public')) {
     await verifyPublicMovies(site);
@@ -38,7 +40,30 @@ export async function buildPublic(site = path.join(root, 'site'), out = path.joi
         await writeFile(path.join(out, url), body);
         return url;
     };
-    const boot = await build({ stdin: { contents: `import {installDemoPlayback} from './src/demo-playback.ts';import {browserReplay} from './src/browser-replay.ts';import {mediaURL,mediaJSON,mediaHTML} from './src/media.ts';import * as tags from './src/tag-management.ts';installDemoPlayback(window);const images=${JSON.stringify(images)},variants=${JSON.stringify(variants)},videos=${JSON.stringify(videos)};globalThis.peachDemoTags=tags;globalThis.peachDemoMedia=v=>mediaURL(v,images,location.origin,variants,videos);globalThis.peachDemoMediaJSON=v=>mediaJSON(v,images,location.origin,variants,videos);globalThis.peachDemoHTML=v=>mediaHTML(v,images,location.origin,variants,videos);globalThis.peachDemoReplay=browserReplay(${JSON.stringify(replay.files)},window.fetch.bind(window),location.origin);`, resolveDir: root }, bundle: true, write: false, platform: 'browser', format: 'iife', target: 'es2022', minify: true });
+    await writeFile(path.join(out, '_demo/catalog-original-names.json'), JSON.stringify(originalEntityNames));
+    const boot = await build({ stdin: { contents: `
+        import {installDemoPlayback} from './src/demo-playback.ts';
+        import {browserReplay} from './src/browser-replay.ts';
+        import {originalCatalogURL} from './src/catalog-language.ts';
+        import {mediaURL,mediaJSON,mediaHTML} from './src/media.ts';
+        import * as tags from './src/tag-management.ts';
+        installDemoPlayback(window);
+        const images=${JSON.stringify(images)},variants=${JSON.stringify(variants)},videos=${JSON.stringify(videos)};
+        const originalNames=${JSON.stringify(originalEntityNames)};
+        globalThis.peachDemoTags=tags;
+        globalThis.peachDemoMedia=v=>{
+            if (typeof v !== 'string' || !v.startsWith('/')) return v;
+            const url=new URL(v,location.origin);
+            const original=originalCatalogURL(url,originalNames);
+            return mediaURL(original===url?v:original.pathname+original.search,images,location.origin,variants,videos);
+        };
+        globalThis.peachDemoMediaJSON=v=>mediaJSON(v,images,location.origin,variants,videos);
+        globalThis.peachDemoHTML=v=>mediaHTML(v,images,location.origin,variants,videos);
+        const files=${JSON.stringify(replay.files)}, network=window.fetch.bind(window);
+        const local=browserReplay(files,network,location.origin,{originalNames});
+        const english=browserReplay(files,network,location.origin,{names:${JSON.stringify(englishCatalog)},originalNames});
+        globalThis.peachDemoReplay=request=>(document.documentElement.lang==='en'?english:local)(request);
+    `, resolveDir: root }, bundle: true, write: false, platform: 'browser', format: 'iife', target: 'es2022', minify: true });
     const runtime = await assets('runtime', boot.outputFiles[0].contents, 'js');
     const interaction = await assets('interactions', await readFile(path.join(site, '_demo/interactions.js')), 'js');
     const tour = await assets('tour', await readFile(path.join(site, '_demo/tour.js')), 'js');
@@ -68,7 +93,15 @@ export async function buildPublic(site = path.join(root, 'site'), out = path.joi
         .replace(escape(DEMO_DATA_NOTICE), 'Film and image credits are listed below. Catalog codes, file details, ratings, viewing, follows and task statuses are sample data.')
         .replace('图片来自 Blender 与 Wikimedia Commons，按容器缩放或裁切。播放入口仅提供演示，不加载视频。Public domain 的具体依据见各图片的原始文件页。', 'Images from Blender and Wikimedia Commons are resized or cropped to fit. Playback controls demonstrate the interface. See the original file pages for the basis of each public domain designation.')
         .replaceAll('>电影图片 · ', '>Film image · ').replaceAll('>人物肖像 · ', '>Portrait · ').replaceAll('>厂牌标识 · ', '>Studio logo · ')
-        .replaceAll('>原始来源<', '>Original source<').replaceAll('>许可依据<', '>License details<');
+        .replaceAll('>原始来源<', '>Original source<').replaceAll('>许可依据<', '>License details<')
+        .replace(/<h2>(.*?)<\/h2>/g, (heading, title) => {
+            const item = rights.find(row => escape(row.title) === title);
+            return item ? `<h2>${escape(catalogName(englishCatalog, item.title))}</h2>` : heading;
+        })
+        .replaceAll('页面按容器缩放或裁切。', 'Resized or cropped to fit.')
+        .replaceAll('缩放至240像素宽并转换为WebP；头像按圆形容器裁切。', 'Resized to 240 pixels wide and converted to WebP. Portraits use a circular crop.')
+        .replaceAll('按 Peach 应用的厂牌图标规则烤成不透明方图，缩放至480像素宽并转换为WebP；按容器缩放显示。', 'Rendered as an opaque square, resized to 480 pixels wide and converted to WebP.')
+        .replaceAll(' · 未署名', ' · Uncredited');
     await mkdir(path.join(out, 'film-sources/en'), { recursive: true });
     await writeFile(path.join(out, 'film-sources/en/index.html'), englishSources);
     await writeFile(path.join(out, 'index.html'), decorate(await readFile(path.join(site, 'index.html'), 'utf8')));

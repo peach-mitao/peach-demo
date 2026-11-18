@@ -9,7 +9,7 @@ export function page(respond: (url: URL) => unknown = () => ({ status: 'complete
             static now() { return now; }
         },
         location: { href: 'https://demo.example/', origin: 'https://demo.example', search: '' },
-        document: { readyState: 'loading', addEventListener() { } },
+        document: { documentElement: { lang: 'zh-CN' }, readyState: 'loading', addEventListener() { } },
         fetch: async (input: RequestInfo | URL, init?: RequestInit) => { const url = input instanceof Request ? new URL(input.url) : new URL(input, 'https://demo.example'); calls.push({ path: url.pathname, search: url.search, method: input instanceof Request ? input.method : init?.method || 'GET' }); return new Response(JSON.stringify(respond(url)), { headers: { 'content-type': 'application/json' } }); } };
     context.window = context;
     context.peachDemoMedia = (value: any) => value;

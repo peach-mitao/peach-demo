@@ -7,6 +7,7 @@ test('回放清单读取不依赖其他请求未完成的上下文', {timeout:10
   let reads=0;
   const env: ReplayEnv={ASSETS:{async fetch(input){
     const path=new URL(input instanceof Request?input.url:input,'https://demo.example').pathname;
+    if(path==='/_demo/catalog-original-names.json')return Response.json({});
     if(path==='/_demo/replay-files.json'){
       reads++;
       if(reads===1)return await new Promise<never>(()=>{});

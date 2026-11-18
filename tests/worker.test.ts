@@ -37,6 +37,7 @@ const env = { ASSETS: { async fetch(input: string|URL) {
             const name = new URL(input instanceof Request ? input.url : input).pathname;
             if (name === '/_demo/replay-files.json')
                 return Response.json(Object.fromEntries([...files.keys()].map(name => [name, name])));
+            if (name === '/_demo/catalog-original-names.json') return Response.json({});
             if (!files.has(name))
                 return new Response('not found', { status: 404 });
             const body = files.get(name), video = name.endsWith('.mp4');
@@ -125,7 +126,9 @@ test('搜索推荐关注请求与作者目录共享头像来源', async () => {
     const source = follow.sources.find((row: { author_key: any; }) => row.author_key === authors.items[0].key);
     assert.equal(source.avatar_url, '/follow-avatar?provider=kemono&ref=demo');
     assert.equal(follow.groups.length, 1);
-    assert.equal((await call('/api/follow?author=unknown&sort=rand')).status, 404);
+    const empty = await call('/api/follow?author=unknown&sort=rand');
+    assert.equal(empty.status, 200);
+    assert.deepEqual((await empty.json()).groups, []);
 });
 test('订阅新作推荐返回已录制的首批作品', async () => {
     const response = await call('/api/feeds/discoveries?limit=5');

@@ -21,6 +21,16 @@ test('随机分页使用同一粒种子且不重不漏', () => {
 });
 test('不完整录制和未支持的筛选保持未取得', () => {
     assert.equal(followPage({ ...snapshot, has_more: true }, new URLSearchParams('sort=rand')), null);
-    for (const query of ['author=unknown', 'status=saved', 'sort=hot'] as const)
+    for (const query of ['field=unknown', 'sort=hot'] as const)
         assert.equal(followPage(snapshot, new URLSearchParams(query)), null);
+});
+test('按英文标签筛出符合条件的关注更新', () => {
+    const recorded = { ...snapshot, groups: [
+        { primary: { id: 1, tags: ['Animation', 'Comedy'], status: 'saved' } },
+        { primary: { id: 2, tags: ['Animation'], status: 'saved' } },
+        { primary: { id: 3, tags: ['Animation', 'Comedy'], status: 'seen' } },
+    ] };
+    const query = new URLSearchParams({ status: 'saved', tag: '动画,Comedy' });
+    const result = followPage(recorded, query, { 动画: 'Animation' });
+    assert.deepEqual(result!.groups.map(group => group.primary.id), [1]);
 });

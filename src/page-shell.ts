@@ -4,7 +4,7 @@ if(!('homeLayout' in s))s.homeLayout='big';if(!('detailAutoplay' in s))s.detailA
 if(!('photoLayout' in s))s.photoLayout='masonry';if(!('followImagesOnly' in s))s.followImagesOnly=true;
 const u=new URL(location.href),l=u.searchParams.get('lang');
 if(l==='en'||l==='zh-CN'){s.interfaceLanguage=l;u.searchParams.delete('lang');history.replaceState(history.state,'',u)}
-if(!('performerNameLanguage' in s)){const choice=s.interfaceLanguage;if(choice==='en'||choice==='zh-CN')s.performerNameLanguage=choice;else{s.performerNameLanguage=navigator.languages.map(v=>v.split('-')[0]).find(v=>v==='zh'||v==='en')==='zh'?'zh-CN':'en'}}
+if(!('performerNameLanguage' in s))s.performerNameLanguage='local-ja';
 localStorage.setItem(k,JSON.stringify(s))}catch(_e){}</script>`;
 // 页脚链接共用一套下划线：应用外链样式只给新窗口链接加 3px 偏移，站内链接也写明同值，三条线才对齐。
 const NOTICE_LINK = 'display:inline;line-height:inherit;pointer-events:auto;color:inherit;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px';

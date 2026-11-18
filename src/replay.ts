@@ -7,8 +7,9 @@ import { discoveryPage, feedDiscoveryPage, releasePage, type ReleaseRow } from '
 import { followPage } from './follow.ts';
 import { folderIndex, folderItems, folderPage } from './folders.ts';
 import type {Catalog,CatalogItem,FixtureManifest,ReplayEnv,Directory,DiscoveryRow,FollowGroup,Suggestions,SuggestAsset,JSONValue} from './types.ts';
+import {catalogName, originalCatalogURL, type CatalogNames} from './catalog-language.ts';
 const readJSON=async<T>(env:ReplayEnv,url:URL):Promise<T>=>{const response=await env.ASSETS.fetch(url);if(!response.ok)throw Error('演示快照未取得');return await response.json() as T};
-export function createReplay() {
+export function createReplay({ names = {}, originalNames = {} }: {names?: CatalogNames; originalNames?: CatalogNames} = {}) {
     const json = (body: string, status = 200) => new Response(body, { status, headers: { 'content-type': TYPES.json } });
     const TYPES:Record<string,string> = {
         json: 'application/json; charset=utf-8', jpg: 'image/jpeg', png: 'image/png', webp: 'image/webp', avif: 'image/avif',
@@ -38,6 +39,7 @@ export function createReplay() {
         return new Response(response.body, { status: 200, headers });
     }
     async function lookup(env:ReplayEnv, url:URL, method:string) {
+        url = originalCatalogURL(url, originalNames);
         const keys = [fixtureKey(method, url)];
         if (MEDIA_PATHS.has(url.pathname) && url.searchParams.has('v')) {
             const image = new URL(url);
@@ -70,15 +72,15 @@ export function createReplay() {
     async function catalogItems(env:ReplayEnv, url:URL) {
         await loadCatalog(env, url);
         const p = url.searchParams, fold = (text:unknown) => String(text ?? '').toLowerCase().replaceAll('-', '');
-        const words = fold(p.get('q')).split(/\s+/).filter(Boolean);
-        const tags = (p.get('tag') || '').split(',').filter(Boolean);
+        const words = fold(catalogName(names, p.get('q') || '')).split(/\s+/).filter(Boolean);
+        const tags = (p.get('tag') || '').split(',').filter(Boolean).map(tag => catalogName(names, tag));
         return folderItems(folders, catalog.items, p).filter((it) => {
             if (p.get('loc') && !p.get('loc')!.split(',').includes(it.location||''))
                 return false;
             if (p.get('jav') === '1' && !it.is_jav)
                 return false;
             for (const kind of ['creator', 'studio', 'performer', 'agency', 'series'] as const) {
-                const name = p.get(kind);
+                const name = catalogName(names, p.get(kind) || '');
                 if (!name)
                     continue;
                 const members = catalog.entity_filters?.[kind]?.[name];
@@ -151,7 +153,7 @@ export function createReplay() {
         ['series', '系列'], ['tag', '标签'], ['asset', '视频']];
     let suggestions:Suggestions;
     async function suggest(env:ReplayEnv, url:URL) {
-        const query = (url.searchParams.get('q') ?? '').trim().slice(0, 64);
+        const query = catalogName(names, (url.searchParams.get('q') ?? '').trim().slice(0, 64));
         if (!query)
             return json(JSON.stringify({ q: '', groups: [] }));
         suggestions ??= await readJSON<Suggestions>(env,new URL('/_fixtures/suggest.json', url));
@@ -253,6 +255,14 @@ export function createReplay() {
                 const snapshot = await lookup(env, plan, method);
                 if (snapshot) return snapshot;
             }
+            if (method === 'GET' && url.pathname === '/api/follow' && !url.searchParams.has('item') && !url.searchParams.has('summary')) {
+                if (!follow) {
+                    const snapshot = await lookup(env, new URL('/api/follow?limit=100&offset=0', url), method);
+                    if (snapshot) follow = await snapshot.json() as {groups:FollowGroup[]};
+                }
+                const page = follow && followPage(follow, url.searchParams, names);
+                if (page) return json(JSON.stringify(page));
+            }
             const recorded = await lookup(env, url, method);
             if (recorded) {
                 if (url.pathname === '/api/links') {
@@ -276,16 +286,6 @@ export function createReplay() {
                         .filter((row) => row.n).sort((a, b) => b.n - a.n).slice(offset, offset + limit);
                     return json(JSON.stringify({ performers: pick(data.performers, 'performer'), studios: pick(data.studios, 'studio') }));
                 }
-            }
-            if (method === 'GET' && url.pathname === '/api/follow') {
-                if (!follow) {
-                    const snapshot = await lookup(env, new URL('/api/follow?limit=100&offset=0', url), method);
-                    if (snapshot)
-                        follow = await snapshot.json() as {groups:FollowGroup[]};
-                }
-                const page = follow && followPage(follow, url.searchParams);
-                if (page)
-                    return json(JSON.stringify(page));
             }
             if (method === 'GET' && url.pathname === '/api/feeds/discoveries') {
                 if (!feedDiscoveries) {

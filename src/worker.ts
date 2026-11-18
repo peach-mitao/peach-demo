@@ -6,12 +6,16 @@ const contexts = new WeakMap<Assets,ReplayContext>();
 async function context(env: ReplayEnv, origin: string) {
     const cached = contexts.get(env.ASSETS);
     if (cached) return cached;
-            const response = await env.ASSETS.fetch(new URL('/_demo/replay-files.json', origin));
-            if (!response.ok)
+            const [response, names] = await Promise.all([
+                env.ASSETS.fetch(new URL('/_demo/replay-files.json', origin)),
+                env.ASSETS.fetch(new URL('/_demo/catalog-original-names.json', origin)),
+            ]);
+            if (!response.ok || !names.ok)
                 throw Error('公开回放清单未取得');
             const files = await response.json() as Record<string,string>;
             const assets:Assets = { fetch: (input) => { const url = files[new URL(input instanceof Request ? input.url : input, origin).pathname]; return url ? env.ASSETS.fetch(new URL(url, origin)) : new Response('not found', { status: 404 }); } };
-            const result = { assets, replay: browserReplay(files, url => env.ASSETS.fetch(url), origin, {sharePending: false}) };
+            const originalNames = await names.json() as Record<string,string>;
+            const result = { assets, replay: browserReplay(files, url => env.ASSETS.fetch(url), origin, {sharePending: false, originalNames}) };
             contexts.set(env.ASSETS, result);
             return result;
 }

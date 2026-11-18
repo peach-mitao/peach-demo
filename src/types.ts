@@ -22,7 +22,7 @@ export interface DiscoveryRow {
 }
 
 export interface FollowGroup {
-  primary: {id: number};
+  primary: {id: number; status?: string; author_key?: string; provider?: string; tags?: string[]; duration?: number | null};
 }
 
 export type ImageMap = Readonly<Record<string, string>>;
