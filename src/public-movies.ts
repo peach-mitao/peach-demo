@@ -4,7 +4,7 @@ import { withBackend } from './backend-defaults.ts';
 // 与片目无关的接口以应用的实际默认值打底（null 为全部顶层字段），演示数据覆盖在上面。
 const BACKEND_BASE: Record<string, readonly string[] | null> = {
   '/api/settings': null, '/api/media-processing': null, '/api/review': null, '/api/duplicates': null, '/api/quality-goals': null, '/api/ads': null,
-  '/api/sources': ['offline_roots'], '/api/diagnostics': null,
+  '/api/sources': ['offline_roots'], '/api/diagnostics': null, '/api/entity/shapes': ['ok', 'home', 'name_glyphs'],
 };
 export const DEMO_DATA_NOTICE = '影片资料与图片来源见页脚；编号、文件参数、评分、观看、关注和任务状态均为演示数据。未取得人物照片时显示姓名字母。';
 export interface PublicImage {
@@ -299,6 +299,13 @@ export function publicMovies(films: readonly PublicMovie[] = FILMS, people: read
     counts: { searching: 0, unreleased: 0, given_up: 0, acquired: 1 }, scraping: false, searching: false, demo_notice: DEMO_DATA_NOTICE };
   const recorded = { '/api/tasks': tasks, '/api/downloads': downloads, '/api/wants': wants, '/api/orphan-records': { total: 0, items: [] } };
   for (const [route, value] of Object.entries(recorded)) put(route, value);
+  const nameVariants = entities.flatMap(row => {
+    const person = people.find(item => item.name === row.canonical_name);
+    return person?.original_name ? [{
+      id: row.id, kind: row.kind, canonical_name: row.canonical_name, zh_cn: row.canonical_name, ja: null, en: person.original_name,
+    }] : [];
+  });
+  put('/api/entity/shapes', { entities: [], name_variants: nameVariants });
   put('/api/result-updates', { ok: true, result_versions: {}, ingest_notices: { epoch: 'demo', items: [] }, busy: false, running_tasks: [] });
   put('/api/jav/discoveries/metadata', { metadata_job: null });
   put('/api/review/auto-landings', { items: [] });

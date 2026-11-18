@@ -6,6 +6,8 @@ export const demoRules:Rule[]=[
  rule('sort.settings','自定义排序项','[data-sort-settings]'),
  rule('appearance.order','调整分区顺序','[data-order-step]'),
  rule('table.column-filter','筛选表格列','[data-table-column-filter]'),
+ {...rule('ledger.backup','立即备份','#ledgerBackups button'),text:'立即备份'},
+ {...rule('ledger.backup','立即备份','#ledgerBackups button'),text:'Back up now'},
  ...[
   ['seed-sharing.refresh','刷新状态','Refresh status'],
   ['seed-sharing.preview','预览本机资料','Preview local metadata'],
