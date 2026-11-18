@@ -62,11 +62,22 @@ export async function buildPublic(site = path.join(root, 'site'), out = path.joi
     await mkdir(path.join(out, 'film-sources'), { recursive: true });
     await writeFile(path.join(out, 'film-sources.json'), JSON.stringify({ notice: DEMO_DATA_NOTICE, images: '官方电影代表图；按容器缩放或裁切显示。', films: rights }, null, 2));
     await writeFile(path.join(out, 'film-sources/index.html'), `<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>素材来源与许可 · Peach</title><link rel="stylesheet" href="/app.css"><style>body{margin:0;padding:clamp(20px,5vw,64px);font:16px/1.7 system-ui;background:var(--ground,#fff);color:var(--ink,#222)}main{max-width:760px;margin:auto}article{padding:24px 0;border-bottom:1px solid var(--border-15,#8884)}h1{font-size:28px}h2{font-size:20px}a{color:inherit;text-decoration:underline}p{overflow-wrap:anywhere}</style></head><body><main><a href="/">返回演示站</a><h1>素材来源与许可</h1><p>${escape(DEMO_DATA_NOTICE)}</p><p>图片来自 Blender 与 Wikimedia Commons，按容器缩放或裁切。播放入口仅提供演示，不加载视频。Public domain 的具体依据见各图片的原始文件页。</p>${rights.map(item => `<article><h2>${escape(item.title)}</h2><p>${escape(item.kind)} · ${escape(item.attribution || item.artist)}</p><p><a href="${escape(item.source)}">原始来源</a> · <a href="${escape(item.license_url)}">${escape(item.license)}</a> · <a href="${escape(item.license_source || item.source)}">许可依据</a></p><p>${escape(item.changes)}</p></article>`).join('')}</main>${editorGate}</body></html>`);
+    const sourcePage = await readFile(path.join(out, 'film-sources/index.html'), 'utf8');
+    const englishSources = sourcePage.replace('lang="zh-CN"', 'lang="en"')
+        .replaceAll('素材来源与许可', 'Sources and licenses').replace('返回演示站', 'Back to the demo')
+        .replace(escape(DEMO_DATA_NOTICE), 'Film and image credits are listed below. Catalog codes, file details, ratings, viewing, follows and task statuses are sample data.')
+        .replace('图片来自 Blender 与 Wikimedia Commons，按容器缩放或裁切。播放入口仅提供演示，不加载视频。Public domain 的具体依据见各图片的原始文件页。', 'Images from Blender and Wikimedia Commons are resized or cropped to fit. Playback controls demonstrate the interface. See the original file pages for the basis of each public domain designation.')
+        .replaceAll('>电影图片 · ', '>Film image · ').replaceAll('>人物肖像 · ', '>Portrait · ').replaceAll('>厂牌标识 · ', '>Studio logo · ')
+        .replaceAll('>原始来源<', '>Original source<').replaceAll('>许可依据<', '>License details<');
+    await mkdir(path.join(out, 'film-sources/en'), { recursive: true });
+    await writeFile(path.join(out, 'film-sources/en/index.html'), englishSources);
     await writeFile(path.join(out, 'index.html'), decorate(await readFile(path.join(site, 'index.html'), 'utf8')));
     const entry = JSON.parse(await readFile(path.join(site, '_fixtures/entry-pages.json'), 'utf8'));
     for (const route of ['login', 'setup'] as const) {
         await mkdir(path.join(out, route), { recursive: true });
-        await writeFile(path.join(out, route, 'index.html'), decorate(entry[route]));
+        const englishTitle = entry[`${route}_en`]?.match(/<title>([^<]+)<\/title>/)?.[1];
+        const page = englishTitle ? entry[route].replace('<html ', `<html data-demo-title-en="${escape(englishTitle)}" `) : entry[route];
+        await writeFile(path.join(out, route, 'index.html'), decorate(page));
     }
     await mkdir(path.join(out, 'integrations/peach-userscript-bridge'), { recursive: true });
     await writeFile(path.join(out, 'integrations/peach-userscript-bridge/index.html'), entry.userscript_bridge.html);

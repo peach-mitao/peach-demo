@@ -3,7 +3,7 @@
 // 写操作不落地：页面内交互适配提供临时状态，Worker 提供录制响应，刷新恢复录制状态。
 import { fixtureHash, fixtureKey } from './key.ts';
 import { directoryPage } from './directory.ts';
-import { discoveryPage, feedDiscoveryPage } from './discovery.ts';
+import { discoveryPage, feedDiscoveryPage, releasePage, type ReleaseRow } from './discovery.ts';
 import { followPage } from './follow.ts';
 import { folderIndex, folderItems, folderPage } from './folders.ts';
 import type {Catalog,CatalogItem,FixtureManifest,ReplayEnv,Directory,DiscoveryRow,FollowGroup,Suggestions,SuggestAsset,JSONValue} from './types.ts';
@@ -232,6 +232,10 @@ export function createReplay() {
                 if (discoveries.has(scope))
                     return json(JSON.stringify(discoveryPage(discoveries.get(scope)!, url.searchParams)));
             }
+            if (method === 'GET' && url.pathname === '/api/jav/releases') {
+                const snapshot = await lookup(env, new URL('/api/jav/discoveries?scope=external&limit=100&sort=taste&direction=desc', url), method);
+                if (snapshot) return json(JSON.stringify(releasePage((await snapshot.json() as {items:ReleaseRow[]}).items, url.searchParams)));
+            }
             if (method === 'GET' && ['/api/index', '/api/follow/authors', '/api/follow/tags'].includes(url.pathname)) {
                 directory ??= await readJSON<Directory>(env,new URL('/_fixtures/indexes.json', url));
                 const kind = url.pathname === '/api/index' ? url.searchParams.get('kind') : url.pathname.endsWith('/authors') ? 'onlineAuthors' : 'onlineTags';
@@ -243,6 +247,12 @@ export function createReplay() {
                 return fallbackCatalog(env, url);
             if (method === 'GET' && url.pathname === '/api/facets' && url.searchParams.get('state') !== 'trash')
                 return fallbackCatalog(env, url, true);
+            if (method === 'GET' && ['/api/stream-plan', '/api/playback-plan'].includes(url.pathname) && url.searchParams.has('id')) {
+                const plan = new URL(url.pathname, url);
+                plan.searchParams.set('id', url.searchParams.get('id')!);
+                const snapshot = await lookup(env, plan, method);
+                if (snapshot) return snapshot;
+            }
             const recorded = await lookup(env, url, method);
             if (recorded) {
                 if (url.pathname === '/api/links') {

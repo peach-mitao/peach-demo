@@ -7,6 +7,11 @@
             location.assign('/');
         });
         const notice = (document.querySelector('[data-demo-notice]') as HTMLElement), toasts = (document.querySelector('#toasts') as HTMLElement);
+        if (document.documentElement.lang === 'en') {
+            document.title = document.documentElement.dataset.demoTitleEn || document.title;
+            notice?.querySelectorAll<HTMLElement>('[data-demo-label-en]').forEach(node => { node.textContent = node.dataset.demoLabelEn!; });
+            notice?.querySelectorAll<HTMLAnchorElement>('[data-demo-href-en]').forEach(link => { link.href = link.dataset.demoHrefEn!; });
+        }
         const menu = (document.querySelector('#searchMenu') as HTMLElement);
         let queued = false;
         const layout = () => {
@@ -54,7 +59,7 @@
     if (new URLSearchParams(location.search).get('favorites') === '1') {
         let attempts = 0;
         const open = () => {
-            const button = (document.querySelector('button[aria-label="我的收藏"]') as HTMLButtonElement);
+            const button = document.querySelector<HTMLButtonElement>('button[data-shortcuts-trigger]');
             if (button) {
                 button.click();
                 return;
@@ -243,6 +248,60 @@
         }
         const request = new Request(input instanceof Request ? input : url, init);
         const path = url.pathname;
+        if (path === '/api/configuration/retention' && ['GET', 'POST'].includes(request.method)) {
+            const retention = await read(path);
+            if (request.method === 'POST') {
+                const patch = await request.json();
+                const choices = { backup_keep: [2, 5, 10, 20], log_days: [30, 90, 183, 365] };
+                const entries = Object.entries(patch ?? {});
+                if (!entries.length || entries.some(([key, value]) => !Object.hasOwn(choices, key) || !choices[key as keyof typeof choices].includes(value as number)))
+                    return result({ message: 'Unsupported retention period' }, 400);
+                Object.assign(retention, patch);
+            }
+            return result(retention);
+        }
+        if (path === '/api/scraping/check-all' && ['GET', 'POST'].includes(request.method)) {
+            const check = await read(path);
+            if (request.method === 'POST') {
+                const en = document.documentElement.lang === 'en';
+                check.results = [{ source: 'demo', label: en ? 'Demo catalog' : '演示馆藏', results: [{
+                    target: 'page', label: en ? 'External sources' : '外部来源', ok: false, outcome: 'skipped',
+                    outcome_label: en ? 'Skipped' : '未检查',
+                    message: en ? 'The demo does not contact external sources.' : '演示站不连接外部来源。',
+                }] }];
+            }
+            return result(check);
+        }
+        if (request.method === 'POST' && ['/api/jav/discoveries/metadata', '/api/jav/releases/metadata'].includes(path))
+            return result(await read('/api/jav/discoveries/metadata'));
+        if (path === '/api/release-notice' && request.method === 'POST') {
+            const notice = await read(path);
+            return result({ ok: true, seen: notice.current });
+        }
+        if (path === '/api/settings' && ['GET', 'POST'].includes(request.method)) {
+            const settings = await read(path);
+            // 应用以自己的浏览器设置镜像完成换语言与重载，演示只在页面内回放写请求。
+            let language = 'auto', nameLanguage = settings.performerNameLanguage;
+            try {
+                const stored = JSON.parse(localStorage.getItem('peach.settings.v1') || '{}');
+                const choice = stored?.interfaceLanguage;
+                if (['auto', 'zh-CN', 'en'].includes(choice)) language = choice;
+                if (['zh-CN', 'ja', 'en', 'ja-local', 'local-ja'].includes(stored?.performerNameLanguage)) nameLanguage = stored.performerNameLanguage;
+            } catch { /* 损坏的镜像跟随浏览器语言 */ }
+            if (request.method === 'POST') {
+                const patch = await request.json();
+                if (!patch || typeof patch !== 'object' || Array.isArray(patch))
+                    return result({ message: 'Invalid settings' }, 400);
+                if (Object.hasOwn(patch, 'interfaceLanguage') && !['auto', 'zh-CN', 'en'].includes(patch.interfaceLanguage))
+                    return result({ message: 'Unsupported interface language' }, 400);
+                for (const key of Object.keys(settings)) {
+                    if (key !== 'interfaceLanguage' && Object.hasOwn(patch, key)) settings[key] = patch[key];
+                }
+                language = patch.interfaceLanguage ?? language;
+                nameLanguage = patch.performerNameLanguage ?? nameLanguage;
+            }
+            return result({ ...settings, interfaceLanguage: language, performerNameLanguage: nameLanguage });
+        }
         if (path === '/api/tag-management' || path === '/api/tag-management/preview') {
             const body = request.method === 'GET' ? {} : await request.clone().json();
             const scope = body.scope || url.searchParams.get('scope') || 'local', key = '/api/tag-management' + (scope === 'online' ? '?scope=online' : '');

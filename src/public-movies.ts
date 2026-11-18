@@ -4,7 +4,7 @@ import { withBackend } from './backend-defaults.ts';
 // 与片目无关的接口以应用的实际默认值打底（null 为全部顶层字段），演示数据覆盖在上面。
 const BACKEND_BASE: Record<string, readonly string[] | null> = {
   '/api/settings': null, '/api/media-processing': null, '/api/review': null, '/api/duplicates': null, '/api/quality-goals': null, '/api/ads': null,
-  '/api/sources': ['offline_roots'], '/api/diagnostics': null,
+  '/api/sources': ['offline_roots'], '/api/diagnostics': null, '/api/entity/shapes': ['ok', 'home', 'name_glyphs'],
 };
 export const DEMO_DATA_NOTICE = '影片资料与图片来源见页脚；编号、文件参数、评分、观看、关注和任务状态均为演示数据。未取得人物照片时显示姓名字母。';
 export interface PublicImage {
@@ -223,11 +223,11 @@ export function publicMovies(films: readonly PublicMovie[] = FILMS, people: read
     seen: 0, has_image: row.has_image, image_version: row.image_version, avatar_focus: null, demo: true })), unread: indexes.performers.items.length, demo_notice: DEMO_DATA_NOTICE });
   const source = { id: 0, provider: 'demo', provider_label: '公开电影片目', ref: 'public-movies', label: '电影资料（演示）', author_name: '电影资料',
     author_key: 'demo:catalog', url: films[0]!.credit, semantics: 'work', enabled: true,
-    entity_id: null as number | null, entity_name: '电影资料', avatar_url: null as string | null,
+    entity_id: null as number | null, entity_name: '电影资料', avatar_url: null as string | null, cached_avatar_url: '',
     can_backfill: true, backfill_page: 0, created_at: now, last_checked_at: now, last_status: 'ok', last_error: null, history_exhausted: true };
   const sources: Row[] = authors.map((author, index) => ({ ...source, id: index + 1, ref: `creator-${author.entity_id}`,
     label: `${author.k} · 电影资料`, author_name: author.k, author_key: author.key, entity_id: author.entity_id, entity_name: author.k,
-    avatar_url: author.avatar || null, official_avatar_url: author.avatar || null,
+    avatar_url: author.avatar || null, official_avatar_url: author.avatar || null, cached_avatar_url: author.avatar || '',
     url: entities.find(row => row.id === author.entity_id)!.metadata.source_url }));
   if (items.some(row => !row.creator_entity)) sources.push({ ...source, official_avatar_url: null });
   // 电影本身记成视频帖：卡片带时长，进「视频」；演示站不放片，详情只显示海报。另取一批片子的海报记成图片帖，
@@ -299,6 +299,32 @@ export function publicMovies(films: readonly PublicMovie[] = FILMS, people: read
     counts: { searching: 0, unreleased: 0, given_up: 0, acquired: 1 }, scraping: false, searching: false, demo_notice: DEMO_DATA_NOTICE };
   const recorded = { '/api/tasks': tasks, '/api/downloads': downloads, '/api/wants': wants, '/api/orphan-records': { total: 0, items: [] } };
   for (const [route, value] of Object.entries(recorded)) put(route, value);
+  const nameVariants = entities.flatMap(row => {
+    const person = people.find(item => item.name === row.canonical_name);
+    return person?.original_name ? [{
+      id: row.id, kind: row.kind, canonical_name: row.canonical_name, zh_cn: row.canonical_name, ja: null, en: person.original_name,
+    }] : [];
+  });
+  put('/api/entity/shapes', { entities: [], name_variants: nameVariants });
+  put('/api/result-updates', { ok: true, result_versions: {}, ingest_notices: { epoch: 'demo', items: [] }, busy: false, running_tasks: [] });
+  put('/api/jav/discoveries/metadata', { metadata_job: null });
+  put('/api/review/auto-landings', { items: [] });
+  put('/api/scraping/check-all', { status: 'idle' });
+  put('/api/configuration/access/sessions', { revision: 'demo', sessions: [], manageable: false });
+  put('/api/configuration/storage/external-cache', { configured: false });
+  put('/api/configuration/ledger-backups', {
+    backups: [], backup: { status: 'idle' }, restore: { status: 'idle' }, writer: false, writer_reason: '', last_restore: null,
+  });
+  put('/api/configuration/retention', { backup_keep: 5, log_days: 183 });
+  const seedSharingSchema = 1;
+  const seedSharingPreview = { schema: seedSharingSchema, claims: [], omitted: 0 };
+  put('/api/configuration/seed-sharing', {
+    enabled: false, available: false, schema: seedSharingSchema,
+    name_candidates: { pending: 0, adopted: 0, withdrawn: 0 }, seed_revision: '', last_attempt: {},
+  });
+  put('/api/configuration/seed-sharing/preview', {
+    data: seedSharingPreview, bytes: JSON.stringify(seedSharingPreview).length, token: '', schema: seedSharingSchema,
+  });
   put('/api/downloads?limit=50', downloads);
   put('/api/library-processing', { status: 'complete', job_id: 'demo-scan', stage: '扫描文件', requested_stage: 'scan', speed_mode: 'standard',
     checked: items.length, total: items.length, metadata_only: false, started_at: null, completed_at: null, error: null,

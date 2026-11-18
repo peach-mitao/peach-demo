@@ -26,7 +26,12 @@ export async function buildReplay(site: string, images: ImageMap) {
     const fixtures = path.join(site, '_fixtures'), load = async (name:string) => JSON.parse(await readFile(path.join(fixtures, name), 'utf8'));
     const manifest = await load('manifest.json'), catalog = await load('catalog.json'), indexes = await load('indexes.json');
     const routes = new Set(['/healthz', '/api/network-status', '/api/background-issues', '/api/feeds/schedule', ...READS.map(name => '/api/' + name)]);
-    for (const name of ['custom-metadata', 'follow/resolve', 'follow/schedule', 'links/prune', 'review', 'scraping/cover', 'taste/refresh', 'thumbnail-jobs', 'resource-sync/apply'] as const)
+    for (const name of [
+        'custom-metadata', 'follow/resolve', 'follow/schedule', 'links/prune', 'review', 'scraping/cover', 'taste/refresh',
+        'thumbnail-jobs', 'resource-sync/apply', 'result-updates', 'release-notice', 'jav/discoveries/metadata',
+        'review/auto-landings', 'scraping/check-all', 'configuration/access/sessions', 'configuration/storage/external-cache',
+        'configuration/ledger-backups', 'configuration/retention', 'configuration/seed-sharing', 'configuration/seed-sharing/preview',
+    ] as const)
         routes.add('/api/' + name);
     const add = (name: string, query: object) => routes.add(name + '?' + new URLSearchParams(query as Record<string,string>));
     for (const item of catalog.items) {

@@ -2,6 +2,9 @@
 const DEMO_SETTINGS = `<script>try{const k='peach.settings.v1',s=JSON.parse(localStorage.getItem(k)||'{}');
 if(!('homeLayout' in s))s.homeLayout='big';if(!('detailAutoplay' in s))s.detailAutoplay=false;
 if(!('photoLayout' in s))s.photoLayout='masonry';if(!('followImagesOnly' in s))s.followImagesOnly=true;
+const u=new URL(location.href),l=u.searchParams.get('lang');
+if(l==='en'||l==='zh-CN'){s.interfaceLanguage=l;u.searchParams.delete('lang');history.replaceState(history.state,'',u)}
+if(!('performerNameLanguage' in s)){const choice=s.interfaceLanguage;if(choice==='en'||choice==='zh-CN')s.performerNameLanguage=choice;else{s.performerNameLanguage=navigator.languages.map(v=>v.split('-')[0]).find(v=>v==='zh'||v==='en')==='zh'?'zh-CN':'en'}}
 localStorage.setItem(k,JSON.stringify(s))}catch(_e){}</script>`;
 // 页脚链接共用一套下划线：应用外链样式只给新窗口链接加 3px 偏移，站内链接也写明同值，三条线才对齐。
 const NOTICE_LINK = 'display:inline;line-height:inherit;pointer-events:auto;color:inherit;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px';
@@ -15,6 +18,9 @@ const NOTICE = `<style>
 [data-demo-copy="compact"]{display:none}
 @media(max-width:560px){
  [data-demo-notice]{white-space:nowrap}
+ [lang="en"] [data-demo-notice]{white-space:normal}
+ [lang="en"] [data-follow-head]{flex-wrap:wrap}
+ [lang="en"] [data-follow-head-actions]{min-width:0;max-width:100%;flex-wrap:wrap}
  #searchMenu{max-height:min(70vh,var(--demo-search-space,100vh))!important}
 }
 /* 完整写法在 390 宽手机上放得下，只有更窄的屏幕换精简写法。 */
@@ -26,5 +32,5 @@ const NOTICE = `<style>
 padding:6px 10px;border-radius:12px;width:max-content;box-sizing:border-box;text-align:center;max-width:calc(100vw - 24px);font:12px/1.4 system-ui,sans-serif;
 background:var(--color-background-primary-default,#fff);color:var(--color-text-secondary,#555);
 border:1px solid var(--color-separator-border,#0002);box-shadow:0 2px 8px #0001">
-<span data-demo-copy="full">Peach 演示站 · </span><span data-demo-copy="compact">演示站 · </span><a href="https://peach.video/" target="_blank" rel="noopener" style="${NOTICE_LINK}">官网</a> · <a href="https://github.com/peach-mitao/peach" target="_blank" rel="noopener" style="${NOTICE_LINK}">GitHub</a> · <a href="/film-sources/" style="${NOTICE_LINK}">素材来源</a> · <a href="https://peach.video/copyright/" target="_blank" rel="noopener" style="${NOTICE_LINK}">DMCA</a> · <a href="https://peach.video/privacy/analytics" target="_blank" rel="noopener" style="${NOTICE_LINK}"><span data-demo-copy="full">统计偏好</span><span data-demo-copy="compact">统计</span></a></div>`;
+<span data-demo-copy="full" data-demo-label-en="Peach demo · ">Peach 演示站 · </span><span data-demo-copy="compact" data-demo-label-en="Demo · ">演示站 · </span><a href="https://peach.video/" data-demo-href-en="https://peach.video/en/" data-demo-label-en="Website" target="_blank" rel="noopener" style="${NOTICE_LINK}">官网</a> · <a href="https://github.com/peach-mitao/peach" target="_blank" rel="noopener" style="${NOTICE_LINK}">GitHub</a> · <a href="/film-sources/" data-demo-href-en="/film-sources/en/" data-demo-label-en="Sources" style="${NOTICE_LINK}">素材来源</a> · <a href="https://peach.video/copyright/" data-demo-href-en="https://peach.video/en/copyright/" target="_blank" rel="noopener" style="${NOTICE_LINK}">DMCA</a> · <a href="https://peach.video/privacy/analytics" data-demo-href-en="https://peach.video/privacy/analytics?lang=en" target="_blank" rel="noopener" style="${NOTICE_LINK}"><span data-demo-copy="full" data-demo-label-en="Analytics preferences">统计偏好</span><span data-demo-copy="compact" data-demo-label-en="Privacy">统计</span></a></div>`;
 export { DEMO_SETTINGS, NOTICE };
