@@ -13,7 +13,7 @@ def main():
     args = parser.parse_args()
     source = args.source.resolve()
     sys.path.insert(0, str(source / "src"))
-    from peach import onboarding
+    from peach import __version__, onboarding, release_notice
     from peach.routes_auth import login_html
     from peach.routes_jav_browser import userscript_bridge
     from peach.routes_pages import setup_shell, _question_view, _CLOUD_HELP, _CLOUD_HELP_URL, _CLOUD_HELP_LABEL
@@ -49,7 +49,18 @@ def main():
     constants = {"storage_categories": [{"key": item.key, "label": item.label, "description": item.description,
                                          "note": item.note, "cleanable": item.cleanable} for item in CATEGORIES],
                  "task_labels": {key: task_label(key) for key in TASK_KEYS}}
-    pages = {"commit": commit, "login": login_html("/"), "setup": setup_shell(), "questions": payload,
+    version = __version__
+    notices = release_notice.NOTICES.get(version)
+    release = {
+        "current": version, "kind": "seen", "show": False, "previous": version, "estimated": False,
+        "release_url": release_notice.RELEASES_URL + version, "missed": [],
+    }
+    if notices:
+        release["notice"] = {"level": notices.get("level", "notice"), "headline": release_notice._text(version, "headline"),
+                             "features": release_notice._items(version, notices.get("features"), release_notice.platform(), {}),
+                             "automatic": [], "attention": []}
+    pages = {"commit": commit, "login": login_html("/"), "login_en": login_html("/", language="en"),
+             "setup": setup_shell(), "setup_en": setup_shell(language="en"), "questions": payload, "release_notice": release,
              "userscript_bridge": {"html": bytes(bridge.body).decode('utf-8'), "headers": dict(bridge.headers)},
              "constants": constants}
     target.mkdir(parents=True, exist_ok=True)

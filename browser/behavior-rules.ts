@@ -2,9 +2,15 @@ import type {Rule} from './assets/behavior-contract.ts';
 const rule=(id:string,label:string,selector:string,region=false):Rule=>({id,label,selector,region});
 const pages=['unseen','watch-later','flagged','jav','performers','creators','studios','agencies','tags','follow','playlists','wall','immerse','stats','taste','review','data-cleanup','duplicates','quality-goals','sources','tasks','subscriptions','junk-files','trash','settings'];
 export const demoRules:Rule[]=[
- rule('source.credits','素材来源','a[href="/film-sources/"]'),
+ rule('source.credits','素材来源','a[href^="/film-sources/"]'),
  rule('sort.settings','自定义排序项','[data-sort-settings]'),
  rule('appearance.order','调整分区顺序','[data-order-step]'),
+ rule('table.column-filter','筛选表格列','[data-table-column-filter]'),
+ ...[
+  ['seed-sharing.refresh','刷新状态','Refresh status'],
+  ['seed-sharing.preview','预览本机资料','Preview local metadata'],
+  ['seed-sharing.download','下载完整预览','Download full preview'],
+ ].flatMap(([id,zh,en])=>[zh,en].map(text=>({...rule(id!,zh!,'#seedSharing button'),text}))),
  rule('wall.thumbnails','显示视频缩略图','[data-wall-image]'),
  rule('asset.edit','编辑资料','[data-item-edit-open]'),rule('asset.recollect','重新采集资料','[data-recollect]'),
  rule('tag.edit','编辑标签','[data-follow-tags-edit]'),

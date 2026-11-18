@@ -7,6 +7,11 @@
             location.assign('/');
         });
         const notice = (document.querySelector('[data-demo-notice]') as HTMLElement), toasts = (document.querySelector('#toasts') as HTMLElement);
+        if (document.documentElement.lang === 'en') {
+            document.title = document.documentElement.dataset.demoTitleEn || document.title;
+            notice?.querySelectorAll<HTMLElement>('[data-demo-label-en]').forEach(node => { node.textContent = node.dataset.demoLabelEn!; });
+            notice?.querySelectorAll<HTMLAnchorElement>('[data-demo-href-en]').forEach(link => { link.href = link.dataset.demoHrefEn!; });
+        }
         const menu = (document.querySelector('#searchMenu') as HTMLElement);
         let queued = false;
         const layout = () => {
@@ -54,7 +59,7 @@
     if (new URLSearchParams(location.search).get('favorites') === '1') {
         let attempts = 0;
         const open = () => {
-            const button = (document.querySelector('button[aria-label="我的收藏"]') as HTMLButtonElement);
+            const button = document.querySelector<HTMLButtonElement>('button[data-shortcuts-trigger]');
             if (button) {
                 button.click();
                 return;
@@ -243,6 +248,27 @@
         }
         const request = new Request(input instanceof Request ? input : url, init);
         const path = url.pathname;
+        if (path === '/api/settings' && ['GET', 'POST'].includes(request.method)) {
+            const settings = await read(path);
+            // 应用以自己的浏览器设置镜像完成换语言与重载，演示只在页面内回放写请求。
+            let language = 'auto';
+            try {
+                const choice = JSON.parse(localStorage.getItem('peach.settings.v1') || '{}')?.interfaceLanguage;
+                if (['auto', 'zh-CN', 'en'].includes(choice)) language = choice;
+            } catch { /* 损坏的镜像跟随浏览器语言 */ }
+            if (request.method === 'POST') {
+                const patch = await request.json();
+                if (!patch || typeof patch !== 'object' || Array.isArray(patch))
+                    return result({ message: 'Invalid settings' }, 400);
+                if (Object.hasOwn(patch, 'interfaceLanguage') && !['auto', 'zh-CN', 'en'].includes(patch.interfaceLanguage))
+                    return result({ message: 'Unsupported interface language' }, 400);
+                for (const key of Object.keys(settings)) {
+                    if (key !== 'interfaceLanguage' && Object.hasOwn(patch, key)) settings[key] = patch[key];
+                }
+                language = patch.interfaceLanguage ?? language;
+            }
+            return result({ ...settings, interfaceLanguage: language });
+        }
         if (path === '/api/tag-management' || path === '/api/tag-management/preview') {
             const body = request.method === 'GET' ? {} : await request.clone().json();
             const scope = body.scope || url.searchParams.get('scope') || 'local', key = '/api/tag-management' + (scope === 'online' ? '?scope=online' : '');

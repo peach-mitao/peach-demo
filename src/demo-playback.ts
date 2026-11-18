@@ -6,7 +6,8 @@ export function installDemoPlayback(scope: Window & typeof globalThis) {
     const inform = () => {
         const doc = scope.document;
         if (!doc.body) return;
-        notice ??= Object.assign(doc.createElement('div'), { textContent: DEMO_PLAYBACK_MESSAGE });
+        notice ??= doc.createElement('div');
+        notice.textContent = doc.documentElement.lang === 'en' ? 'Demo only' : DEMO_PLAYBACK_MESSAGE;
         notice.setAttribute('role', 'status');
         notice.setAttribute('aria-live', 'polite');
         notice.setAttribute('data-demo-playback-notice', '');

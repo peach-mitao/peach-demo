@@ -299,6 +299,25 @@ export function publicMovies(films: readonly PublicMovie[] = FILMS, people: read
     counts: { searching: 0, unreleased: 0, given_up: 0, acquired: 1 }, scraping: false, searching: false, demo_notice: DEMO_DATA_NOTICE };
   const recorded = { '/api/tasks': tasks, '/api/downloads': downloads, '/api/wants': wants, '/api/orphan-records': { total: 0, items: [] } };
   for (const [route, value] of Object.entries(recorded)) put(route, value);
+  put('/api/result-updates', { ok: true, result_versions: {}, ingest_notices: { epoch: 'demo', items: [] }, busy: false, running_tasks: [] });
+  put('/api/jav/discoveries/metadata', { metadata_job: null });
+  put('/api/review/auto-landings', { items: [] });
+  put('/api/scraping/check-all', { status: 'idle' });
+  put('/api/configuration/access/sessions', { revision: 'demo', sessions: [], manageable: false });
+  put('/api/configuration/storage/external-cache', { configured: false });
+  put('/api/configuration/ledger-backups', {
+    backups: [], backup: { status: 'idle' }, restore: { status: 'idle' }, writer: false, writer_reason: '', last_restore: null,
+  });
+  put('/api/configuration/retention', { backup_keep: 5, log_days: 183 });
+  const seedSharingSchema = 1;
+  const seedSharingPreview = { schema: seedSharingSchema, claims: [], omitted: 0 };
+  put('/api/configuration/seed-sharing', {
+    enabled: false, available: false, schema: seedSharingSchema,
+    name_candidates: { pending: 0, adopted: 0, withdrawn: 0 }, seed_revision: '', last_attempt: {},
+  });
+  put('/api/configuration/seed-sharing/preview', {
+    data: seedSharingPreview, bytes: JSON.stringify(seedSharingPreview).length, token: '', schema: seedSharingSchema,
+  });
   put('/api/downloads?limit=50', downloads);
   put('/api/library-processing', { status: 'complete', job_id: 'demo-scan', stage: '扫描文件', requested_stage: 'scan', speed_mode: 'standard',
     checked: items.length, total: items.length, metadata_only: false, started_at: null, completed_at: null, error: null,

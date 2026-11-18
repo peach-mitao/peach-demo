@@ -17,3 +17,11 @@ test('输入提示里的示例番号换成演示编号', () => {
     assert.equal(movieText('输入番号，例如 SSIS-950'), '输入编号，例如 FILM-001');
     assert.equal(movieText('例如 ABF-087、SYKH-145…'), '例如 FILM-001、FILM-002…');
 });
+test('英文和中文命名空间各用自己的电影术语', () => {
+    const source = 'const en={nav:"JAV",subs:"JAV subscriptions"},zh={nav:"JAV"};globalThis.result={"zh-CN":{navigation:zh},en:{navigation:en}};';
+    const context: Record<string, any> = {};
+    vm.runInNewContext(movieScript(source), context);
+    assert.equal(context.result['zh-CN'].navigation.nav, '影片');
+    assert.equal(context.result.en.navigation.nav, 'Films');
+    assert.equal(context.result.en.navigation.subs, 'Film subscriptions');
+});

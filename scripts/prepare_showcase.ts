@@ -28,6 +28,7 @@ export async function prepareShowcase(site = fileURLToPath(new URL('../site/', i
         manifest.fixtures[key] = 'json';
         await writeFile(path.join(directory, `${key}.json`), JSON.stringify(data));
     };
+    if (entry.release_notice) await write('/api/release-notice', entry.release_notice);
     const writeMissing = async (route: string, data: { kind?: string; name?: any; entity_id?: any; sets?: never[]; total?: number; items: never[]|never[]; seed?: number; sample_total?: number; has_more?: boolean; ok?: boolean; more?: boolean; }) => {
         const own = await hash(route), key = manifest.alias?.[own] ?? own;
         if (!manifest.fixtures[key])

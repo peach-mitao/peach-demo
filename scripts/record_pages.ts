@@ -4,7 +4,12 @@ import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
 import { demoScenarios } from './demo_pages.ts';
 import {contentReady} from './browser_state.ts';
-const base = process.env.BASE || 'http://127.0.0.1:8791';
+const base = new URL(process.env.BASE || 'http://127.0.0.1:8791').origin;
+const language = process.env.PEACH_DEMO_TEST_LANGUAGE || 'zh-CN';
+if (!['zh-CN', 'en'].includes(language)) throw Error('验收语言须为 zh-CN 或 en');
+const text = language === 'en'
+    ? { status: 'Tag status', hidden: /^Hidden(?:\s|$)/, active: 'In use', edit: /^Edit tag /, cancel: 'Cancel' }
+    : { status: '标签状态', hidden: /^已隐藏(?:\s|$)/, active: '使用中', edit: /^编辑标签 /, cancel: '取消' };
 const verify = process.argv.includes('--verify');
 const asked = process.argv.indexOf('--route');
 const scenarios = asked < 0 ? await demoScenarios() : process.argv.slice(asked + 1).filter(value => !value.startsWith('--')).map(route => ({ route, mode: process.argv.includes('--manage') ? 'tag-management' : 'browse' }));
@@ -15,7 +20,7 @@ await mkdir(out, { recursive: true });
 const report = [];
 try {
     for (const width of [1440, 390] as const) {
-        const context = await browser.newContext({ viewport: { width, height: width === 390 ? 844 : 960 }, reducedMotion: 'reduce', colorScheme: 'light' });
+        const context = await browser.newContext({ viewport: { width, height: width === 390 ? 844 : 960 }, reducedMotion: 'reduce', colorScheme: 'light', locale: language });
         await context.addInitScript(() => {
             const settings: {detailAutoplay:boolean;uiSounds:boolean;theme:string;followLayout?:string} = { detailAutoplay: false, uiSounds: false, theme: 'light' };
             if (new URLSearchParams(location.search).get('view') === 'table')
@@ -77,18 +82,18 @@ try {
                 }
                 if (mode === 'tag-management'&&!loadError) {
                     const manager = page.locator('[data-tag-manager]');
-                    for (const name of ['已隐藏', '使用中'] as const) {
-                        await page.getByRole('group', { name: '标签状态' }).getByRole('button', { name, exact: true }).click();
+                    for (const name of [text.hidden, text.active]) {
+                        await page.getByRole('group', { name: text.status }).getByRole('button', { name, exact: true }).click();
                         await page.waitForFunction(contentReady, null, { timeout: 12000 });
-                        await page.screenshot({ path: fileURLToPath(new URL(`${prefix}-${name === '已隐藏' ? 'hidden' : 'active'}.png`, out)), fullPage: false });
-                        states.push(name);
+                        await page.screenshot({ path: fileURLToPath(new URL(`${prefix}-${name === text.hidden ? 'hidden' : 'active'}.png`, out)), fullPage: false });
+                        states.push(String(name));
                     }
-                    const edit = manager.getByRole('button', { name: /^编辑标签 / }).first();
+                    const edit = manager.getByRole('button', { name: text.edit }).first();
                     if (await edit.count()) {
                         await edit.click();
                         await page.getByRole('dialog').waitFor();
                         await page.screenshot({ path: fileURLToPath(new URL(`${prefix}-rename.png`, out)), fullPage: false });
-                        await page.getByRole('dialog').getByRole('button', { name: '取消', exact: true }).click();
+                        await page.getByRole('dialog').getByRole('button', { name: text.cancel, exact: true }).click();
                         states.push('重命名弹层');
                     }
                 }
@@ -124,7 +129,7 @@ try {
 }
 finally {
     await browser.close();
-    await writeFile(new URL('report.json', out), JSON.stringify({ base, routes, report }, null, 2));
+    await writeFile(new URL('report.json', out), JSON.stringify({ base, language, routes, report }, null, 2));
 }
 if (verify) {
     const failures = report.filter(row => row.errors.length || row.failed.length || row.overflow || row.loading || row.brokenImages.length || row.loadError

@@ -29,10 +29,11 @@ export async function verifyPublicMovies(site: string, dataset: PublicCatalog = 
     const info = JSON.parse(await readFile(path.join(site, '_demo/frontend-source.json'), 'utf8'));
     const release = JSON.parse(await readFile(path.join(site, 'integrations/jav-userscript-release.json'), 'utf8'));
     const sites = JSON.parse(await readFile(path.join(site, 'integrations/jav-sites.json'), 'utf8')).sites;
-    const constants = JSON.parse(await readFile(path.join(fixtures, 'entry-pages.json'), 'utf8')).constants;
+    const {constants, release_notice} = JSON.parse(await readFile(path.join(fixtures, 'entry-pages.json'), 'utf8'));
     const config = configuration(certificate.configuration, info.version, constants);
     derived.set('/api/tasks', taskRuns(expected.recorded['/api/tasks'], constants));
     derived.set('/api/client-updates', clientUpdates(info.version));
+    if (release_notice) derived.set('/api/release-notice', release_notice);
     derived.set('/api/configuration', config);
     derived.set('/healthz', { ...certificate.health, version: info.version, build_commit: info.commit });
     derived.set('/api/configuration/downloads', downloads());
