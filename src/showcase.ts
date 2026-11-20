@@ -1,7 +1,7 @@
 import { withBackend } from './backend-defaults.ts';
 // 演示专用连接配置，只使用公开占位地址。根目录与媒体库身份按应用的多媒体库契约给出稳定演示值。
 const source = (location: string, root: string, library: string, cost: string, library_id: string) => ({ location, root, path: root, root_id: `demo-root-${location}`,
-    library_id, library, library_icon: location, library_color: '', library_policy: 'auto', library_stages: '', cost, transport: 'filesystem', online: true });
+    library_id, library, library_icon: '', library_color: '', library_policy: 'auto', library_stages: '', cost, transport: 'filesystem', online: true });
 export const sources = [
     source('local', 'R:\\Media', '演示馆藏', 'free', 'demo-movies'),
     source('115', 'A:\\115', '115 收藏', 'metered', 'demo-115'),

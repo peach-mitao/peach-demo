@@ -25,3 +25,22 @@ test('英文和中文命名空间各用自己的电影术语', () => {
     assert.equal(context.result.en.navigation.nav, 'Films');
     assert.equal(context.result.en.navigation.subs, 'Film subscriptions');
 });
+
+test('存储来源注册表按页面语言显示名称并保留来源 ID', () => {
+    const source = movieScript('globalThis.result=[{id:"local",name:"本地磁盘",label:"本地磁盘",default_cost:"free"},{label:"本地磁盘"}];');
+    for (const [lang, label] of [['en', 'Local disk'], ['zh-CN', '本地磁盘']]) {
+        const context = { document: { documentElement: { lang } }, result: [] as { id?: string; name?: string; label: string }[] };
+        vm.runInNewContext(source, context);
+        assert.equal(context.result[0]?.id, 'local');
+        assert.equal(context.result[0]?.name, label);
+        assert.equal(context.result[0]?.label, label);
+        assert.equal(context.result[1]?.label, '本地磁盘');
+    }
+});
+
+test('缺少系列图标时复用已有的列表字形', () => {
+    const sprite = '<svg><symbol id="ri-list-unordered" viewBox="0 0 24 24"><path d="M4 4h16"/></symbol></svg>';
+    const patched = movieHTML(sprite);
+    assert.match(patched, /<symbol id="i-list" [^>]*><use href="#ri-list-unordered"/);
+    assert.equal(movieHTML(patched), patched);
+});
