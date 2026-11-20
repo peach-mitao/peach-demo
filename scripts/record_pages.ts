@@ -10,6 +10,14 @@ if (!['zh-CN', 'en'].includes(language)) throw Error('验收语言须为 zh-CN �
 const text = language === 'en'
     ? { status: 'Tag status', hidden: /^Hidden(?:\s|$)/, active: 'In use', edit: /^Edit tag /, cancel: 'Cancel' }
     : { status: '标签状态', hidden: /^已隐藏(?:\s|$)/, active: '使用中', edit: /^编辑标签 /, cancel: '取消' };
+function missingSpriteIcons(): string[] {
+    return Array.from(document.querySelectorAll<SVGUseElement>('svg use[href^="#"]')).flatMap(use => {
+        const href = use.getAttribute('href')!;
+        const icon = use.ownerSVGElement;
+        return icon?.checkVisibility({ visibilityProperty: true }) && !document.getElementById(href.slice(1)) ? [href] : [];
+    });
+}
+
 const verify = process.argv.includes('--verify');
 const asked = process.argv.indexOf('--route');
 const scenarios = asked < 0 ? await demoScenarios() : process.argv.slice(asked + 1).filter(value => !value.startsWith('--')).map(route => ({ route, mode: process.argv.includes('--manage') ? 'tag-management' : 'browse' }));
@@ -61,6 +69,7 @@ try {
                 const prefix = `${width}-${String(index).padStart(2, '0')}`;
                 await page.screenshot({ path: fileURLToPath(new URL(prefix + '.png', out)), fullPage: false });
                 const states = [];
+                const brokenIcons = new Set(await page.evaluate(missingSpriteIcons));
                 const tabs = page.getByRole('tab');
                 for (let at = 0; at < await tabs.count() && at < 16; at++) {
                     const tab = tabs.nth(at);
@@ -74,6 +83,7 @@ try {
                             await page.locator('[data-tag-mode]').click();
                         await page.waitForFunction(contentReady, null, { timeout: 12000 });
                         await page.screenshot({ path: fileURLToPath(new URL(`${prefix}-tab-${at}.png`, out)), fullPage: false });
+                        for (const icon of await page.evaluate(missingSpriteIcons)) brokenIcons.add(icon);
                     }
                     catch (error) {
                         errors.push(`${name}: ${(error instanceof Error ? error.message : String(error)).split('\n')[0]}`);
@@ -118,8 +128,9 @@ try {
                         brokenImages: Array.from(document.images).filter(img => img.checkVisibility() && img.complete && !img.naturalWidth).map(img => img.currentSrc) };
                 });
                 state.loading = !(await page.evaluate(contentReady));
-                report.push({ width, route, mode, states, loadError, errors: [...errors], failed: [...failed], requests: [...requests], ...state });
-                console.log(`${width} ${route} ${mode}: ${failed.length} 失败请求，${errors.length} 运行错误${loadError ? '，加载未就绪' : ''}`);
+                for (const icon of await page.evaluate(missingSpriteIcons)) brokenIcons.add(icon);
+                report.push({ width, route, mode, states, loadError, errors: [...errors], failed: [...failed], requests: [...requests], brokenIcons: [...brokenIcons], ...state });
+                console.log(`${width} ${route} ${mode}: ${failed.length} 失败请求，${errors.length} 运行错误${loadError ? '，加载未就绪' : ''}${brokenIcons.size ? '，缺失图标 ' + [...brokenIcons].join('、') : ''}`);
             }
         }
         finally {
@@ -132,7 +143,7 @@ finally {
     await writeFile(new URL('report.json', out), JSON.stringify({ base, language, routes, report }, null, 2));
 }
 if (verify) {
-    const failures = report.filter(row => row.errors.length || row.failed.length || row.overflow || row.loading || row.brokenImages.length || row.loadError
+    const failures = report.filter(row => row.errors.length || row.failed.length || row.overflow || row.loading || row.brokenImages.length || row.brokenIcons.length || row.loadError
         || (row.indexHeader && (!row.indexHeader.aligned || row.indexHeader.searchWidth < 64)) || /演示回放未取得|演示数据读取失败/.test(row.text));
     if (failures.length)
         throw Error(`界面覆盖未通过：${failures.map(row => `${row.width} ${row.route}`).join('、')}`);

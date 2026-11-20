@@ -38,11 +38,29 @@ const englishMovieText = (text: string) => text === 'JAV' ? 'Films' : text.repla
     .replace(/\bactresses\b/g, 'performers').replace(/\bactress\b/g, 'performer')
     .replaceAll('Orgasm recorded', 'Highlight marked').replaceAll('Record an orgasm', 'Mark a highlight')
     .replaceAll('SSIS-950', 'FILM-001').replaceAll('ABF-087', 'FILM-001').replaceAll('SYKH-145', 'FILM-002');
+const englishStorageNames = new Map([
+    ['本地磁盘', 'Local disk'],
+    ['光鸭云盘', 'Guangya Cloud'],
+    ['其他已挂载网盘', 'Other mounted cloud storage'],
+]);
+
 export function movieScript(source: string): string {
     const tree = parse(source, { ecmaVersion: 'latest', sourceType: 'module' });
     const english = englishResources(tree);
     const ranges: [number, number, string][] = [];
     walk(tree, node => {
+        // 存储来源注册表独立于应用的语言资源，按页面语言投影显示名。
+        if (node.type === 'ObjectExpression' && node.properties.some(property =>
+            property.type === 'Property' && propertyName(property.key) === 'default_cost')) {
+            for (const property of node.properties) {
+                if (property.type !== 'Property' || !['name', 'label'].includes(propertyName(property.key) || '')) continue;
+                const value = property.value;
+                if (value.type !== 'Literal' || typeof value.value !== 'string') continue;
+                const label = englishStorageNames.get(value.value);
+                if (label) ranges.push([value.start, value.end,
+                    `(document.documentElement.lang === 'en' ? ${JSON.stringify(label)} : ${JSON.stringify(value.value)})`]);
+            }
+        }
         if (node.type !== 'Literal' && node.type !== 'TemplateElement') return;
         const project = english.some(([from, to]) => node.start >= from && node.end <= to) ? englishMovieText : movieText;
         if (node.type === 'Literal' && typeof node.value === 'string' && project(node.value) !== node.value)
@@ -54,6 +72,11 @@ export function movieScript(source: string): string {
     return source;
 }
 export function movieHTML(source: string): string {
+    // Peach 0.59 的「系列」标签引用 i-list，复用同一份雪碧图里的无序列表字形。
+    if (!source.includes('id="i-list"')) {
+        source = source.replace(/<symbol id="ri-list-unordered"[^>]*>[\s\S]*?<\/symbol>/, (symbol) => symbol
+            + '<symbol id="i-list" viewBox="0 0 24 24"><use href="#ri-list-unordered" fill="currentColor" stroke="none" /></symbol>');
+    }
     return source.replace(/<script\b[^>]*>[\s\S]*?<\/script>|<style\b[^>]*>[\s\S]*?<\/style>|<!--[^]*?-->|>[^<]+<|\b(?:alt|title|aria-label|placeholder)="[^"]*"/gi,
         part => /^<(?:script|style|!--)/i.test(part) ? part : movieText(part));
 }

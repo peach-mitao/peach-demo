@@ -17,6 +17,8 @@ test('演示配置展示下载、代理和诊断能力并保留录制对象', ()
     assert.equal(data.facts[0].value, '1.2.3');
     assert.equal(data.remote_reporting.usage, false);
     assert.equal(data.library_sharing.enabled, false);
+    assert.deepEqual(data.media_sources.map((row: { location: string; library_icon: string }) => [row.location, row.library_icon]),
+        [['local', ''], ['115', ''], ['pikpak', '']]);
     assert.ok(data.push_discovery.prefixes.every((row: { root: any; }) => data.media_dirs.includes(row.root)));
     assert.equal('downloads' in seed, false);
     assert.deepEqual(seed.push_discovery.prefixes, []);
