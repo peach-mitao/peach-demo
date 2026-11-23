@@ -39,6 +39,7 @@ DEFAULT_ROUTES = (
 )
 #: 默认值里出现的本机路径换成演示站使用的占位路径。
 DEMO_MEDIA, DEMO_DATA = "R:\\Media", "C:\\Users\\peach\\peach-data"
+DEMO_FREE_BYTES, DEMO_TOTAL_BYTES = 412 * 1024**3, 931 * 1024**3
 #: 参照库取片目前几部：覆盖 Blender 开放电影、带演员与多厂牌的经典片。
 FILMS = 12
 #: 媒体目录拆成两个根，覆盖多媒体库下条目带的根目录与媒体库身份。
@@ -139,12 +140,27 @@ def shape(value, at: str = "", out: dict | None = None) -> dict:
 
 
 def scrub(value, roots: tuple[Path, Path], data: Path, route: str = ""):
-    """临时实例的路径换成演示占位路径；之后不允许再出现任何本机目录。第二个根先换，免得被第一个根的前缀吃掉。"""
+    """将本机磁盘标识、容量和路径换成演示值。第二个根先换，免得被第一个根的前缀吃掉。"""
     if route == "/api/diagnostics":
         # 外部工具取自本机 PATH，换成演示数据根下的工具目录。
         for name, tool in value["checks"]["ffmpeg"]["details"].items():
             if tool.get("path"):
                 tool["path"] = f"{DEMO_DATA}\\tools\\{name}.exe"
+    if route in ("/api/configuration", "/api/configuration/storage"):
+        storage = value["storage"] if route == "/api/configuration" else value
+        storage.update(free_bytes=DEMO_FREE_BYTES, total_bytes=DEMO_TOTAL_BYTES)
+        check = storage["budget"].get("last_check") or {}
+        for volume in check.get("volumes", []):
+            if volume["free_bytes"] is not None:
+                volume["free_bytes"] = DEMO_FREE_BYTES
+        # 指向相同父目录的配置项仍共享一个身份，保持存储探测的实际对应关系。
+        devices, directories = {}, {}
+        for entry in (check.get("layout") or {}).get("paths", {}).values():
+            device, directory = entry[2:]
+            entry[2:] = [
+                devices.setdefault(device, len(devices) + 1),
+                directories.setdefault((device, directory), len(directories) + 1),
+            ]
     text = json.dumps(value, ensure_ascii=False)
     for real, demo in ((roots[1], DEMO_MEDIA + "2"), (roots[0], DEMO_MEDIA), (data, DEMO_DATA),
                        (Path(tempfile.gettempdir()), DEMO_DATA + "\\temporary")):

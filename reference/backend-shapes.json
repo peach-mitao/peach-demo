@@ -1,7 +1,7 @@
 {
  "schema": 1,
- "app_commit": "1b3694ecb4d3aba8a1ac8a7cf75f0b17ec0fa3ea",
- "app_version": "0.59.0",
+ "app_commit": "9676e2f3e4056a1b9321f87696cbdd6c54279d03",
+ "app_version": "0.61.0",
  "films": 12,
  "approved": 65,
  "routes": {

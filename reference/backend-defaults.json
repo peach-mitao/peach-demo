@@ -1,7 +1,7 @@
 {
  "schema": 1,
- "app_commit": "1b3694ecb4d3aba8a1ac8a7cf75f0b17ec0fa3ea",
- "app_version": "0.59.0",
+ "app_commit": "9676e2f3e4056a1b9321f87696cbdd6c54279d03",
+ "app_version": "0.61.0",
  "routes": {
   "/api/sources": {
    "ok": true,
@@ -60,11 +60,11 @@
     "catalog": "327:0",
     "follow": "46:0",
     "discoveries": "0:0",
-    "review": "130:0:1795010234707536800",
-    "artwork": "1795010230338974200:None:None:None:None"
+    "review": "130:0:1795420522939625600",
+    "artwork": "1795420518560716600:None:None:None:None"
    },
    "ingest_notices": {
-    "epoch": "77ec7532",
+    "epoch": "ca6b2210",
     "items": []
    },
    "running": [],
@@ -1125,7 +1125,7 @@
    "editable": false,
    "notice": "这个部署由配置文件管理服务；在本机编辑下方的设置文件。",
    "notice_code": "labels.configuration.fileManagedNotice",
-   "revision": "a662b591f961cbe426872a2952fdcee46e719dbd68ba4bc3fa932aa0025573c0",
+   "revision": "8e4e9127744ce75de8c2374ef7a49326cbc3b0bf391847b80f558d8efabf4f61",
    "media_dirs": [
     "R:\\Media",
     "R:\\Media2"
@@ -1136,7 +1136,7 @@
    "port_editable": false,
    "facts": [
     {
-     "value": "0.59.0",
+     "value": "0.61.0",
      "term": "版本",
      "term_code": "labels.runtimeFacts.version",
      "term_params": {}
@@ -1224,14 +1224,14 @@
    },
    "startup": {
     "available": true,
-    "enabled": true,
+    "enabled": false,
     "silent": true,
     "message": "",
     "message_code": "",
     "message_params": {},
-    "desktop": true,
-    "desktop_message": "",
-    "desktop_message_code": "",
+    "desktop": false,
+    "desktop_message": "桌面快捷方式属于另一份 Peach 安装",
+    "desktop_message_code": "errors.desktopStartup.desktopShortcutForeign",
     "desktop_message_params": {}
    },
    "uninstall": {
@@ -1254,8 +1254,8 @@
    },
    "storage": {
     "data_root": "C:\\Users\\peach\\peach-data",
-    "free_bytes": 272753721344,
-    "total_bytes": 2031179788288,
+    "free_bytes": 442381631488,
+    "total_bytes": 999653638144,
     "system_drive": true,
     "budget": {
      "policy": {
@@ -1273,7 +1273,7 @@
       "external_cache_bytes": null,
       "measured_at": null,
       "errors": {},
-      "checked_at": 1795010226.7116275,
+      "checked_at": 1795420513.894602,
       "reasons": [],
       "reason_codes": [],
       "freed_bytes": 0,
@@ -1282,7 +1282,7 @@
       "volumes": [
        {
         "path": "C:\\",
-        "free_bytes": 273181630464,
+        "free_bytes": 442381631488,
         "reserve_bytes": 42949672960
        }
       ],
@@ -1292,62 +1292,62 @@
         "data": [
          "C:\\Users\\peach\\peach-data",
          "C:\\Users\\peach\\peach-data",
-         17168867184031664651,
-         2251799826673389
+         1,
+         1
         ],
         "database": [
          "C:\\Users\\peach\\peach-data\\database",
          "C:\\Users\\peach\\peach-data\\database",
-         17168867184031664651,
-         38843546799058670
+         1,
+         2
         ],
         "generated": [
          "C:\\Users\\peach\\peach-data\\generated",
          "C:\\Users\\peach\\peach-data\\generated",
-         17168867184031664651,
-         562949966417699
+         1,
+         3
         ],
         "sources": [
          "C:\\Users\\peach\\peach-data\\sources",
          "C:\\Users\\peach\\peach-data\\sources",
-         17168867184031664651,
-         562949966413203
+         1,
+         4
         ],
         "state": [
          "C:\\Users\\peach\\peach-data\\state",
          "C:\\Users\\peach\\peach-data\\state",
-         17168867184031664651,
-         844424943124010
+         1,
+         5
         ],
         "secrets": [
          "C:\\Users\\peach\\peach-data\\secrets",
          "C:\\Users\\peach\\peach-data",
-         17168867184031664651,
-         2251799826673389
+         1,
+         1
         ],
         "logs": [
          "C:\\Users\\peach\\peach-data\\logs",
          "C:\\Users\\peach\\peach-data",
-         17168867184031664651,
-         2251799826673389
+         1,
+         1
         ],
         "tools": [
          "C:\\Users\\peach\\peach-data\\tools",
          "C:\\Users\\peach\\peach-data",
-         17168867184031664651,
-         2251799826673389
+         1,
+         1
         ],
         "review": [
          "C:\\Users\\peach\\peach-data\\review",
          "C:\\Users\\peach\\peach-data",
-         17168867184031664651,
-         2251799826673389
+         1,
+         1
         ],
         "temporary": [
          "C:\\Users\\peach\\peach-data\\temporary",
          "C:\\Users\\peach\\peach-data\\temporary",
-         17168867184031664651,
-         4503599631252381
+         1,
+         6
         ]
        }
       }
@@ -1439,7 +1439,7 @@
     ]
    },
    "updates": {
-    "current_version": "0.59.0",
+    "current_version": "0.61.0",
     "latest_version": null,
     "channel": "测试版",
     "channel_code": "test",
@@ -1466,8 +1466,8 @@
      "location": "local",
      "root": "R:\\Media",
      "path": "R:\\Media",
-     "root_id": "ec9f75c6-0d57-5f9c-b2f9-5ab4bb77ef65",
-     "library_id": "4157ce46-9a6c-59f3-b724-8b55c111cad7",
+     "root_id": "bc9aba4b-4426-540a-af89-6b7027892a86",
+     "library_id": "84412993-821d-5e3c-9b33-9870f35cd433",
      "library": "media",
      "library_icon": "",
      "library_color": "",
@@ -1481,8 +1481,8 @@
      "location": "local",
      "root": "R:\\Media2",
      "path": "R:\\Media2",
-     "root_id": "7429d5ed-9ac7-5134-aeb4-4cfbd3454b9d",
-     "library_id": "d67b5c2c-cb97-5f3a-b41e-3a1ec7f96bee",
+     "root_id": "a2848d82-bbbc-5f63-91b1-8dcfe36de838",
+     "library_id": "34f5dd1d-d865-59ab-abd1-8a91b99f7b0d",
      "library": "media2",
      "library_icon": "",
      "library_color": "",
@@ -1601,8 +1601,8 @@
   },
   "/api/configuration/storage": {
    "data_root": "C:\\Users\\peach\\peach-data",
-   "free_bytes": 272753430528,
-   "total_bytes": 2031179788288,
+   "free_bytes": 442381631488,
+   "total_bytes": 999653638144,
    "system_drive": true,
    "budget": {
     "policy": {
@@ -1620,7 +1620,7 @@
      "external_cache_bytes": null,
      "measured_at": null,
      "errors": {},
-     "checked_at": 1795010226.7116275,
+     "checked_at": 1795420513.894602,
      "reasons": [],
      "reason_codes": [],
      "freed_bytes": 0,
@@ -1629,7 +1629,7 @@
      "volumes": [
       {
        "path": "C:\\",
-       "free_bytes": 273181630464,
+       "free_bytes": 442381631488,
        "reserve_bytes": 42949672960
       }
      ],
@@ -1639,62 +1639,62 @@
        "data": [
         "C:\\Users\\peach\\peach-data",
         "C:\\Users\\peach\\peach-data",
-        17168867184031664651,
-        2251799826673389
+        1,
+        1
        ],
        "database": [
         "C:\\Users\\peach\\peach-data\\database",
         "C:\\Users\\peach\\peach-data\\database",
-        17168867184031664651,
-        38843546799058670
+        1,
+        2
        ],
        "generated": [
         "C:\\Users\\peach\\peach-data\\generated",
         "C:\\Users\\peach\\peach-data\\generated",
-        17168867184031664651,
-        562949966417699
+        1,
+        3
        ],
        "sources": [
         "C:\\Users\\peach\\peach-data\\sources",
         "C:\\Users\\peach\\peach-data\\sources",
-        17168867184031664651,
-        562949966413203
+        1,
+        4
        ],
        "state": [
         "C:\\Users\\peach\\peach-data\\state",
         "C:\\Users\\peach\\peach-data\\state",
-        17168867184031664651,
-        844424943124010
+        1,
+        5
        ],
        "secrets": [
         "C:\\Users\\peach\\peach-data\\secrets",
         "C:\\Users\\peach\\peach-data",
-        17168867184031664651,
-        2251799826673389
+        1,
+        1
        ],
        "logs": [
         "C:\\Users\\peach\\peach-data\\logs",
         "C:\\Users\\peach\\peach-data",
-        17168867184031664651,
-        2251799826673389
+        1,
+        1
        ],
        "tools": [
         "C:\\Users\\peach\\peach-data\\tools",
         "C:\\Users\\peach\\peach-data",
-        17168867184031664651,
-        2251799826673389
+        1,
+        1
        ],
        "review": [
         "C:\\Users\\peach\\peach-data\\review",
         "C:\\Users\\peach\\peach-data",
-        17168867184031664651,
-        2251799826673389
+        1,
+        1
        ],
        "temporary": [
         "C:\\Users\\peach\\peach-data\\temporary",
         "C:\\Users\\peach\\peach-data\\temporary",
-        17168867184031664651,
-        4503599631252381
+        1,
+        6
        ]
       }
      }
@@ -1766,11 +1766,11 @@
   },
   "/api/client-updates": {
    "runtime": {
-    "version": "0.59.0",
-    "build_id": "123840400b701d5ef7fe534a"
+    "version": "0.61.0",
+    "build_id": "969bab63ced6fe31a7e0dac7"
    },
    "release": {
-    "current_version": "0.59.0",
+    "current_version": "0.61.0",
     "latest_version": null,
     "channel": "测试版",
     "channel_code": "test",
@@ -1831,12 +1831,12 @@
    "pending_total": 0,
    "dismissed_total": 0,
    "counts": {
-    "url": 0,
+    "archive": 0,
+    "video": 0,
     "other": 0,
     "audio": 0,
-    "video": 0,
-    "image": 0,
-    "archive": 0
+    "url": 0,
+    "image": 0
    },
    "kind": "",
    "status": "pending",
@@ -1866,7 +1866,7 @@
    "failing_since": null
   },
   "/api/diagnostics": {
-   "version": "0.59.0",
+   "version": "0.61.0",
    "status": "ok",
    "checks": {
     "database": {
@@ -1895,7 +1895,7 @@
      "target": null,
      "details": {
       "schema": "current",
-      "version": "0058",
+      "version": "0059",
       "pending": [],
       "mismatched": [],
       "unknown_versions": 0
@@ -2016,17 +2016,17 @@
      "label": "版本",
      "label_code": "labels.diagnostics.label.version",
      "status": "ok",
-     "reason": "Peach 0.59.0 · Python 3.14.7",
+     "reason": "Peach 0.61.0 · Python 3.14.7",
      "reason_code": "labels.diagnostics.reason.versions",
      "reason_params": {
-      "peach": "0.59.0",
+      "peach": "0.61.0",
       "python": "3.14.7"
      },
      "action": "",
      "action_code": null,
      "target": null,
      "details": {
-      "peach": "0.59.0",
+      "peach": "0.61.0",
       "python": "3.14.7"
      }
     }
@@ -2078,7 +2078,7 @@
       }
      }
     },
-    "issue_at": "2026-11-18T13:56:52.169972+00:00"
+    "issue_at": "2026-11-23T07:54:59.359111+00:00"
    },
    "sources": [
     {
@@ -2095,6 +2095,39 @@
     {
      "source": "javdb",
      "label": "JavDB",
+     "status": "unchecked",
+     "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "reason_code": "labels.libraryDiagnostics.source.unchecked",
+     "last_check_at": null,
+     "elapsed_s": null,
+     "last_success_at": null,
+     "cooldown_until": null
+    },
+    {
+     "source": "stashdb",
+     "label": "StashDB",
+     "status": "unchecked",
+     "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "reason_code": "labels.libraryDiagnostics.source.unchecked",
+     "last_check_at": null,
+     "elapsed_s": null,
+     "last_success_at": null,
+     "cooldown_until": null
+    },
+    {
+     "source": "theporndb",
+     "label": "ThePornDB",
+     "status": "unchecked",
+     "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
+     "reason_code": "labels.libraryDiagnostics.source.unchecked",
+     "last_check_at": null,
+     "elapsed_s": null,
+     "last_success_at": null,
+     "cooldown_until": null
+    },
+    {
+     "source": "vixen-network",
+     "label": "Vixen Media Group",
      "status": "unchecked",
      "reason": "尚无检查或解析记录，可在来源和凭证中检查连接",
      "reason_code": "labels.libraryDiagnostics.source.unchecked",
