@@ -51,7 +51,7 @@
     "deploy": "cf deploy --prebuilt"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "5.20261117.1",
+    "@cloudflare/workers-types": "5.20261124.1",
     "@noble/hashes": "2.4.0",
     "@types/node": "24.19.2",
     "acorn": "8.19.0",
@@ -60,6 +60,6 @@
     "playwright": "1.65.1",
     "sharp": "0.35.5",
     "typescript": "7.0.2",
-    "wrangler": "4.164.0"
+    "wrangler": "4.167.0"
   }
 }
