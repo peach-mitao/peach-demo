@@ -1,6 +1,6 @@
 import { createReplay } from './replay.ts';
 import type {Assets} from './types.ts';
-import { projectCatalog, type CatalogNames } from './catalog-language.ts';
+import { catalogName, projectCatalog, type CatalogNames } from './catalog-language.ts';
 // 文件映射由构建器生成；只读取批准公开且带内容指纹的快照。
 export function browserReplay(files: Readonly<Record<string,string>>, networkFetch: (url: URL) => Promise<Response> | Response, origin: string,
     options: {sharePending?: boolean; names?: CatalogNames; originalNames?: CatalogNames} = {}) {
@@ -40,7 +40,7 @@ export function browserReplay(files: Readonly<Record<string,string>>, networkFet
             return await replay.fetch(request, {ASSETS:assets});
         }
         catch {
-            return Response.json({ error: 'unavailable', message: '演示数据读取失败，请刷新重试' }, { status: 503 });
+            return Response.json({ error: 'unavailable', message: catalogName(options.names ?? {}, '演示数据读取失败，请刷新重试') }, { status: 503 });
         }
     };
 }

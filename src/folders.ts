@@ -1,22 +1,26 @@
+import { catalogName, type CatalogNames } from './catalog-language.ts';
 // 目录只由演示馆藏生成，路径不读取录制机器的真实目录。
 export interface FolderItem {id:number; location?:string;is_jav?:boolean;studio?:string;creator?:string;medium?:string}
 export interface FolderNode {id:string; location:string;path:string;name:string;parent:string|null;root:string;videos:number;files:number;has_children:boolean}
 export interface FolderIndex {nodes:Map<string,FolderNode>;memberships:Map<number,string[]>}
-export function folderIndex(items: readonly FolderItem[]): FolderIndex {
+export function folderIndex(items: readonly FolderItem[], names: CatalogNames = {}): FolderIndex {
     const nodes = new Map<string,FolderNode>(), memberships = new Map<number,string[]>();
     for (const item of items) {
         const location = item.location || 'local';
         const parts = [location === 'local' ? '本地演示库' : `${location} 演示库`,
             item.is_jav ? '编号影片' : '创作者作品',
             item.is_jav ? item.studio || '其他厂牌' : item.creator || '其他视频'];
+        const displayParts = parts.map(name => name === `${location} 演示库`
+            ? `${location} ${catalogName(names, '演示库')}`
+            : catalogName(names, name));
         let parent: string|null = null, root: string|null = null;
         const chain = [];
         for (let i = 0; i < parts.length; i++) {
-            const path = `R:\\Peach 演示\\${parts.slice(0, i + 1).join('\\')}`;
-            const id = `demo:${location}:${encodeURIComponent(path)}`;
+            const id = `demo:${location}:${encodeURIComponent(`R:\\Peach 演示\\${parts.slice(0, i + 1).join('\\')}`)}`;
+            const path = `R:\\${catalogName(names, 'Peach 演示')}\\${displayParts.slice(0, i + 1).join('\\')}`;
             root ??= id;
             if (!nodes.has(id))
-                nodes.set(id, { id, location, path, name: parts[i], parent, root,
+                nodes.set(id, { id, location, path, name: displayParts[i], parent, root,
                     videos: 0, files: 0, has_children: false });
             const node = nodes.get(id)!;
             node.files++;
