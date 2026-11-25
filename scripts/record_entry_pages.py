@@ -13,7 +13,7 @@ def main():
     args = parser.parse_args()
     source = args.source.resolve()
     sys.path.insert(0, str(source / "src"))
-    from peach import __version__, onboarding, release_notice
+    from peach import __version__, interface_text, onboarding, release_notice
     from peach.routes_auth import login_html
     from peach.routes_jav_browser import userscript_bridge
     from peach.routes_pages import setup_shell, _question_view, _CLOUD_HELP, _CLOUD_HELP_URL, _CLOUD_HELP_LABEL
@@ -24,21 +24,31 @@ def main():
     config = SimpleNamespace(data_root=Path("C:/Users/peach/peach-data"), server=SimpleNamespace(port=8900, mdns_name="peach"))
     asked = onboarding.questions(config, windows=True, home=Path("C:/Users/peach"))
     defaults = {"media_dir": "R:\\Media", "data_root": "C:\\Users\\peach\\peach-data"}
+
+    def server_text(code):
+        return interface_text.text(f"server:{code}")
+
     questions = []
     for question in asked:
         view = _question_view(question)
-        item = dict(view, key=question.key, help=[view["help"]] if view["help"] else [],
+        label = view["label"]
+        help_codes = [view["help"]] if view["help"] else []
+        item = dict(view, key=question.key, label=server_text(label), label_code=label,
+                    help=[server_text(code) for code in help_codes], help_codes=help_codes,
                     default=defaults.get(question.key, question.default), required=question.key != "host",
                     advanced=question.key != "media_dir")
         if question.key == "host":
-            item["options"] = [{"value": value, "label": label} for value, label in reversed(onboarding.HOST_OPTIONS)]
+            item["options"] = [{"value": value, "label": server_text(code), "label_code": code}
+                               for value, code in reversed(onboarding.HOST_OPTIONS)]
         if question.key == "mdns_name":
             item["visible_when"] = {"host": "2"}
         questions.append(item)
     payload = dict(windows=True, standalone=False, questions=questions,
                    media_sources=[{"value": value, "label": label} for value, label in SOURCE_OPTIONS],
                    media_source_default="local", media_root=None, access_enabled=False, scan_now=True, history_guide=False,
-                   cloud={"help": _CLOUD_HELP, "link": {"url": _CLOUD_HELP_URL, "label": _CLOUD_HELP_LABEL}, "dependencies": []})
+                   cloud={"help": server_text(_CLOUD_HELP), "help_code": _CLOUD_HELP, "dependencies": [],
+                          "link": {"url": _CLOUD_HELP_URL, "label": server_text(_CLOUD_HELP_LABEL),
+                                   "label_code": _CLOUD_HELP_LABEL}})
     payload["remote_reporting"] = {"usage": False, "errors": False, "available": True,
                                    "fields": {"usage": "版本与系统信息", "errors": "故障类型与代码位置"}, "notice": ""}
     commit = subprocess.check_output(["git", "-C", str(source), "rev-parse", "HEAD"], text=True).strip()

@@ -1,6 +1,7 @@
 import { parse } from 'acorn';
 import type { AnyNode } from 'acorn';
 import { walk } from './ast.ts';
+import { englishStorageNames } from './catalog_names.ts';
 // 只投影可见字串，协议键、路由和应用同步产物保持来源指纹。
 export function movieText(text: string): string {
     if (text === 'sperm') return 'star';
@@ -38,12 +39,6 @@ const englishMovieText = (text: string) => text === 'JAV' ? 'Films' : text.repla
     .replace(/\bactresses\b/g, 'performers').replace(/\bactress\b/g, 'performer')
     .replaceAll('Orgasm recorded', 'Highlight marked').replaceAll('Record an orgasm', 'Mark a highlight')
     .replaceAll('SSIS-950', 'FILM-001').replaceAll('ABF-087', 'FILM-001').replaceAll('SYKH-145', 'FILM-002');
-const englishStorageNames = new Map([
-    ['本地磁盘', 'Local disk'],
-    ['光鸭云盘', 'Guangya Cloud'],
-    ['其他已挂载网盘', 'Other mounted cloud storage'],
-]);
-
 export function movieScript(source: string): string {
     const tree = parse(source, { ecmaVersion: 'latest', sourceType: 'module' });
     const english = localeResources(tree, 'en');
@@ -57,7 +52,7 @@ export function movieScript(source: string): string {
                 if (property.type !== 'Property' || !['name', 'label'].includes(propertyName(property.key) || '')) continue;
                 const value = property.value;
                 if (value.type !== 'Literal' || typeof value.value !== 'string') continue;
-                const label = englishStorageNames.get(value.value);
+                const label = Object.hasOwn(englishStorageNames, value.value) ? englishStorageNames[value.value] : undefined;
                 if (label) ranges.push([value.start, value.end,
                     `(document.documentElement.lang === 'en' ? ${JSON.stringify(label)} : ${JSON.stringify(value.value)})`]);
             }

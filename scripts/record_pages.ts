@@ -8,8 +8,10 @@ const base = new URL(process.env.BASE || 'http://127.0.0.1:8791').origin;
 const language = process.env.PEACH_DEMO_TEST_LANGUAGE || 'zh-CN';
 if (!['zh-CN', 'en'].includes(language)) throw Error('验收语言须为 zh-CN 或 en');
 const text = language === 'en'
-    ? { status: 'Tag status', hidden: /^Hidden(?:\s|$)/, active: 'In use', edit: /^Edit tag /, cancel: 'Cancel' }
-    : { status: '标签状态', hidden: /^已隐藏(?:\s|$)/, active: '使用中', edit: /^编辑标签 /, cancel: '取消' };
+    ? { status: 'Tag status', hidden: /^Hidden(?:\s|$)/, active: 'In use', edit: /^Edit tag /, cancel: 'Cancel',
+        startSetup: 'Get started', setupMedia: "Where's your media?", localDisk: 'Local disk' }
+    : { status: '标签状态', hidden: /^已隐藏(?:\s|$)/, active: '使用中', edit: /^编辑标签 /, cancel: '取消',
+        startSetup: '开始设置', setupMedia: '你的媒体，放在哪里？', localDisk: '本地磁盘' };
 function missingSpriteIcons(): string[] {
     return Array.from(document.querySelectorAll<SVGUseElement>('svg use[href^="#"]')).flatMap(use => {
         const href = use.getAttribute('href')!;
@@ -70,6 +72,22 @@ try {
                 await page.screenshot({ path: fileURLToPath(new URL(prefix + '.png', out)), fullPage: false });
                 const states = [];
                 const brokenIcons = new Set(await page.evaluate(missingSpriteIcons));
+                if (route === '/setup' && !loadError) {
+                    try {
+                        await page.getByRole('button', { name: text.startSetup, exact: true }).press('Enter');
+                        await page.locator('[data-copy-key="setup.title.1"]').waitFor({ timeout: 12000 });
+                        await page.getByText(text.localDisk, { exact: true }).filter({ visible: true }).first().waitFor({ timeout: 12000 });
+                        const formCopy = await page.locator('[data-setup-form-panel]').innerText();
+                        if (/(?:pages\.setup\.|labels\.onboarding\.)/.test(formCopy)
+                            || (language === 'en' && /\p{Script=Han}/u.test(formCopy))) {
+                            errors.push('首次设置媒体步骤存在未翻译的题目或存储选项');
+                        }
+                        states.push(text.setupMedia);
+                    }
+                    catch (error) {
+                        errors.push(`${text.setupMedia}: ${(error instanceof Error ? error.message : String(error)).split('\n')[0]}`);
+                    }
+                }
                 const tabs = page.getByRole('tab');
                 for (let at = 0; at < await tabs.count() && at < 16; at++) {
                     const tab = tabs.nth(at);
