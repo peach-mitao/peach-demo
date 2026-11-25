@@ -294,6 +294,8 @@
                     return result({ message: 'Invalid settings' }, 400);
                 if (Object.hasOwn(patch, 'interfaceLanguage') && !['auto', 'zh-CN', 'en'].includes(patch.interfaceLanguage))
                     return result({ message: 'Unsupported interface language' }, 400);
+                if (['zh-CN', 'ja', 'en', 'ja-local', 'local-ja'].includes(patch.performerNameLanguage))
+                    localStorage.setItem('peach.demo.nameLanguageChosen', '1');
                 for (const key of Object.keys(settings)) {
                     if (key !== 'interfaceLanguage' && Object.hasOwn(patch, key)) settings[key] = patch[key];
                 }

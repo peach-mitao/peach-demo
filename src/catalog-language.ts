@@ -1,6 +1,9 @@
 import type { JSONValue } from './types.ts';
 
 export type CatalogNames = Readonly<Record<string, string>>;
+const englishLengthLabels: CatalogNames = {
+    速食: 'Under 5 min', 短: '5–15 min', 中: '15–40 min', 长: 'Over 40 min',
+};
 
 export function catalogName(names: CatalogNames, value: string): string {
     return Object.hasOwn(names, value) ? names[value]! : value;
@@ -9,11 +12,18 @@ export function catalogName(names: CatalogNames, value: string): string {
 export function projectCatalog(value: JSONValue, names: CatalogNames, field = ''): JSONValue {
     if (typeof value === 'string') {
         if (field === 'zh_cn') return value;
+        if (field === 'length_bin') return catalogName(englishLengthLabels, value);
         if (field === 'performers' || field === 'director') {
             return value.split('、').map(name => catalogName(names, name)).join(', ');
         }
         if (field === 'title' && value.endsWith(' 海报')) {
             return catalogName(names, value.slice(0, -3)) + ' poster';
+        }
+        if (field === 'label' || field === 'source_label') {
+            const suffix = ' · 电影资料';
+            if (value.endsWith(suffix)) {
+                return `${catalogName(names, value.slice(0, -suffix.length))} · ${catalogName(names, '电影资料')}`;
+            }
         }
         if ((field === 'headline' || field === 'message') && value.startsWith('演示偏好：')) {
             const tags = value.slice('演示偏好：'.length, -1).split('、').map(tag => catalogName(names, tag));
@@ -31,7 +41,8 @@ export function projectCatalog(value: JSONValue, names: CatalogNames, field = ''
     if (!value || typeof value !== 'object') return value;
     const projected = Object.fromEntries(Object.entries(value).map(([key, child]) => [
         ['tag_categories', 'entity_filter', 'tag_types'].includes(field) ? catalogName(names, key) : key,
-        projectCatalog(child, names, field === 'entity_filters' ? 'entity_filter' : key),
+        projectCatalog(child, names, field === 'entity_filters' ? 'entity_filter' :
+            field === 'by_length' && key === 'k' ? 'length_bin' : key),
     ]));
     if (typeof projected.canonical_name === 'string' && typeof projected.kind === 'string') {
         const name = projected.canonical_name;

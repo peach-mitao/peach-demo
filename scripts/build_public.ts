@@ -9,11 +9,11 @@ import { DEMO_SETTINGS, NOTICE } from '../src/page-shell.ts';
 import sharp from 'sharp';
 import { bundlePlayer } from './bundle_player.ts';
 import { pageRoutes } from './demo_pages.ts';
-import { movieHTML, movieScript } from './public_copy.ts';
+import { englishEditorCopy, localizeDemoScript, movieHTML, movieScript } from './public_copy.ts';
 import { verifyPublicMovies } from './prepare_public_movies.ts';
 import { FILMS, PEOPLE, DEMO_DATA_NOTICE, STUDIOS } from '../src/public-movies.ts';
 import { MOVIE_RIGHTS } from '../src/movie-rights.ts';
-import { englishCatalog, originalEntityNames } from './catalog_names.ts';
+import { englishCatalog, englishInteractionCopy, originalEntityNames } from './catalog_names.ts';
 import { catalogName } from '../src/catalog-language.ts';
 const root = fileURLToPath(new URL('../', import.meta.url));
 export async function buildPublic(site = path.join(root, 'site'), out = path.join(root, 'public')) {
@@ -65,11 +65,13 @@ export async function buildPublic(site = path.join(root, 'site'), out = path.joi
         globalThis.peachDemoReplay=request=>(document.documentElement.lang==='en'?english:local)(request);
     `, resolveDir: root }, bundle: true, write: false, platform: 'browser', format: 'iife', target: 'es2022', minify: true });
     const runtime = await assets('runtime', boot.outputFiles[0].contents, 'js');
-    const interaction = await assets('interactions', await readFile(path.join(site, '_demo/interactions.js')), 'js');
+    const interaction = await assets('interactions', localizeDemoScript(await readFile(path.join(site, '_demo/interactions.js'), 'utf8'), englishInteractionCopy), 'js');
     const tour = await assets('tour', await readFile(path.join(site, '_demo/tour.js')), 'js');
-    const editorCore = await assets('copy-editor-core', await readFile(path.join(site, '_demo/copy-editor-core.js')), 'js');
-    const editor = await assets('copy-editor', await readFile(path.join(site, '_demo/copy-editor.js')), 'js');
-    const editorUI = await assets('edit-toolbar', await readFile(path.join(site, '_demo/edit-toolbar.js')), 'js');
+    const editorAsset = async (name: string) =>
+        assets(name, localizeDemoScript(await readFile(path.join(site, `_demo/${name}.js`), 'utf8'), englishEditorCopy), 'js');
+    const editorCore = await editorAsset('copy-editor-core');
+    const editor = await editorAsset('copy-editor');
+    const editorUI = await editorAsset('edit-toolbar');
     const behaviorBuild=await build({entryPoints:[path.join(root,'browser/behavior.ts')],bundle:true,write:false,platform:'browser',format:'iife',target:'es2022',minify:true});
     const behavior=await assets('behavior',behaviorBuild.outputFiles[0].contents,'js');
     const tourGate = `<script>if(new URLSearchParams(location.search).has('tour'))document.write('<script src="${tour}"><'+ '/script>')</script>`;
@@ -99,7 +101,9 @@ export async function buildPublic(site = path.join(root, 'site'), out = path.joi
             return item ? `<h2>${escape(catalogName(englishCatalog, item.title))}</h2>` : heading;
         })
         .replaceAll('页面按容器缩放或裁切。', 'Resized or cropped to fit.')
+        .replaceAll('从顶部裁成正方形后缩放至240像素宽并转换为WebP；头像按圆形容器裁切。', 'Cropped to a square from the top, resized to 240 pixels wide, and converted to WebP. Portraits use a circular crop.')
         .replaceAll('缩放至240像素宽并转换为WebP；头像按圆形容器裁切。', 'Resized to 240 pixels wide and converted to WebP. Portraits use a circular crop.')
+        .replaceAll('缩放至480像素宽并转换为WebP；页面按容器裁切。', 'Resized to 480 pixels wide and converted to WebP. Displayed cropped to fit.')
         .replaceAll('按 Peach 应用的厂牌图标规则烤成不透明方图，缩放至480像素宽并转换为WebP；按容器缩放显示。', 'Rendered as an opaque square, resized to 480 pixels wide and converted to WebP.')
         .replaceAll(' · 未署名', ' · Uncredited');
     await mkdir(path.join(out, 'film-sources/en'), { recursive: true });

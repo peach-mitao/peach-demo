@@ -11,6 +11,7 @@ import {catalogName, originalCatalogURL, type CatalogNames} from './catalog-lang
 const readJSON=async<T>(env:ReplayEnv,url:URL):Promise<T>=>{const response=await env.ASSETS.fetch(url);if(!response.ok)throw Error('演示快照未取得');return await response.json() as T};
 export function createReplay({ names = {}, originalNames = {} }: {names?: CatalogNames; originalNames?: CatalogNames} = {}) {
     const json = (body: string, status = 200) => new Response(body, { status, headers: { 'content-type': TYPES.json } });
+    const copy = (value: string) => catalogName(names, value);
     const TYPES:Record<string,string> = {
         json: 'application/json; charset=utf-8', jpg: 'image/jpeg', png: 'image/png', webp: 'image/webp', avif: 'image/avif',
         gif: 'image/gif', svg: 'image/svg+xml', ico: 'image/x-icon', vtt: 'text/vtt; charset=utf-8',
@@ -66,7 +67,7 @@ export function createReplay({ names = {}, originalNames = {} }: {names?: Catalo
     let folders:ReturnType<typeof folderIndex>;
     async function loadCatalog(env:ReplayEnv, url:URL) {
         catalog ??= await readJSON<Catalog>(env,new URL('/_fixtures/catalog.json', url));
-        folders ??= folderIndex(catalog.items);
+        folders ??= folderIndex(catalog.items, names);
         return catalog;
     }
     async function catalogItems(env:ReplayEnv, url:URL) {
@@ -125,7 +126,7 @@ export function createReplay({ names = {}, originalNames = {} }: {names?: Catalo
                         counts.set(k, (counts.get(k) || 0) + 1); return [...counts].map(([k, n]) => ({ k, n })).sort((a, b) => b.n - a.n); };
             // 与 Peach 的筛选面板契约一致：来源带已看数，地区带显示名，年份按发行年倒序。
             const locations = counts((it) => [it.location]).map(row => ({ ...row, played: items.filter(it => it.location === row.k && it.play_count).length }));
-            const regions = counts((it) => [it.effective_region || 'none']).map(row => ({ ...row, label: row.k === 'none' ? '未判定' : row.k, label_code: '' }));
+            const regions = counts((it) => [it.effective_region || 'none']).map(row => ({ ...row, label: row.k === 'none' ? copy('未判定') : row.k, label_code: '' }));
             const years = counts((it) => [String(it.release_date || '').slice(0, 4) || undefined]).map(row => ({ k: row.k, label: row.k, n: row.n })).sort((a, b) => b.k.localeCompare(a.k));
             return json(JSON.stringify({ locations, orientations: counts((it) => [it.ctx_orient]), regions, years,
                 creators: counts((it) => [it.creator]), tags: counts((it) => it.filter_tags || it.tags).filter(row => catalog.tag_categories?.[row.k] !== 'meta').map(row => ({ ...row, cat: catalog.tag_categories?.[row.k] || 'general' })),
@@ -190,7 +191,7 @@ export function createReplay({ names = {}, originalNames = {} }: {names?: Catalo
             }
         }
         return json(JSON.stringify({ q: query, groups: SUGGEST_GROUPS.filter(([kind]) => buckets.get(kind)?.length)
-                .map(([kind, label]) => ({ kind, label, total: totals.get(kind) ?? 0, items: buckets.get(kind) })) }));
+                .map(([kind, label]) => ({ kind, label: copy(label), total: totals.get(kind) ?? 0, items: buckets.get(kind) })) }));
     }
     return {
         async fetch(request:Request, env:ReplayEnv):Promise<Response> {
@@ -202,25 +203,25 @@ export function createReplay({ names = {}, originalNames = {} }: {names?: Catalo
                 if (url.pathname === '/api/setup/questions')
                     return json(JSON.stringify(entryPages.questions));
                 if (url.pathname.startsWith('/api/setup'))
-                    return json(JSON.stringify({ url: '/', scan_requested: false, history_guide: false, standalone: false, redirect: null, facts: [{ term: '数据目录', value: 'C:\\Users\\peach\\peach-data' }] }));
+                    return json(JSON.stringify({ url: '/', scan_requested: false, history_guide: false, standalone: false, redirect: null, facts: [{ term: copy('数据目录'), value: 'C:\\Users\\peach\\peach-data' }] }));
             }
             manifest ??= await readJSON<FixtureManifest>(env,new URL('/_fixtures/manifest.json', url));
             const method = request.method === 'HEAD' ? 'GET' : request.method;
             if (method === 'GET' && ['/api/jav/resources', '/api/resources/search'].includes(url.pathname)) {
-                return json(JSON.stringify({ state: 'unavailable', items: [], warnings: [], error: '资源搜索未启用', complete: true }));
+                return json(JSON.stringify({ state: 'unavailable', items: [], warnings: [], error: copy('资源搜索未启用'), complete: true }));
             }
             if (method === 'GET' && url.pathname.startsWith('/api/subtitles/')) {
                 if (url.pathname === '/api/subtitles/search')
-                    return json(JSON.stringify({ results: [{ id: 'demo', title: 'Peach 演示字幕', language: '中文', format: 'WebVTT' }], more: false }));
+                    return json(JSON.stringify({ results: [{ id: 'demo', title: copy('Peach 演示字幕'), language: copy('中文'), format: 'WebVTT' }], more: false }));
                 if (url.pathname === '/api/subtitles/subtitlecat/demo')
-                    return json(JSON.stringify({ files: [{ index: 0, name: 'Peach 演示字幕.vtt', playable: true, language: '中文' }] }));
+                    return json(JSON.stringify({ files: [{ index: 0, name: copy('Peach 演示字幕') + '.vtt', playable: true, language: copy('中文') }] }));
                 if (url.pathname === '/api/subtitles/subtitlecat/demo/0')
                     return new Response('WEBVTT\n\n00:00.000 --> 00:10.000\nPeach 演示字幕\n', { headers: { 'content-type': TYPES.vtt } });
             }
             if (method === 'GET' && url.pathname === '/api/folders') {
                 await loadCatalog(env, url);
                 const page = folderPage(folders, url.searchParams);
-                return page ? json(JSON.stringify(page)) : json('{"message":"目录不存在或已移出演示库"}', 404);
+                return page ? json(JSON.stringify(page)) : json(JSON.stringify({ message: copy('目录不存在或已移出演示库') }), 404);
             }
             if (method === 'GET' && url.pathname === '/api/jav/discoveries') {
                 const scope = url.searchParams.get('scope') === 'library' ? 'library' : 'external';
@@ -320,7 +321,7 @@ export function createReplay({ names = {}, originalNames = {} }: {names?: Catalo
             if (url.pathname === '/api/facets')
                 return fallbackCatalog(env, url, true);
             if (url.pathname.startsWith('/api/'))
-                return new Response('{"error":"unavailable","message":"演示回放未取得"}', { status: 404, headers: { 'content-type': TYPES.json, 'x-peach-demo-missing': '1' } });
+                return new Response(JSON.stringify({ error: 'unavailable', message: copy('演示回放未取得') }), { status: 404, headers: { 'content-type': TYPES.json, 'x-peach-demo-missing': '1' } });
             if (MEDIA_PATHS.has(url.pathname) || manifest.paths.includes(url.pathname))
                 return json('{"error":"unavailable"}', 404);
             return env.ASSETS.fetch(request);

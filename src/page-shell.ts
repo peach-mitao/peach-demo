@@ -4,7 +4,13 @@ if(!('homeLayout' in s))s.homeLayout='big';if(!('detailAutoplay' in s))s.detailA
 if(!('photoLayout' in s))s.photoLayout='masonry';if(!('followImagesOnly' in s))s.followImagesOnly=true;
 const u=new URL(location.href),l=u.searchParams.get('lang');
 if(l==='en'||l==='zh-CN'){s.interfaceLanguage=l;u.searchParams.delete('lang');history.replaceState(history.state,'',u)}
-if(!('performerNameLanguage' in s))s.performerNameLanguage='local-ja';
+const nameDefaultKey='peach.demo.nameLanguageDefault',nameDefault=localStorage.getItem(nameDefaultKey)||'local-ja';
+if(!('performerNameLanguage' in s)||(!localStorage.getItem('peach.demo.nameLanguageChosen')&&s.performerNameLanguage===nameDefault)){
+ const preferred=[...(navigator.languages||[]),navigator.language,s.systemLanguage].map(tag=>String(tag||'').toLowerCase().split('-')[0]).find(tag=>tag==='zh'||tag==='en');
+ const chinese=s.interfaceLanguage==='zh-CN'||(s.interfaceLanguage!=='en'&&preferred==='zh');
+ s.performerNameLanguage=chinese?'local-ja':'en';
+ localStorage.setItem(nameDefaultKey,s.performerNameLanguage);
+}
 localStorage.setItem(k,JSON.stringify(s))}catch(_e){}</script>`;
 // 页脚链接共用一套下划线：应用外链样式只给新窗口链接加 3px 偏移，站内链接也写明同值，三条线才对齐。
 const NOTICE_LINK = 'display:inline;line-height:inherit;pointer-events:auto;color:inherit;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px';

@@ -165,6 +165,7 @@
         }
     };
     const buttonNamed = (name: string, root:Document|HTMLElement = document) => [...(root.querySelectorAll('button') as NodeListOf<HTMLButtonElement>)].find((b) => b.textContent!.trim() === name && visible(b));
+    const copy = (chinese: string, english: string) => document.documentElement.lang === 'en' ? english : chinese;
     const SCRIPTS = {
         async search(ready: () => void) {
             const searchButton=await waitFor(()=>document.querySelector<HTMLButtonElement>('#searchBtn')||document.querySelector<HTMLInputElement>('#q'));
@@ -178,15 +179,16 @@
             await sleep(900);
             await click(input, { fx: 0.06 });
             input.focus();
-            await type(input, '卓别林');
+            const query = copy('卓别林', 'Chaplin');
+            await type(input, query);
             const menu = await waitFor(() => { const m = (document.querySelector('#searchMenu') as HTMLElement); return visible(m) && (m.querySelector('img') as HTMLImageElement) ? m : null; });
             await sleep(1500);
             await moveTo(menu, { fx: 0.3, fy: 0.35 });
             await sleep(700);
             await moveTo(input, { fx: 0.12 });
             await sleep(250);
-            await key(input, 'Enter', '↵ 回车');
-            await waitFor(() => new URLSearchParams(location.search).get('q') === '卓别林');
+            await key(input, 'Enter', copy('↵ 回车', '↵ Enter'));
+            await waitFor(() => new URLSearchParams(location.search).get('q') === query);
             await sleep(1400);
             const cards = await waitFor(() => { const found = works(); return found.length ? found : null; });
             await scrollTo(cards[0], 'center');
@@ -197,7 +199,7 @@
             await sleep(1800);
         },
         async feed(ready: () => void) {
-            const subscribed=()=>document.querySelector<HTMLInputElement>('[role="switch"][aria-label="订阅新作"]');
+            const subscribed=()=>document.querySelector<HTMLInputElement>(`[role="switch"][aria-label="${copy('订阅新作', 'Subscribe to new releases')}"]`);
             const target=await waitFor(()=>document.querySelector<HTMLElement>('[data-feed-new]:has([data-feed-id] img)')||subscribed());
             ready();
             if(target instanceof HTMLInputElement){
@@ -220,17 +222,18 @@
                 card.classList.remove('peach-tour-hover');
                 await sleep(1300);
             };
-            await act(cards[0], '标为已看过');
-            await act(cards[1], '标为已看过');
-            await act(cards[2], '不想看');
+            await act(cards[0], copy('标为已看过', 'Mark as seen'));
+            await act(cards[1], copy('标为已看过', 'Mark as seen'));
+            await act(cards[2], copy('不想看', 'Not interested'));
             await sleep(1800);
         },
         async review(ready: () => void) {
-            await waitFor(()=>document.querySelector('main')?.textContent?.match(/复核|审核|候选|暂无|没有/));
+            await waitFor(()=>document.querySelector('main')?.textContent?.match(/复核|审核|候选|暂无|没有|review|candidate/i));
             ready();
-            if(!buttonNamed('通过')){await sleep(1800);return}
+            const approve = copy('通过', 'Approve'), reject = copy('拒绝', 'Reject');
+            if(!buttonNamed(approve)){await sleep(1800);return}
             await sleep(1000);
-            for (const name of ['通过', '通过', '拒绝'] as const) {
+            for (const name of [approve, approve, reject]) {
                 const button = await waitFor(() => buttonNamed(name));
                 const card = (button.closest('article,li,section') as HTMLElement) ?? button;
                 await moveTo(card, { fx: 0.45, fy: 0.3 });
@@ -247,14 +250,15 @@
                     holder = holder.parentElement;
                 return (holder?.querySelector('img') as HTMLImageElement);
             };
-            const open = await waitFor(() => (document.querySelector('button[aria-label^="更换"]') as HTMLButtonElement));
+            const change = () => document.querySelector<HTMLButtonElement>(`button[aria-label^="${copy('更换', 'Change avatar')}"]`);
+            const open = await waitFor(change);
             const face = faceNear(open);
             await waitFor(() => face?.complete && face.naturalWidth);
             ready();
             await sleep(1000);
             await click(open);
             const dialog = await waitFor(() => [...(document.querySelectorAll('[role=dialog],dialog[open]') as NodeListOf<HTMLElement>)]
-                .find((d) => d.textContent.includes('更换头像')));
+                .find((d) => d.textContent.includes(copy('更换头像', 'Change avatar'))));
             await waitFor(()=>!dialog.querySelector('[data-skeleton],[aria-busy="true"]'));
             await sleep(900);
             const choices = [...(dialog.querySelectorAll('button') as NodeListOf<HTMLButtonElement>)].filter((b) => (b.querySelector('img') as HTMLImageElement));
@@ -265,8 +269,9 @@
             }
             await click(choices[Math.min(3,choices.length-1)], { fy: 0.45 });
             // 第二步「框出头像那一块」：Peach 已经把方框放在脸上，左下角圆形预览就是换上后的样子。
+            const useArea = copy('用这一块', 'Use this area');
             const crop = await waitFor(() => [...(document.querySelectorAll('[role=dialog]') as NodeListOf<HTMLElement>)]
-                .find((d) => d.textContent.includes('框出头像') && buttonNamed('用这一块', d)));
+                .find((d) => d.textContent.includes(copy('框出头像', 'Select avatar area')) && buttonNamed(useArea, d)));
             await sleep(700);
             const frame = (crop.querySelector('[style*="--crop-l"]') as HTMLElement);
             if (frame) {
@@ -278,11 +283,11 @@
             const shot = look && { image: look.backgroundImage, size: look.backgroundSize, position: look.backgroundPosition };
             await moveTo(preview ?? crop, { fx: 0.5, fy: 0.5 });
             await sleep(700);
-            await click(buttonNamed('用这一块', crop)!);
+            await click(buttonNamed(useArea, crop)!);
             await waitFor(() => !visible(crop), 5000).catch(() => { });
             await sleep(300);
             // 演示站的写请求不落地，重取的头像还是原来那张；按预览的同一块画面换上去，就是真实 Peach 保存后的样子。
-            const target = faceNear((document.querySelector('button[aria-label^="更换"]') as HTMLButtonElement)) ?? face;
+            const target = faceNear(change() ?? open) ?? face;
             // 头像 <img> 的尺寸按原图的人脸框（data-facebox）算，不能换它的 src；在外框上叠一层同形状的画面。
             const portrait = target.parentElement;
             if (shot && portrait) {

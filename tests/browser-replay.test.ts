@@ -5,6 +5,7 @@ import { fixtureHash } from '../src/key.ts';
 import { publicValue } from '../scripts/build_replay.ts';
 import { mediaURL, mediaJSON } from '../src/media.ts';
 import { playerImports } from '../scripts/bundle_player.ts';
+import { englishCatalog } from '../scripts/catalog_names.ts';
 test('播放器按需导入组保留模块次序和唯一加载入口', () => {
     const source = 'const prefix="/vendor/videojs/1.0.0/",files=["video-player.js","ui/container.js"];Promise.all(files.map(name=>import(`${prefix}${name}`)))';
     const found = playerImports(source);
@@ -37,6 +38,37 @@ test('快照读取失败明确报错且允许重试', async () => {
     assert.equal((await replay(new Request('https://demo.example/api/unknown'))).status, 503);
     assert.equal((await replay(new Request('https://demo.example/api/unknown'))).status, 404);
     assert.equal(calls, 2);
+});
+
+test('英文回放翻译订阅和统计标签并保留目录及筛选协议', async () => {
+    const snapshots: Record<string, unknown> = {
+        catalog: { items: [{ id: 1, name: 'Modern Times', studio: 'United Artists', is_jav: true, ctx_length: '长', tags: [], size: 1, duration: 5400 }] },
+        feeds: { sources: [{ id: 1, kind: 'demo-film', kind_label: '普通电影订阅' }] },
+        follow: { sources: [{ id: 1, label: '查理·卓别林 · 电影资料' }], groups: [{ primary: { source_label: '查理·卓别林 · 电影资料' } }] },
+        stats: { by_length: [{ k: '长', n: 1 }] },
+    };
+    const files: Record<string, string> = { '/_fixtures/manifest.json': '/manifest', '/_fixtures/catalog.json': '/catalog' };
+    const fixtures: Record<string, string> = {};
+    for (const route of ['feeds', 'follow', 'stats']) {
+        const hash = await fixtureHash(`GET /api/${route}`);
+        fixtures[hash] = 'json';
+        files[`/_fixtures/${hash}.json`] = '/' + route;
+    }
+    snapshots.manifest = { fixtures, paths: {} };
+    const replay = browserReplay(files, url => Response.json(snapshots[url.pathname.slice(1)]), 'https://demo.example', { names: englishCatalog });
+    const read = async (route: string) => {
+        const response = await replay(new Request('https://demo.example/api/' + route));
+        assert.equal(response.status, 200, route);
+        return response.json();
+    };
+    const [feeds, follow, stats, folders] = await Promise.all(['feeds', 'follow', 'stats', 'folders'].map(read));
+    assert.deepEqual(feeds.sources, [{ id: 1, kind: 'demo-film', kind_label: 'Film subscription' }]);
+    assert.equal(follow.sources[0].label, 'Charlie Chaplin · Film information');
+    assert.equal(follow.groups[0].primary.source_label, 'Charlie Chaplin · Film information');
+    assert.deepEqual(stats.by_length, [{ k: 'Over 40 min', n: 1 }]);
+    assert.equal(folders.roots[0].name, 'Local demo library');
+    const filtered = await read('items?' + new URLSearchParams({ browse: 'folders', folder: folders.roots[0].id, len: '长' }));
+    assert.equal(filtered.items[0].ctx_length, '长');
 });
 
 test('Worker 回放不等待其他请求未完成的快照且复用已完成的正文', {timeout:1000}, async () => {
