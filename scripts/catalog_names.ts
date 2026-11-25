@@ -40,6 +40,12 @@ for (const studio of new Set(FILMS.map(film => film.studio))) {
     if (studio.includes('、')) studioNames[studio] = studio.split('、').map(part => studioNames[part] || part).join(' / ');
 }
 
+export const englishStorageNames: CatalogNames = {
+    本地磁盘: 'Local disk',
+    光鸭云盘: 'Guangya Cloud',
+    其他已挂载网盘: 'Other mounted cloud storage',
+};
+
 const demoCopy = {
     '演员 / 配音': 'Actor / voice actor',
     导演: 'Director',
@@ -75,6 +81,8 @@ const demoCopy = {
     目录不存在或已移出演示库: 'This folder is no longer in the demo library.',
     演示回放未取得: 'Sample data is unavailable.',
     '演示数据读取失败，请刷新重试': 'Could not load sample data. Refresh to try again.',
+    版本与系统信息: 'Version and system information',
+    故障类型与代码位置: 'Error types and code locations',
     演示数据: 'Sample data',
     数据说明: 'About the data',
     电影演示馆藏: 'Demo film library',
@@ -162,7 +170,7 @@ export const englishInteractionCopy = {
 };
 
 export const englishCatalog: CatalogNames = {
-    ...genres, ...studioNames, ...demoCopy,
+    ...genres, ...studioNames, ...englishStorageNames, ...demoCopy,
     ...Object.fromEntries(PEOPLE.map(person => [person.name, person.original_name])),
     ...Object.fromEntries(FILMS.map(film => [film.title, film.original_title === 'Q1024861' ? 'Cabiria' : film.original_title || film.title])),
 };

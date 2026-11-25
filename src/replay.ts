@@ -7,7 +7,7 @@ import { discoveryPage, feedDiscoveryPage, releasePage, type ReleaseRow } from '
 import { followPage } from './follow.ts';
 import { folderIndex, folderItems, folderPage } from './folders.ts';
 import type {Catalog,CatalogItem,FixtureManifest,ReplayEnv,Directory,DiscoveryRow,FollowGroup,Suggestions,SuggestAsset,JSONValue} from './types.ts';
-import {catalogName, originalCatalogURL, type CatalogNames} from './catalog-language.ts';
+import {catalogName, originalCatalogURL, projectCatalog, type CatalogNames} from './catalog-language.ts';
 const readJSON=async<T>(env:ReplayEnv,url:URL):Promise<T>=>{const response=await env.ASSETS.fetch(url);if(!response.ok)throw Error('演示快照未取得');return await response.json() as T};
 export function createReplay({ names = {}, originalNames = {} }: {names?: CatalogNames; originalNames?: CatalogNames} = {}) {
     const json = (body: string, status = 200) => new Response(body, { status, headers: { 'content-type': TYPES.json } });
@@ -26,7 +26,7 @@ export function createReplay({ names = {}, originalNames = {} }: {names?: Catalo
     let directory:Directory;
     let follow:{groups:FollowGroup[]}|null = null;
     let feedDiscoveries:{items:unknown[];more?:boolean}|null = null;
-    let entryPages:{questions:unknown};
+    let setupQuestions:JSONValue | undefined;
     const discoveries = new Map<string,{items:DiscoveryRow[]}>();
     async function fixture(env:ReplayEnv, url:URL, ext:{hash:string;ext:string}) {
         const response = await env.ASSETS.fetch(new URL(`/_fixtures/${ext.hash}.${ext.ext}`, url));
@@ -199,9 +199,13 @@ export function createReplay({ names = {}, originalNames = {} }: {names?: Catalo
             if (url.pathname.startsWith('/_fixtures/') || url.pathname.startsWith('/_media/'))
                 return json('{"error":"not found"}', 404);
             if (['/api/setup/questions', '/api/setup', '/api/setup/restore'].includes(url.pathname)) {
-                entryPages ??= await readJSON<{questions:unknown}>(env,new URL('/_fixtures/entry-pages.json', url));
-                if (url.pathname === '/api/setup/questions')
-                    return json(JSON.stringify(entryPages.questions));
+                if (url.pathname === '/api/setup/questions') {
+                    if (setupQuestions === undefined) {
+                        const { questions } = await readJSON<{questions:JSONValue}>(env,new URL('/_fixtures/entry-pages.json', url));
+                        setupQuestions = projectCatalog(questions, names);
+                    }
+                    return json(JSON.stringify(setupQuestions));
+                }
                 if (url.pathname.startsWith('/api/setup'))
                     return json(JSON.stringify({ url: '/', scan_requested: false, history_guide: false, standalone: false, redirect: null, facts: [{ term: copy('数据目录'), value: 'C:\\Users\\peach\\peach-data' }] }));
             }

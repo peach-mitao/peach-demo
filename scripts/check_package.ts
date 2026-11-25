@@ -17,6 +17,11 @@ if (process.argv.includes('--assets')) {
     const entry = JSON.parse(await readFile(new URL('site/_fixtures/entry-pages.json', root), 'utf8'));
     assert.match(info.commit, /^[a-f0-9]{40}$/);
     assert.equal(entry.commit, info.commit, '入口页与前端必须来自同一应用提交');
+    const questions = entry.questions?.questions;
+    assert.ok(Array.isArray(questions) && questions.length && questions.every(question =>
+        question.label_code && question.label !== question.label_code && question.help_codes?.length === question.help?.length
+        && (question.options ?? []).every((option: { label: string; label_code: string }) => option.label_code && option.label !== option.label_code)),
+    '首次设置题目缺少本地化字段，请重新运行 scripts/record_entry_pages.py');
     for (const [file, sha256] of Object.entries(info.files)) {
         assert.ok(!file.includes('..') && !file.startsWith('/'), '前端来源路径必须在 site 内');
         const body = await readFile(new URL('site/' + file, root));
